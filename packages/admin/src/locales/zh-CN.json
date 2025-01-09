@@ -1,0 +1,239 @@
+{
+  "403": {
+    "description": "你访问的资源不存在"
+  },
+  "404": {
+    "_title": "404 页面不存在",
+    "backhome": "返回首页",
+    "description": "你访问的页面不存在",
+    "wenjuan": "问卷不存在",
+    "backwenjuan": "返回项目列表页面"
+  },
+  "common": {
+    "appname": "问卷",
+    "lang": "语言",
+    "enabled": "启用",
+    "disabled": "禁用",
+    "disable": "禁用",
+    "enable": "启用",
+    "submit": "提交",
+    "reset": "重置",
+    "send": "发送",
+    "del": "删除",
+    "edit": "编辑",
+    "action": "动作",
+    "status": "状态",
+    "all": "全部",
+    "save": "保存",
+    "cancel": "取消",
+    "ok": "确定",
+    "upload": "上传",
+    "delete": "删除",
+    "components": {
+      "pwdstrength": {
+        "weak": "很弱",
+        "fair": "较弱",
+        "good": "中等",
+        "strong": "较强",
+        "excellent": "很强"
+      }
+    },
+    "deleteSuccess": "删除成功"
+  },
+  "workspace": {
+    "_title": "工作台",
+    "main": {
+      "_title": "工作台"
+    },
+    "upload": {
+      "_title": "上传"
+    }
+  },
+  "signin": {
+    "_title": "登录",
+    "title": "登录管理运营平台",
+    "accountname": "账号",
+    "password": "密码",
+    "signin": "登录",
+    "error": "用户名/密码错误",
+    "newpwd": "新密码",
+    "pep": "请输入密码",
+    "pepa": "请再次输入密码",
+    "pnm": "两次输入密码不一致",
+    "cfpwd": "确认新密码",
+    "samepwd": "新密码不能与初始密码一样",
+    "peya": "请输入账号名",
+    "peypwd": "请输入密码",
+    "forgotpwd": "忘记密码",
+    "email": "电子邮件",
+    "phone": "手机短信"
+  },
+  "signout": {
+    "_title": "退出登录"
+  },
+  "account": {
+    "_title": "账户",
+    "account": {
+      "_title": "账户信息"
+    },
+    "accountlist": {
+      "_title": "账户列表",
+      "accountname": "帐户名",
+      "realname": "姓名",
+      "email": "邮箱",
+      "phone": "手机",
+      "2fa": "两步验证"
+    }
+  },
+  "my": {
+    "_title": "我的",
+    "authentication": {
+      "_title": "密码和身份认证",
+      "hide": "隐藏",
+      "pwd": "密码",
+      "oldpwd": "旧密码",
+      "newpwd": "新密码",
+      "pep": "请输入密码",
+      "pepa": "请再次输入密码",
+      "pnm": "两��入密码不一致",
+      "cpwd": "修改密码",
+      "cfpwd": "确认新密码",
+      "syaeyps": "强化账户安全，确保使用强度高的密码。",
+      "pst": "密码太简单了，请使用数字、大小写字母、符号的组合。",
+      "auth": "身份验证",
+      "email": "电子邮件",
+      "mobi": "手机号码",
+      "totp": "动态口令",
+      "emailad": "电子邮件",
+      "svcode": "发送验证码",
+      "edit": "修改",
+      "notset": "未设置",
+      "set": "设置",
+      "reset": "重新设置",
+      "editemail": "修改电子邮件地址",
+      "setemail": "设置电子邮件地址",
+      "resendin": "{count}秒后可以重新发送",
+      "rsvemail": "你的邮箱将收到一封验证邮件，请将邮件中的4位数字验证码填入下方空格内，切勿将验证码透露给其他人",
+      "editphone": "修改手机号码",
+      "setphone": "设置手机号码",
+      "phonead": "手机号码",
+      "rsvphone": "你的手机将收到一条验证短信，请将短信中的4位数字验证码填入下方空格内，切勿将验证码透露给其他人",
+      "havset": "已设置",
+      "settotp": "绑定动态口令App",
+      "samepwd": "新密码不能与旧密码一样",
+      "enhphone": "设置手机号码，用于接收登录验证码、接收系统消息",
+      "enhtotp": "使用动态口令增强账户安全",
+      "enhemail": "配置电子邮件账户，用于接收登录验证码、接收系统消息",
+      "areacode": "国际区号",
+      "pephone": "请输入手机号码",
+      "pedphone": "请输入与之前不同的号码",
+      "pecphone": "请输入正确的手机号码",
+      "peemail": "请输入电子邮件地址",
+      "pecemail": "请输入正确的电子邮件地址",
+      "pedemail": "请输入与之前不同的电子邮件地址",
+      "2fa": "两步验证",
+      "enh2fa": "使用两步验证(2FA)增强账户安全，验证方式包括短信验证码、邮件验证码和动态口令验证",
+      "scanQRCode": "使用验证APP扫描二维码",
+      "scanQRCodeHint": "扫描验证码后，将得到一组6位数字验证码。还没有安装验证APP？",
+      "downloadApp": "点击这里下载",
+      "enterVerificationCode": "输入6位验证码",
+      "enterVerificationCodeHint": "在下面的框中输入APP中显示的6位验证码来激活你的动态口令验证服务。",
+      "2faWarning": "要使两步验证生效，请先设置手机号码、电子邮件或动态口令其中一项",
+      "pwdUpdateSuccess": "密码成功更新!",
+      "pwdUpdateError": "旧密码输入错误，请重试",
+      "sendTooFrequent": "发送过于频繁，请稍后再试",
+      "sendFailed": "发送失败, 请重试",
+      "emailSendFailed": "邮件发送失败, 请重试",
+      "update2FAFailed": "2FA更新失败"
+    },
+    "profile": {
+      "_title": "我的资料"
+    }
+  },
+  "sys": {
+    "_title": "系统设置",
+    "permission": {
+      "_title": "权限",
+      "role": {
+        "_title": "角色"
+      },
+      "resource": {
+        "_title": "资源",
+        "all": "全部",
+        "pagesOnly": "仅页面",
+        "pagesAndFunctions": "页面+功能",
+        "pagesAndData": "页面+数据",
+        "searchPlaceholder": "输入关键词搜索",
+        "noMatchingData": "没有符合条件的数据。",
+        "clearSearchKeywords": "清除搜索关键词",
+        "resourceEditor": "资源编辑器",
+        "name": "名称",
+        "code": "编码",
+        "type": "类型",
+        "page": "页面",
+        "function": "功能",
+        "data": "数据",
+        "nameRequired": "名称不能为空",
+        "nameDuplicate": "重名了",
+        "codeRequired": "编码不能为空",
+        "codeDuplicate": "编码已存在，请更换",
+        "copyToClipboard": "点击复制到剪贴板",
+        "addSubResource": "添加子资源",
+        "linkType": "链接类型",
+        "router": "路由",
+        "url": "外部链接",
+        "link": "URL",
+        "target": "跳转方式",
+        "currentPage": "当前页面",
+        "newPage": "新页面",
+        "isHidden": "是否隐藏",
+        "icon": "图标",
+        "iconSelector": "图标选择器",
+        "searchIcon": "搜索图标",
+        "autoSelectChildren": "自动勾选子级",
+        "searchKeywords": "输入关键词搜索",
+        "warn": {
+          "cssHighlightNotSupported": "CSS Custom Highlight API 不支持"
+        },
+        "selectIcon": "选择图标"
+      }
+    },
+    "org": {
+      "_title": "组织架构",
+      "department": "部门",
+      "selectLeader": "请选择负责人",
+      "selectRoles": "请至少选择一个角色",
+      "fullname": "全称",
+      "leader": "负责人",
+      "orgRoles": "组织角色",
+      "roles": "角色"
+    }
+  },
+  "wenjuan": {
+    "_title": "问卷",
+    "editor": {
+      "_title": "问卷"
+    },
+    "project": {
+      "_title": "问卷"
+    }
+  },
+  "comp": {
+    "iconSelect": {
+      "systemIcons": "系统图标",
+      "customIcons": "自定义图标",
+      "noIcons": "暂无图标",
+      "svgOnly": "只能上传 SVG 文件！",
+      "sizeLimit": "文件必须小于 1MB！",
+      "preparing": "准备上传...",
+      "uploading": "上传中... {percent}%",
+      "success": "上传成功！",
+      "failed": "上传失败：{error}",
+      "confirmContent": "Are you sure you want to delete {name}?"
+    },
+    "mpInputI18n": {
+      "editorTitle": "多语言编辑器",
+      "translate": "翻译"
+    }
+  }
+}

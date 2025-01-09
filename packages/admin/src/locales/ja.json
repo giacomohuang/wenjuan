@@ -1,0 +1,236 @@
+{
+  "404": {
+    "_title": "404 ページが見つかりません",
+    "backhome": "ホームに戻る",
+    "description": "お探しのページは存在しません",
+    "wenjuan": "アンケートは存在しません",
+    "backwenjuan": "プロジェクト一覧ページに戻る"
+  },
+  "common": {
+    "appname": "アンケート",
+    "lang": "言語",
+    "enabled": "有効",
+    "disabled": "無効",
+    "disable": "無効化",
+    "enable": "有効化",
+    "submit": "送信",
+    "reset": "リセット",
+    "send": "送信",
+    "del": "削除",
+    "edit": "編集",
+    "action": "アクション",
+    "status": "状態",
+    "all": "すべて",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "ok": "確認",
+    "upload": "アップロード",
+    "delete": "削除",
+    "components": {
+      "pwdstrength": {
+        "weak": "非常に弱い",
+        "fair": "弱い",
+        "good": "普通",
+        "strong": "強い",
+        "excellent": "非常に強い"
+      }
+    },
+    "deleteSuccess": "削除しました"
+  },
+  "workspace": {
+    "_title": "ワークスペース",
+    "main": {
+      "_title": "ワークスペース"
+    },
+    "upload": {
+      "_title": "アップロード"
+    }
+  },
+  "signin": {
+    "_title": "ログイン",
+    "title": "管理運営プラットフォームログイン",
+    "accountname": "アカウント",
+    "password": "パスワード",
+    "signin": "ログイン",
+    "error": "ユーザー名/パスワードが間違っています",
+    "newpwd": "新しいパスワード",
+    "pep": "パスワードを入力してください",
+    "pepa": "パスワードを再入力してください",
+    "pnm": "パスワードが一致しません",
+    "cfpwd": "新しいパスワードの確認",
+    "samepwd": "新しいパスワードは現在のパスワードと異なる必要があります",
+    "peya": "アカウント名を入力してください",
+    "peypwd": "パスワードを入力してください",
+    "forgotpwd": "パスワードをお忘れの方",
+    "email": "メール",
+    "phone": "携帯SMS"
+  },
+  "signout": {
+    "_title": "ログアウト"
+  },
+  "account": {
+    "_title": "アカウント",
+    "account": {
+      "_title": "アカウント情報"
+    },
+    "accountlist": {
+      "_title": "アカウント一覧",
+      "accountname": "アカウント名",
+      "realname": "氏名",
+      "email": "メールアドレス",
+      "phone": "携帯電話",
+      "2fa": "二段階認証"
+    }
+  },
+  "my": {
+    "_title": "マイページ",
+    "authentication": {
+      "_title": "パスワードと認証",
+      "hide": "非表示",
+      "pwd": "パスワード",
+      "oldpwd": "現在のパスワード",
+      "newpwd": "新しいパスワード",
+      "pep": "パスワードを入力してください",
+      "pepa": "パスワードを再入力してください",
+      "pnm": "パスワードが一致しません",
+      "cpwd": "パスワード変更",
+      "cfpwd": "新しいパスワードの確認",
+      "syaeyps": "アカウントのセキュリティを強化するため、強力なパスワードを使用してください。",
+      "pst": "パスワードが簡単すぎます。数字、大文字小文字、記号を組み合わせてください。",
+      "auth": "認証",
+      "email": "メール",
+      "mobi": "携帯電話番号",
+      "totp": "ワンタイムパスワード",
+      "emailad": "メールアドレス",
+      "svcode": "認証コードを送信",
+      "edit": "編集",
+      "notset": "未設定",
+      "set": "設定",
+      "reset": "再設定",
+      "editemail": "メールアドレスの変更",
+      "setemail": "メールアドレスの設定",
+      "resendin": "{count}秒後に再送信可能",
+      "rsvemail": "メールに4桁の認証コードを送信しました。下記の欄に入力してください。認証コードは他人に教えないでください。",
+      "editphone": "携帯電話番号の変更",
+      "setphone": "携帯電話番号の設定",
+      "phonead": "携帯電話番号",
+      "rsvphone": "SMSに4桁の認証コードを送信しました。下記の欄に入力してください。認証コードは他人に教えないでください。",
+      "havset": "設定済み",
+      "settotp": "認証アプリの連携",
+      "samepwd": "新しいパスワードは現在のパスワードと異なる必要があります",
+      "enhphone": "ログイン認証やシステムメッセージの受信のため、携帯電話番号を設定してください",
+      "enhtotp": "認証アプリを使用してアカウントのセキュリティを強化してください",
+      "enhemail": "ログイン認証やシステムメッセージの受信のため、メールアドレスを設定してください",
+      "areacode": "国番号",
+      "pephone": "携帯電話番号を入力してください",
+      "pedphone": "以前と異なる番号を入力してください",
+      "pecphone": "正しい携帯電話番号を入力してください",
+      "peemail": "メールアドレスを入力してください",
+      "pecemail": "正しいメールアドレスを入力してください",
+      "pedemail": "以前と異なるメールアドレスを入力してください",
+      "2fa": "二段階認証",
+      "enh2fa": "二段階認証(2FA)でアカウントのセキュリティを強化してください。SMS、メール、認証アプリで認証できます",
+      "scanQRCode": "認証アプリでQRコードをスキャンしてください",
+      "scanQRCodeHint": "QRコードをスキャンすると6桁の認証コードが生成されます。認証アプリをお持ちでない場合は",
+      "downloadApp": "こちらからダウンロード",
+      "enterVerificationCode": "6桁の認証コードを入力",
+      "enterVerificationCodeHint": "アプリに表示される6桁の認証コードを入力して、認証サービスを有効化してください。",
+      "2faWarning": "二段階認証を有効にするには、携帯電話番号、メールアドレス、認証アプリのいずれかを設定する必要があります",
+      "pwdUpdateSuccess": "パスワードを更新しました！",
+      "pwdUpdateError": "現在のパスワードが間違っています。もう一度お試しください",
+      "sendTooFrequent": "送信が頻繁すぎます。しばらく待ってから再試行してください",
+      "sendFailed": "送信に失敗しました。もう一度お試しください",
+      "emailSendFailed": "メール送信に失敗しました。もう一度お試しください",
+      "update2FAFailed": "2FA更新に失敗しました"
+    },
+    "profile": {
+      "_title": "プロフィール"
+    }
+  },
+  "sys": {
+    "_title": "システム設定",
+    "permission": {
+      "_title": "権限",
+      "role": {
+        "_title": "ロール"
+      },
+      "resource": {
+        "_title": "リソース",
+        "all": "すべて",
+        "pagesOnly": "ページのみ",
+        "pagesAndFunctions": "ページ+機能",
+        "pagesAndData": "ページ+データ",
+        "searchPlaceholder": "キーワードを入力して検索",
+        "noMatchingData": "該当するデータがありません。",
+        "clearSearchKeywords": "検索キーワードをクリア",
+        "resourceEditor": "リソースエディタ",
+        "name": "名前",
+        "code": "コード",
+        "type": "タイプ",
+        "page": "ページ",
+        "function": "機能",
+        "data": "データ",
+        "nameRequired": "名前は必須です",
+        "nameDuplicate": "名前が重複しています",
+        "codeRequired": "コードは必須です",
+        "codeDuplicate": "コードが既に存在します。別のコードを使用してください",
+        "copyToClipboard": "クリックしてクリップボードにコピー",
+        "addSubResource": "サブリソースを追加",
+        "linkType": "リンクタイプ",
+        "router": "ルーター",
+        "url": "外部リンク",
+        "link": "URL",
+        "target": "開き方",
+        "currentPage": "現在のページ",
+        "newPage": "新しいページ",
+        "isHidden": "非表示",
+        "icon": "アイコン",
+        "iconSelector": "アイコン選択",
+        "searchIcon": "アイコン検索",
+        "autoSelectChildren": "子項目を自動選択",
+        "searchKeywords": "キーワードを入力して検索",
+        "warn": {
+          "cssHighlightNotSupported": "CSS Custom Highlight APIはサポートされていません"
+        },
+        "selectIcon": "アイコンを選択"
+      }
+    },
+    "org": {
+      "_title": "組織構造",
+      "department": "部署",
+      "selectLeader": "責任者を選択してください",
+      "selectRoles": "少なくとも1つのロールを選択してください",
+      "fullname": "フルネーム",
+      "leader": "責任者",
+      "orgRoles": "組織ロール",
+      "roles": "ロール"
+    }
+  },
+  "wenjuan": {
+    "editor": {
+      "_title": "アンケート"
+    },
+    "_title": "アンケート",
+    "project": {
+      "_title": "アンケート"
+    }
+  },
+  "comp": {
+    "iconSelect": {
+      "systemIcons": "システムアイコン",
+      "customIcons": "カスタムアイコン",
+      "noIcons": "アイコンがありません",
+      "svgOnly": "SVGファイルのみアップロード可能です！",
+      "sizeLimit": "ファイルサイズは1MB未満である必要があります！",
+      "preparing": "アップロード準備中...",
+      "uploading": "アップロード中... {percent}%",
+      "success": "アップロード成功！",
+      "failed": "アップロード失敗: {error}",
+      "confirmContent": "{name}を削除してもよろしいですか？"
+    },
+    "mpInputI18n": {
+      "editorTitle": "多言語エディター",
+      "translate": "翻訳する"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+.tag {
+  @apply rounded-md border px-2 py-[2px] text-xs text-gray-800;
+  &.gray {
+    @apply border-primary bg-gray-50;
+  }
+  &.green {
+    @apply border-green-300 bg-green-50;
+  }
+  &.blue {
+    @apply border-blue-200 bg-blue-50;
+  }
+  &.red {
+    @apply border-red-200 bg-red-50;
+  }
+}
+
+[data-theme='dark'] {
+  .tag {
+    @apply text-gray-200;
+    &.gray {
+      @apply border-primary bg-gray-950;
+    }
+    &.green {
+      @apply border-green-800 bg-green-950;
+    }
+    &.blue {
+      @apply border-blue-800 bg-blue-950;
+    }
+    &.red {
+      @apply border-red-800 bg-red-950;
+    }
+  }
+}

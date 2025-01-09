@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>zoom-reset</title>
+    <g id="zoom-reset" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <polyline id="路径-6" stroke="#000000" stroke-width="4" transform="translate(11.5, 12.5) rotate(180) translate(-11.5, -12.5)" points="16 8 7 8 7 17"></polyline>
+        <polyline id="路径-7" stroke="#000000" stroke-width="4" transform="translate(36.5, 12.5) scale(1, -1) rotate(-90) translate(-36.5, -12.5)" points="32 8 41 8 41 17"></polyline>
+        <polyline id="路径-6" stroke="#000000" stroke-width="4" transform="translate(11.5, 35.5) scale(-1, 1) translate(-11.5, -35.5)" points="16 31 7 31 7 40"></polyline>
+        <polyline id="路径-7" stroke="#000000" stroke-width="4" transform="translate(36.5, 35.5) scale(-1, 1) translate(-36.5, -35.5)" points="32 31 41 31 41 40"></polyline>
+    </g>
+</svg>

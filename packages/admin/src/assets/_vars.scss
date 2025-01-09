@@ -1,0 +1,97 @@
+@use 'sass:color';
+
+$color-sets: (
+  'red': #ef4444,
+  'rose': #ff69b4,
+  'orange': #f97316,
+  'yellow': #eab308,
+  'amber': #f59e0b,
+  'lemon': #fff44f,
+  'lime': #84cc16,
+  'green': #22c55e,
+  'blue': #3b82f6,
+  'brand': #2893ff,
+  'sky': #0ea5e9,
+  'indigo': #4f46e5,
+  'purple': #8b5cf6,
+  'gray': #6e7781
+);
+
+:root {
+  // 生成色阶
+  @each $name, $color in $color-sets {
+    --c-#{$name}: #{$color};
+    --c-#{$name}-50: #{color.scale($color, $lightness: 98%)};
+    --c-#{$name}-100: #{color.scale($color, $lightness: 85%)};
+    --c-#{$name}-200: #{color.scale($color, $lightness: 55%)};
+    --c-#{$name}-300: #{color.scale($color, $lightness: 40%)};
+    --c-#{$name}-400: #{color.scale($color, $lightness: 25%)};
+    --c-#{$name}-500: #{$color};
+    --c-#{$name}-600: #{color.scale($color, $lightness: -15%)};
+    --c-#{$name}-700: #{color.scale($color, $lightness: -30%)};
+    --c-#{$name}-800: #{color.scale($color, $lightness: -45%)};
+    --c-#{$name}-900: #{color.scale($color, $lightness: -70%)};
+    --c-#{$name}-950: #{color.scale($color, $lightness: -85%)};
+  }
+  --c-white: #ffffff;
+  --c-black: #000000;
+
+  // ***** 浅色背景 *****
+  // 背景色
+  --bg-primary: var(--c-white);
+  --bg-secondary: var(--c-gray-50);
+  --bg-tertiary: #ebecf5;
+  --bg-0: var(--c-white);
+  --bg-500: rgb(244, 247, 249);
+  --bg-brand: var(--c-brand-100);
+
+  // 文字颜色s
+  --text-primary: var(--c-black);
+  --text-secondary: var(--c-gray-700);
+  --text-tertiary: var(--c-gray-500);
+
+  // 边框颜色
+  --border-light: #f0f0f0;
+  --border-medium: #e0e0e0;
+  --border-dark: var(--c-gray-300);
+
+  // 阴影颜色
+  --shadow-sm: rgba(0, 0, 0, 0.05);
+  --shadow-md: rgba(0, 0, 0, 0.1);
+  --shadow-lg: rgba(0, 0, 0, 0.15);
+
+  // 强调色
+  --accent-primary: var(--c-brand-500);
+  --accent-secondary: var(--c-indigo-500);
+
+  // ***** 深色背景 *****
+  [data-theme='dark'] {
+    // 背景色
+    --bg-primary: var(--c-gray-900);
+    --bg-secondary: var(--c-gray-800);
+    --bg-tertiary: var(--c-gray-700);
+    --bg-0: var(--c-black);
+    --bg-500: var(--c-gray-950);
+
+    --bg-brand: var(--c-brand-950);
+
+    // 文字颜色
+    --text-primary: var(--c-gray-100);
+    --text-secondary: var(--c-gray-300);
+    --text-tertiary: var(--c-gray-500);
+
+    // 边框颜色
+    --border-light: var(--c-gray-800);
+    --border-medium: var(--c-gray-500);
+    --border-dark: var(--c-gray-400);
+
+    // 阴影颜色
+    --shadow-sm: rgba(0, 0, 0, 0.2);
+    --shadow-md: rgba(0, 0, 0, 0.4);
+    --shadow-lg: rgba(0, 0, 0, 0.6);
+
+    // 强调色
+    --accent-primary: var(--c-brand-400);
+    --accent-secondary: var(--c-indigo-400);
+  }
+}

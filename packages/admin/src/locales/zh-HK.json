@@ -1,0 +1,236 @@
+{
+  "404": {
+    "_title": "404 頁面不存在",
+    "backhome": "返回首頁",
+    "description": "你訪問的頁面不存在",
+    "wenjuan": "問卷不存在",
+    "backwenjuan": "返回項目清單頁面"
+  },
+  "common": {
+    "appname": "問卷",
+    "lang": "語言",
+    "enabled": "啟用",
+    "disabled": "停用",
+    "disable": "停用",
+    "enable": "啟用",
+    "submit": "提交",
+    "reset": "重設",
+    "send": "發送",
+    "del": "刪除",
+    "edit": "編輯",
+    "action": "動作",
+    "status": "狀態",
+    "all": "全部",
+    "save": "儲存",
+    "cancel": "取消",
+    "ok": "確定",
+    "upload": "上傳",
+    "delete": "刪除",
+    "components": {
+      "pwdstrength": {
+        "weak": "很弱",
+        "fair": "較弱",
+        "good": "中等",
+        "strong": "較強",
+        "excellent": "很強"
+      }
+    },
+    "deleteSuccess": "刪除成功"
+  },
+  "workspace": {
+    "_title": "工作台",
+    "main": {
+      "_title": "工作台"
+    },
+    "upload": {
+      "_title": "上傳"
+    }
+  },
+  "signin": {
+    "_title": "登入",
+    "title": "登入管理運營平台",
+    "accountname": "帳號",
+    "password": "密碼",
+    "signin": "登入",
+    "error": "用戶名/密碼錯誤",
+    "newpwd": "新密碼",
+    "pep": "請輸入密碼",
+    "pepa": "請再次輸入密碼",
+    "pnm": "兩次輸入密碼不一致",
+    "cfpwd": "確認新密碼",
+    "samepwd": "新密碼不能與初始密碼一樣",
+    "peya": "請輸入帳號名",
+    "peypwd": "請輸入密碼",
+    "forgotpwd": "忘記密碼",
+    "email": "電子郵件",
+    "phone": "手機短訊"
+  },
+  "signout": {
+    "_title": "登出"
+  },
+  "account": {
+    "_title": "帳戶",
+    "account": {
+      "_title": "帳戶資訊"
+    },
+    "accountlist": {
+      "_title": "帳戶列表",
+      "accountname": "帳戶名",
+      "realname": "姓名",
+      "email": "電郵",
+      "phone": "手機",
+      "2fa": "兩步驗證"
+    }
+  },
+  "my": {
+    "_title": "我的",
+    "authentication": {
+      "_title": "密碼和身份認證",
+      "hide": "隱藏",
+      "pwd": "密碼",
+      "oldpwd": "舊密碼",
+      "newpwd": "新密碼",
+      "pep": "請輸入密碼",
+      "pepa": "請再次輸入密碼",
+      "pnm": "兩次輸入密碼不一致",
+      "cpwd": "修改密碼",
+      "cfpwd": "確認新密碼",
+      "syaeyps": "強化帳戶安全，確保使用強度高的密碼。",
+      "pst": "密碼太簡單了，請使用數字、大小寫字母、符號的組合。",
+      "auth": "身份驗證",
+      "email": "電子郵件",
+      "mobi": "手機號碼",
+      "totp": "動態密碼",
+      "emailad": "電子郵件",
+      "svcode": "發送驗證碼",
+      "edit": "修改",
+      "notset": "未設置",
+      "set": "設置",
+      "reset": "重新設置",
+      "editemail": "修改電子郵件地址",
+      "setemail": "設置電子郵件地址",
+      "resendin": "{count}秒後可以重新發送",
+      "rsvemail": "你的郵箱將收到一封驗證郵件，請將郵件中的4位數字驗證碼填入下方空格內，切勿將驗證碼透露給其他人",
+      "editphone": "修改手機號碼",
+      "setphone": "設置手機號碼",
+      "phonead": "手機號碼",
+      "rsvphone": "你的手機將收到一條驗證短訊，請將短訊中的4位數字驗證碼填入下方空格內，切勿將驗證碼透露給其他人",
+      "havset": "已設置",
+      "settotp": "綁定動態密碼App",
+      "samepwd": "新密碼不能與舊密碼一樣",
+      "enhphone": "設置手機號碼，用於接收登入驗證碼、接收系統訊息",
+      "enhtotp": "使用動態密碼增強帳戶安全",
+      "enhemail": "配置電子郵件帳戶，用於接收登入驗證碼、接收系統訊息",
+      "areacode": "國際區號",
+      "pephone": "請輸入手機號碼",
+      "pedphone": "請輸入與之前不同的號碼",
+      "pecphone": "請輸入正確的手機號碼",
+      "peemail": "請輸入電子郵件地址",
+      "pecemail": "請輸入正確的電子郵件地址",
+      "pedemail": "請輸入與之前不同的電子郵件地址",
+      "2fa": "兩步驗證",
+      "enh2fa": "使用兩步驗證(2FA)增強帳戶安全，驗證方式包括短訊驗證碼、郵件驗證碼和動態密碼驗證",
+      "scanQRCode": "使用驗證APP掃描二維碼",
+      "scanQRCodeHint": "掃描驗證碼後，將得到一組6位數字驗證碼。還沒有安裝驗證APP？",
+      "downloadApp": "點擊這裡下載",
+      "enterVerificationCode": "輸入6位驗證碼",
+      "enterVerificationCodeHint": "在下面的框中輸入APP中顯示的6位驗證碼來啟動你的動態密碼驗證服務。",
+      "2faWarning": "要使兩步驗證生效，請先設置手機號碼、電子郵件或動態密碼其中一項",
+      "pwdUpdateSuccess": "密碼成功更新!",
+      "pwdUpdateError": "舊密碼輸入錯誤，請重試",
+      "sendTooFrequent": "發送過於頻繁，請稍後再試",
+      "sendFailed": "發送失敗, 請重試",
+      "emailSendFailed": "郵件發送失敗, 請重試",
+      "update2FAFailed": "2FA更新失敗"
+    },
+    "profile": {
+      "_title": "我的資料"
+    }
+  },
+  "sys": {
+    "_title": "系統設置",
+    "permission": {
+      "_title": "權限",
+      "role": {
+        "_title": "角色"
+      },
+      "resource": {
+        "_title": "資源",
+        "all": "全部",
+        "pagesOnly": "僅頁面",
+        "pagesAndFunctions": "頁面+功能",
+        "pagesAndData": "頁面+數據",
+        "searchPlaceholder": "輸入關鍵詞搜索",
+        "noMatchingData": "沒有符合條件的數據。",
+        "clearSearchKeywords": "清除搜索關鍵詞",
+        "resourceEditor": "資源編輯器",
+        "name": "名稱",
+        "code": "編碼",
+        "type": "類型",
+        "page": "頁面",
+        "function": "功能",
+        "data": "數據",
+        "nameRequired": "名稱不能為空",
+        "nameDuplicate": "重名了",
+        "codeRequired": "編碼不能為空",
+        "codeDuplicate": "編碼已存在，請更換",
+        "copyToClipboard": "點擊複製到剪貼板",
+        "addSubResource": "添加子資源",
+        "linkType": "連結類型",
+        "router": "路由",
+        "url": "外部連結",
+        "link": "URL",
+        "target": "跳轉方式",
+        "currentPage": "當前頁面",
+        "newPage": "新頁面",
+        "isHidden": "是否隱藏",
+        "icon": "圖標",
+        "iconSelector": "圖標選擇器",
+        "searchIcon": "搜索圖標",
+        "autoSelectChildren": "自動勾選子級",
+        "searchKeywords": "輸入關鍵詞搜索",
+        "warn": {
+          "cssHighlightNotSupported": "CSS Custom Highlight API 不支援"
+        },
+        "selectIcon": "選擇圖標"
+      }
+    },
+    "org": {
+      "_title": "組織架構",
+      "department": "部門",
+      "selectLeader": "請選擇負責人",
+      "selectRoles": "請至少選擇一個角色",
+      "fullname": "全稱",
+      "leader": "負責人",
+      "orgRoles": "組織角色",
+      "roles": "角色"
+    }
+  },
+  "wenjuan": {
+    "_title": "問卷",
+    "editor": {
+      "_title": "問卷"
+    },
+    "project": {
+      "_title": "問卷"
+    }
+  },
+  "comp": {
+    "iconSelect": {
+      "systemIcons": "系統圖標",
+      "customIcons": "自定義圖標",
+      "noIcons": "暫無圖標",
+      "svgOnly": "只能上傳 SVG 文件！",
+      "sizeLimit": "文件必須小於 1MB！",
+      "preparing": "準備上傳...",
+      "uploading": "上傳中... {percent}%",
+      "success": "上傳成功！",
+      "failed": "上傳失敗：{error}",
+      "confirmContent": "確定要刪除 {name} 嗎？"
+    },
+    "mpInputI18n": {
+      "editorTitle": "多語言編輯器",
+      "translate": "翻譯"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>theme-system</title>
+    <g id="theme-system" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="矩形" stroke="#000000" stroke-width="4" x="6" y="7" width="36" height="25" rx="3"></rect>
+        <line x1="7" y1="25" x2="40" y2="25" id="直线" stroke="#000000" stroke-width="2" stroke-linecap="square"></line>
+        <path d="M19.4314751,33.0422957 L15.6132932,40.0422957 C15.0843678,41.0119924 15.4416834,42.2268657 16.4113801,42.7557911 C16.7051573,42.9160333 17.0344464,43 17.3690844,43 L29.6309156,43 C30.7354851,43 31.6309156,42.1045695 31.6309156,41 C31.6309156,40.665362 31.5469489,40.3360729 31.3867068,40.0422957 L27.5685249,33.0422957 C27.2180586,32.3997741 26.5446222,32 25.8127338,32 L21.1872662,32 C20.4553778,32 19.7819414,32.3997741 19.4314751,33.0422957 Z" id="路径-3" stroke="#000000" stroke-width="4"></path>
+    </g>
+</svg>

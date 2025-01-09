@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>edit</title>
+    <g id="edit" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="编组" transform="translate(13.173, 9.6752)" stroke="#000000" stroke-width="2">
+            <path d="M16.1363981,-1.52517253 C16.6886828,-1.52517253 17.1886828,-1.3013149 17.5506117,-0.939386089 C17.9125405,-0.577457276 18.1363981,-0.077457276 18.1363981,0.474827474 L18.1363981,26.5024052 L6.84083461,26.5024052 L6.84083461,0.474827474 C6.84083461,-0.077457276 7.06469224,-0.577457276 7.42662105,-0.939386089 C7.78854986,-1.3013149 8.28854986,-1.52517253 8.84083461,-1.52517253 Z" id="矩形" transform="translate(12.4886, 12.4886) rotate(-315) translate(-12.4886, -12.4886)"></path>
+            <line x1="12.1701915" y1="7.32480818" x2="23.4839" y2="7.32480818" id="直线" stroke-linecap="square" transform="translate(17.827, 7.3248) rotate(-315) translate(-17.827, -7.3248)"></line>
+        </g>
+        <polygon id="路径-8" fill="#000000" points="10 28.6707026 10 37.6707026 19 37.6707026"></polygon>
+    </g>
+</svg>

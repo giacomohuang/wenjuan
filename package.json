@@ -1,0 +1,13 @@
+{
+  "name": "wenjuan",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev:admin": "pnpm -F @wenjuan/admin dev",
+    "dev:api": "pnpm -F @wenjuan/api dev",
+    "dev:uniapp": "pnpm -F @wenjuan/uniapp dev",
+    "build:admin": "pnpm -F @wenjuan/admin build",
+    "build:api": "pnpm -F @wenjuan/api build",
+    "build:uniapp": "pnpm -F @wenjuan/uniapp build"
+  }
+}

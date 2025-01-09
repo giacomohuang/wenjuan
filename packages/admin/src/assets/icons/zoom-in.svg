@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>zoom-in</title>
+    <g id="zoom-in" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="椭圆形" stroke="#000000" stroke-width="4" cx="22.5" cy="22.5" r="13.5"></circle>
+        <line x1="33" y1="34" x2="41" y2="42" id="直线-6" stroke="#000000" stroke-width="4" stroke-linecap="square"></line>
+        <line x1="15" y1="22.499975" x2="30" y2="22.499975" id="路径-5" stroke="#000000" stroke-width="2"></line>
+        <line x1="22.5" y1="15.00005" x2="22.5" y2="30.0001" id="路径-5" stroke="#000000" stroke-width="2"></line>
+    </g>
+</svg>

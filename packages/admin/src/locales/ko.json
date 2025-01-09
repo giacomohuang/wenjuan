@@ -1,0 +1,236 @@
+{
+  "404": {
+    "_title": "404 페이지를 찾을 수 없습니다",
+    "backhome": "홈으로 돌아가기",
+    "description": "요청하신 페이지를 찾을 수 없습니다",
+    "wenjuan": "설문지가 존재하지 않습니다.",
+    "backwenjuan": "프로젝트 목록 페이지로 돌아가기"
+  },
+  "common": {
+    "appname": "설문지",
+    "lang": "언어",
+    "enabled": "활성화",
+    "disabled": "비활성화",
+    "disable": "비활성화",
+    "enable": "활성화",
+    "submit": "제출",
+    "reset": "초기화",
+    "send": "전송",
+    "del": "삭제",
+    "edit": "편집",
+    "action": "작업",
+    "status": "상태",
+    "all": "전체",
+    "save": "저장",
+    "cancel": "취소",
+    "ok": "확인",
+    "upload": "업로드",
+    "delete": "삭제",
+    "components": {
+      "pwdstrength": {
+        "weak": "매우 약함",
+        "fair": "약함",
+        "good": "보통",
+        "strong": "강함",
+        "excellent": "매우 강함"
+      }
+    },
+    "deleteSuccess": "삭제 완료"
+  },
+  "workspace": {
+    "_title": "작업대",
+    "main": {
+      "_title": "작업대"
+    },
+    "upload": {
+      "_title": "업로드"
+    }
+  },
+  "signin": {
+    "_title": "로그인",
+    "title": "관리 운영 플랫폼 로그인",
+    "accountname": "계정",
+    "password": "비밀번호",
+    "signin": "로그인",
+    "error": "사용자명/비밀번호가 잘못되었습니다",
+    "newpwd": "새 비밀번호",
+    "pep": "비밀번호를 입력해주세요",
+    "pepa": "비밀번호를 다시 입력해주세요",
+    "pnm": "비밀번호가 일치하지 않습니다",
+    "cfpwd": "새 비밀번호 확인",
+    "samepwd": "새 비밀번호는 기존 비밀번호와 달라야 합니다",
+    "peya": "계정명을 입력해주세요",
+    "peypwd": "비밀번호를 입력해주세요",
+    "forgotpwd": "비밀번호 찾기",
+    "email": "이메일",
+    "phone": "휴대폰 SMS"
+  },
+  "signout": {
+    "_title": "로그아웃"
+  },
+  "account": {
+    "_title": "계정",
+    "account": {
+      "_title": "계정 정보"
+    },
+    "accountlist": {
+      "_title": "계정 목록",
+      "accountname": "계정명",
+      "realname": "실명",
+      "email": "이메일",
+      "phone": "휴대폰",
+      "2fa": "2단계 인증"
+    }
+  },
+  "my": {
+    "_title": "내 정보",
+    "authentication": {
+      "_title": "비밀번호 및 인증",
+      "hide": "숨기기",
+      "pwd": "비밀번호",
+      "oldpwd": "기존 비밀번호",
+      "newpwd": "새 비밀번호",
+      "pep": "비밀번호를 입력해주세요",
+      "pepa": "비밀번호를 다시 입력해주세요",
+      "pnm": "비밀번호가 일치하지 않습니다",
+      "cpwd": "비밀번호 변경",
+      "cfpwd": "새 비밀번호 확인",
+      "syaeyps": "계정 보안 강화를 위해 강력한 비밀번호를 사용하세요.",
+      "pst": "비밀번호가 너무 단순합니다. 숫자, 대소문자, 특수문자를 조합해 주세요.",
+      "auth": "인증",
+      "email": "이메일",
+      "mobi": "휴대폰 번호",
+      "totp": "동적 비밀번호",
+      "emailad": "이메일 주소",
+      "svcode": "인증코드 전송",
+      "edit": "수정",
+      "notset": "미설정",
+      "set": "설정",
+      "reset": "재설정",
+      "editemail": "이메일 주소 수정",
+      "setemail": "이메일 주소 설정",
+      "resendin": "{count}초 후 재전송 가능",
+      "rsvemail": "이메일로 인증코드가 전송되었습니다. 4자리 인증코드를 입력해 주세요. 인증코드를 타인에게 공유하지 마세요.",
+      "editphone": "휴대폰 번호 수정",
+      "setphone": "휴대폰 번호 설정",
+      "phonead": "휴대폰 번호",
+      "rsvphone": "휴대폰으로 인증코드가 전송되었습니다. 4자리 인증코드를 입력해 주세요. 인증코드를 타인에게 공유하지 마세요.",
+      "havset": "설정됨",
+      "settotp": "동적 비밀번호 앱 연동",
+      "samepwd": "새 비밀번호는 기존 비밀번호와 달라야 합니다",
+      "enhphone": "로그인 인증 및 시스템 메시지 수신을 위해 휴대폰 번호를 설정하세요",
+      "enhtotp": "동적 비밀번호로 계정 보안을 강화하세요",
+      "enhemail": "로그인 인증 및 시스템 메시지 수신을 위해 이메일을 설정하세요",
+      "areacode": "국가 번호",
+      "pephone": "휴대폰 번호를 입력해주세요",
+      "pedphone": "이전과 다른 번호를 입력해주세요",
+      "pecphone": "올바른 휴대폰 번호를 입력해주세요",
+      "peemail": "이메일 주소를 입력해주세요",
+      "pecemail": "올바른 이메일 주소를 입력해주세요",
+      "pedemail": "이전과 다른 이메일 주소를 입력해주세요",
+      "2fa": "2단계 인증",
+      "enh2fa": "2단계 인증(2FA)으로 계정 보안을 강화하세요. SMS, 이메일, 동적 비밀번호로 인증할 수 있습니다",
+      "scanQRCode": "인증 앱으로 QR코드를 스캔하세요",
+      "scanQRCodeHint": "QR코드를 스캔하면 6자리 인증코드가 생성됩니다. 인증 앱이 없으신가요?",
+      "downloadApp": "여기를 클릭하여 다운로드",
+      "enterVerificationCode": "6자리 인증코드 입력",
+      "enterVerificationCodeHint": "앱에 표시된 6자리 인증코드를 입력하여 동적 비밀번호 인증을 활성화하세요.",
+      "2faWarning": "2단계 인증을 사용하려면 휴대폰 번호, 이메일 또는 동적 비밀번호 중 하나를 설정해야 합니다",
+      "pwdUpdateSuccess": "비밀번호가 성공적으로 변경되었습니다!",
+      "pwdUpdateError": "기존 비밀번호가 잘못되었습니다. 다시 시도해주세요",
+      "sendTooFrequent": "너무 자주 전송했습니다. 잠시 후 다시 시도해주세요",
+      "sendFailed": "전송 실패. 다시 시도해주세요",
+      "emailSendFailed": "이메일 전송 실패. 다시 시도해주세요",
+      "update2FAFailed": "2FA 업데이트 실패"
+    },
+    "profile": {
+      "_title": "내 프로필"
+    }
+  },
+  "sys": {
+    "_title": "시스템 설정",
+    "permission": {
+      "_title": "권한",
+      "role": {
+        "_title": "역할"
+      },
+      "resource": {
+        "_title": "리소스",
+        "all": "전체",
+        "pagesOnly": "페이지만",
+        "pagesAndFunctions": "페이지+기능",
+        "pagesAndData": "페이지+데이터",
+        "searchPlaceholder": "검색어를 입력하세요",
+        "noMatchingData": "일치하는 데이터가 없습니다.",
+        "clearSearchKeywords": "검색어 지우기",
+        "resourceEditor": "리소스 편집기",
+        "name": "이름",
+        "code": "코드",
+        "type": "유형",
+        "page": "페이지",
+        "function": "기능",
+        "data": "데이터",
+        "nameRequired": "이름은 필수입니다",
+        "nameDuplicate": "이름이 중복되었습니다",
+        "codeRequired": "코드는 필수입니다",
+        "codeDuplicate": "코드가 이미 존재합니다. 다른 코드를 사용해주세요",
+        "copyToClipboard": "클립보드에 복사하려면 클릭하세요",
+        "addSubResource": "하위 리소스 추가",
+        "linkType": "링크 유형",
+        "router": "라우터",
+        "url": "외부 링크",
+        "link": "URL",
+        "target": "열기 방식",
+        "currentPage": "현재 페이지",
+        "newPage": "새 페이지",
+        "isHidden": "숨김 여부",
+        "icon": "아이콘",
+        "iconSelector": "아이콘 선택기",
+        "searchIcon": "아이콘 검색",
+        "autoSelectChildren": "하위 항목 자동 선택",
+        "searchKeywords": "검색어를 입력하세요",
+        "warn": {
+          "cssHighlightNotSupported": "CSS Custom Highlight API가 지원되지 않습니다"
+        },
+        "selectIcon": "아이콘 선택"
+      }
+    },
+    "org": {
+      "_title": "조직 구조",
+      "department": "부서",
+      "selectLeader": "책임자를 선택하세요",
+      "selectRoles": "최소 하나의 역할을 선택하세요",
+      "fullname": "전체 이름",
+      "leader": "책임자",
+      "orgRoles": "조직 역할",
+      "roles": "역할"
+    }
+  },
+  "wenjuan": {
+    "editor": {
+      "_title": "설문조사"
+    },
+    "_title": "설문지",
+    "project": {
+      "_title": "설문지"
+    }
+  },
+  "comp": {
+    "iconSelect": {
+      "systemIcons": "시스템 아이콘",
+      "customIcons": "사용자 정의 아이콘",
+      "noIcons": "아이콘 없음",
+      "svgOnly": "SVG 파일만 업로드할 수 있습니다!",
+      "sizeLimit": "파일 크기는 1MB 미만이어야 합니다!",
+      "preparing": "업로드 준비 중...",
+      "uploading": "업로드 중... {percent}%",
+      "success": "업로드 성공!",
+      "failed": "업로드 실패: {error}",
+      "confirmContent": "{name}을(를) 삭제하시겠습니까?"
+    },
+    "mpInputI18n": {
+      "editorTitle": "다국어 편집기",
+      "translate": "번역하다"
+    }
+  }
+}

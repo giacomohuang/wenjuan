@@ -1,0 +1,29 @@
+# Logs
+logs
+*.log
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+temp
+node_modules
+.DS_Store
+.env
+dist
+dist-ssr
+coverage
+*.local
+_docs
+
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+server/.env
+components.d.ts

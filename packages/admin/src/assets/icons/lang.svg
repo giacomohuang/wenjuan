@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>lang</title>
+    <g id="lang" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="椭圆形" stroke="#000000" stroke-width="2" cx="24.5" cy="24.5" r="19.5"></circle>
+        <ellipse id="椭圆形" stroke="#000000" stroke-width="2" cx="24.5" cy="24.5" rx="9.5" ry="19.5"></ellipse>
+        <ellipse id="椭圆形" stroke="#000000" stroke-width="2" cx="24.5" cy="25" rx="19.5" ry="11"></ellipse>
+        <line x1="6" y1="25" x2="43" y2="25" id="直线-7" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+    </g>
+</svg>

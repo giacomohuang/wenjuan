@@ -1,0 +1,236 @@
+{
+  "404": {
+    "_title": "404 Not Found",
+    "backhome": "Back to home",
+    "description": "Sorry, the page you visited does not exist.",
+    "wenjuan": "Questionnaire does not exist",
+    "backwenjuan": "Return to project list"
+  },
+  "common": {
+    "appname": "Questionnaire",
+    "lang": "Language",
+    "enabled": "Enabled",
+    "disable": "Disable",
+    "enable": "Enable",
+    "disabled": "Disabled",
+    "submit": "Submit",
+    "reset": "Reset",
+    "send": "Send",
+    "del": "Delete",
+    "edit": "Edit",
+    "action": "Action",
+    "status": "Status",
+    "all": "All",
+    "save": "Save",
+    "cancel": "Cancel",
+    "upload": "Upload",
+    "ok": "Confirm",
+    "delete": "Delete",
+    "components": {
+      "pwdstrength": {
+        "weak": "weak",
+        "fair": "fair",
+        "good": "good",
+        "strong": "strong",
+        "excellent": "excellent"
+      }
+    },
+    "deleteSuccess": "Delete successfully"
+  },
+  "workspace": {
+    "_title": "Workspace",
+    "main": {
+      "_title": "Workspace"
+    },
+    "upload": {
+      "_title": "Upload"
+    }
+  },
+  "signin": {
+    "_title": "Sign in",
+    "title": "Sign in to MPAdmin",
+    "accountname": "Account",
+    "password": "Password",
+    "signin": "Sign in",
+    "error": "Accountname or Password is Incorrect",
+    "newpwd": "New Password",
+    "pep": "Please enter the password.",
+    "pepa": "Please enter password again.",
+    "pnm": "Password confirmation doesn't match the password.",
+    "cfpwd": "Confirm password",
+    "samepwd": "The new password cannot be the same as the initial password.",
+    "peya": "Please input your accountname",
+    "peypwd": "Please input your password",
+    "forgotpwd": "Forgot Password",
+    "email": "By Email",
+    "phone": "By Phone"
+  },
+  "signout": {
+    "_title": "Sign Out"
+  },
+  "account": {
+    "_title": "Account",
+    "accountlist": {
+      "_title": "Account List",
+      "accountname": "Account Name",
+      "realname": "Name",
+      "email": "Email",
+      "phone": "Mobile Phone",
+      "2fa": "2FA"
+    },
+    "account": {
+      "_title": "Account Info"
+    }
+  },
+  "my": {
+    "_title": "My",
+    "authentication": {
+      "_title": "Authentication",
+      "hide": "Hide",
+      "pwd": "Password",
+      "oldpwd": "Old Password",
+      "newpwd": "New Password",
+      "pep": "Please enter the password.",
+      "pepa": "Please enter password again.",
+      "pnm": "Password confirmation doesn't match the password.",
+      "cpwd": "Change Password",
+      "cfpwd": "Confirm password",
+      "syaeyps": "Strengthen your account by ensuring your password is strong.",
+      "pst": "The password is too simple. Please use a combination of numbers, uppercase and lowercase letters, and symbols.",
+      "auth": "Authentication",
+      "email": "Email",
+      "mobi": "Mobile Phone",
+      "totp": "Dynamic Password",
+      "emailad": "Email",
+      "svcode": "Send Code",
+      "edit": "Edit",
+      "notset": "Not set",
+      "set": "Set",
+      "reset": "Reset",
+      "editemail": "Edit Email Address",
+      "setemail": "Set Email Address",
+      "resendin": "It's possible to resend after {count}s.",
+      "rsvemail": "You will receive a verification email. Please fill in the 4-digit verification code in the email below. DO NOT share the code to others.",
+      "editphone": "Modify Mobile Phone Number",
+      "setphone": "Set Mobile Phone Number",
+      "phonead": "Phone Number",
+      "rsvphone": "You will receive a verification text message. Please fill in the 4-digit verification code below. DO NOT share the verification code to others.",
+      "havset": "Already set",
+      "settotp": "Setup Dynamic Password",
+      "samepwd": "The new password cannot be the same as the old password.",
+      "enhphone": "Set a mobile phone number to receive verification codes, system messages, etc.",
+      "enhtotp": "Enhance account security with dynamic password.",
+      "enhemail": "Set an email account to receive verification codes, system messages, etc.",
+      "areacode": "Areacode",
+      "pephone": "Please enter the phone number.",
+      "pedphone": "Please enter a different phone number.",
+      "pecphone": "Please enter the correct phone number",
+      "peemail": "Please enter email.",
+      "pecemail": "Please enter correct email.",
+      "pedemail": "Please enter a different email.",
+      "2fa": "Two-Factor Authentication",
+      "enh2fa": "Use two-step verification (2FA) to enhance account security, include SMS verification, email verification and dynamic password verification.",
+      "scanQRCode": "Scan QR code with authentication APP",
+      "scanQRCodeHint": "After scanning the QR code, you will get a 6-digit verification code. Haven't installed the authentication APP yet?",
+      "downloadApp": "Click here to download",
+      "enterVerificationCode": "Enter 6-digit verification code",
+      "enterVerificationCodeHint": "Enter the 6-digit verification code displayed in the APP below to activate your dynamic password verification service.",
+      "2faWarning": "To enable two-factor authentication, please set up at least one of the following: mobile phone number, email, or dynamic password",
+      "pwdUpdateSuccess": "Password updated successfully!",
+      "pwdUpdateError": "Old password is incorrect, please try again",
+      "sendTooFrequent": "Sending too frequent, please try again later",
+      "sendFailed": "Send failed, please try again",
+      "emailSendFailed": "Email send failed, please try again",
+      "update2FAFailed": "2FA update failed"
+    },
+    "profile": {
+      "_title": "My Profile"
+    }
+  },
+  "sys": {
+    "_title": "System",
+    "permission": {
+      "_title": "Permission",
+      "role": {
+        "_title": "Roles"
+      },
+      "resource": {
+        "_title": "Resources",
+        "all": "All",
+        "pagesOnly": "Pages Only",
+        "pagesAndFunctions": "Pages + Functions",
+        "pagesAndData": "Pages + Data",
+        "searchPlaceholder": "Enter keywords to search",
+        "noMatchingData": "No matching data found.",
+        "clearSearchKeywords": "Clear search keywords",
+        "resourceEditor": "Resource Editor",
+        "name": "Name",
+        "code": "Code",
+        "type": "Type",
+        "page": "Page",
+        "function": "Function",
+        "data": "Data",
+        "nameRequired": "Name is required",
+        "nameDuplicate": "Name already exists",
+        "codeRequired": "Code is required",
+        "codeDuplicate": "Code already exists, please change",
+        "copyToClipboard": "Click to copy to clipboard",
+        "addSubResource": "Add sub-resource",
+        "linkType": "Link Type",
+        "router": "Route",
+        "url": "External Link",
+        "link": "URL",
+        "target": "Open Mode",
+        "currentPage": "Current Page",
+        "newPage": "New Page",
+        "isHidden": "Hidden",
+        "icon": "icon",
+        "iconSelector": "Icon selector",
+        "searchIcon": "Search icon",
+        "autoSelectChildren": "Auto select children",
+        "searchKeywords": "Enter keywords to search",
+        "warn": {
+          "cssHighlightNotSupported": "CSS Custom Highlight API not supported"
+        },
+        "selectIcon": "Select icon"
+      }
+    },
+    "org": {
+      "_title": "Organization",
+      "department": "department",
+      "selectLeader": "Please select a leader",
+      "selectRoles": "Please select at least one role",
+      "fullname": "Full Name",
+      "leader": "Leader",
+      "orgRoles": "Organization Roles",
+      "roles": "Roles"
+    }
+  },
+  "wenjuan": {
+    "editor": {
+      "_title": "Questionnaire"
+    },
+    "_title": "Questionnaire",
+    "project": {
+      "_title": "Questionnaire"
+    }
+  },
+  "comp": {
+    "iconSelect": {
+      "systemIcons": "System Icons",
+      "customIcons": "Custom Icons",
+      "noIcons": "No Icons",
+      "svgOnly": "Can only upload SVG files!",
+      "sizeLimit": "File must be smaller than 1MB!",
+      "preparing": "Preparing upload...",
+      "uploading": "Uploading... {percent}%",
+      "success": "Upload successful!",
+      "failed": "Upload failed: {error}",
+      "confirmContent": "Are you sure you want to delete {name}?"
+    },
+    "mpInputI18n": {
+      "editorTitle": "Multilingual editor",
+      "translate": "translate"
+    }
+  }
+}
