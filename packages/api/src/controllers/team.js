@@ -113,32 +113,34 @@ class TeamController extends BaseController {
   static async removeMember(ctx) {
     const { teamId, accountId } = ctx.request.body
     const currentAccountId = ctx.request.headers['accountid']
+    console.log('removeMember', teamId, accountId)
 
-    const team = await Team.findOne({
-      _id: teamId,
-      isDeleted: false,
-      'members.memberInfo': currentAccountId
-    })
+    const res = await Team.updateOne(
+      {
+        _id: teamId,
+        'members.memberInfo': accountId
+      },
+      {
+        $pull: {
+          members: { memberInfo: accountId }
+        }
+      }
+    )
+    console.log('res', res)
 
-    if (!team) {
-      ctx.throw(404, '团队不存在')
-    }
-
-    // // 检查权限
-    // const currentMember = team.members.find((m) => m.memberInfo.toString() === currentAccountId)
-    // if (currentMember.role !== 'admin') {
-    //   ctx.throw(403, '没有权限移除成员')
+    // if (!team) {
+    //   ctx.throw(404, '团队不存在')
     // }
 
-    // 不能移除创建者
-    if (team.operator.toString() === accountId) {
-      ctx.throw(400, '不能移除团队创建者')
-    }
+    // // 不能移除创建者
+    // if (team.operator.toString() === accountId) {
+    //   ctx.throw(400, '不能移除团队创建者')
+    // }
 
-    team.members = team.members.filter((m) => m.memberInfo.toString() !== accountId)
-    await team.save()
+    // team.members = team.members.filter((m) => m.memberInfo.toString() !== accountId)
+    // await team.save()
 
-    ctx.body = { code: 0, message: '移除成功' }
+    ctx.body = res
   }
 
   // 获取团队成员列表

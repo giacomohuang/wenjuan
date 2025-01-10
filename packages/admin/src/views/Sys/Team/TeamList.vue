@@ -335,7 +335,7 @@ const fetchTeamMembers = async () => {
 // 移除团队成员
 const handleRemoveMember = async (record) => {
   try {
-    await API.team.removeMember(currentTeamId.value, record.memberId)
+    await API.team.removeMember({ teamId: currentTeamId.value, accountId: record.memberInfo._id })
     message.success('移除成员成功')
     await fetchTeamMembers()
   } catch (error) {
