@@ -71,20 +71,7 @@
   "signout": {
     "_title": "退出登录"
   },
-  "account": {
-    "_title": "账户",
-    "account": {
-      "_title": "账户信息"
-    },
-    "accountlist": {
-      "_title": "账户列表",
-      "accountname": "帐户名",
-      "realname": "姓名",
-      "email": "邮箱",
-      "phone": "手机",
-      "2fa": "两步验证"
-    }
-  },
+
   "my": {
     "_title": "我的",
     "authentication": {
@@ -152,6 +139,20 @@
   },
   "sys": {
     "_title": "系统设置",
+    "account": {
+      "_title": "账户",
+      "account": {
+        "_title": "账户信息"
+      },
+      "accountlist": {
+        "_title": "账户列表",
+        "accountname": "帐户名",
+        "realname": "姓名",
+        "email": "邮箱",
+        "phone": "手机",
+        "2fa": "两步验证"
+      }
+    },
     "permission": {
       "_title": "权限",
       "role": {
@@ -207,6 +208,15 @@
       "leader": "负责人",
       "orgRoles": "组织角色",
       "roles": "角色"
+    },
+    "team": {
+      "_title": "团队",
+      "myteam": {
+        "_title": "我的团队"
+      },
+      "teamlist": {
+        "_title": "团队列表"
+      }
     }
   },
   "wenjuan": {

@@ -19,8 +19,14 @@ class AccountController extends BaseController {
 
   static async list(ctx) {
     // console.log('aaaa')
-    const { page, limit, query } = ctx.request.body
-    console.log(page, limit, query)
+    const { page, limit, keywords, status } = ctx.request.body
+    const query = {}
+    if (keywords) {
+      query.$or = [{ accountname: { $regex: keywords, $options: 'i' } }, { realname: { $regex: keywords, $options: 'i' } }, { engname: { $regex: keywords, $options: 'i' } }, { aliasname: { $regex: keywords, $options: 'i' } }, { pinyin: { $regex: keywords, $options: 'i' } }]
+    }
+    if (status) {
+      query.status = status
+    }
     const accounts = await Account.find(query)
       .skip((page - 1) * limit)
       .limit(limit)

@@ -68,20 +68,7 @@
   "signout": {
     "_title": "로그아웃"
   },
-  "account": {
-    "_title": "계정",
-    "account": {
-      "_title": "계정 정보"
-    },
-    "accountlist": {
-      "_title": "계정 목록",
-      "accountname": "계정명",
-      "realname": "실명",
-      "email": "이메일",
-      "phone": "휴대폰",
-      "2fa": "2단계 인증"
-    }
-  },
+
   "my": {
     "_title": "내 정보",
     "authentication": {
@@ -149,6 +136,20 @@
   },
   "sys": {
     "_title": "시스템 설정",
+    "account": {
+      "_title": "계정",
+      "account": {
+        "_title": "계정 정보"
+      },
+      "accountlist": {
+        "_title": "계정 목록",
+        "accountname": "계정명",
+        "realname": "실명",
+        "email": "이메일",
+        "phone": "휴대폰",
+        "2fa": "2단계 인증"
+      }
+    },
     "permission": {
       "_title": "권한",
       "role": {
@@ -204,6 +205,15 @@
       "leader": "책임자",
       "orgRoles": "조직 역할",
       "roles": "역할"
+    },
+    "team": {
+      "_title": "팀",
+      "myteam": {
+        "_title": "내 팀"
+      },
+      "teamlist": {
+        "_title": "팀 목록"
+      }
     }
   },
   "wenjuan": {

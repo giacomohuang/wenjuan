@@ -4,6 +4,7 @@ import oss from './oss'
 import org from './org'
 import wenjuan from './wenjuan'
 import verification from './verification'
+import team from './team'
 
 const API = {
   permission,
@@ -11,6 +12,7 @@ const API = {
   verification,
   oss,
   org,
-  wenjuan
+  wenjuan,
+  team
 }
 export default API

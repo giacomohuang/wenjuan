@@ -68,20 +68,7 @@
   "signout": {
     "_title": "تسجيل الخروج"
   },
-  "account": {
-    "_title": "الحساب",
-    "accountlist": {
-      "_title": "قائمة الحسابات",
-      "accountname": "اسم الحساب",
-      "realname": "الاسم",
-      "email": "البريد الإلكتروني",
-      "phone": "الهاتف المحمول",
-      "2fa": "التحقق بخطوتين"
-    },
-    "account": {
-      "_title": "معلومات الحساب"
-    }
-  },
+
   "my": {
     "_title": "حسابي",
     "authentication": {
@@ -149,6 +136,20 @@
   },
   "sys": {
     "_title": "النظام",
+    "account": {
+      "_title": "الحساب",
+      "accountlist": {
+        "_title": "قائمة الحسابات",
+        "accountname": "اسم الحساب",
+        "realname": "الاسم",
+        "email": "البريد الإلكتروني",
+        "phone": "الهاتف المحمول",
+        "2fa": "التحقق بخطوتين"
+      },
+      "account": {
+        "_title": "معلومات الحساب"
+      }
+    },
     "permission": {
       "_title": "الصلاحيات",
       "role": {
@@ -204,6 +205,15 @@
       "leader": "مسؤول",
       "orgRoles": "دور المؤسسة",
       "roles": "دور"
+    },
+    "team": {
+      "_title": "الفريق",
+      "myteam": {
+        "_title": "فريقي"
+      },
+      "teamlist": {
+        "_title": "قائمة الفريق"
+      }
     }
   },
   "wenjuan": {

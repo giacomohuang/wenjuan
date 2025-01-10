@@ -137,12 +137,12 @@ const account = {
       url: '/account/hello1'
     })
   },
-  list(page, limit, query = {}) {
-    console.log('list')
+  list(page, limit, keywords, status) {
+    console.log('list', keywords)
     return fetch({
       baseURL: baseUrl.account,
       method: 'post',
-      data: { page, limit, query },
+      data: { page, limit, keywords, status },
       url: '/account/list'
     })
   },

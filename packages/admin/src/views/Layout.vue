@@ -49,7 +49,7 @@
         <Icon name="theme-dark" class="icon" @click="store.changeTheme('dark')" :class="{ dark: store.theme === 'dark' }"></Icon>
         <Icon name="theme-system" class="icon" @click="store.changeTheme('system')" :class="{ system: store.theme === 'system' }"></Icon>
       </div>
-      <div class="assist-icon"><img src="@/assets/assist.svg" style="width: 1.5em; height: 1.5em" @click="showAssist = !showAssist" /></div>
+      <!-- <div class="assist-icon"><img src="@/assets/assist.svg" style="width: 1.5em; height: 1.5em" @click="showAssist = !showAssist" /></div> -->
     </header>
     <aside class="menu" data-simplebar :data-simplebar-direction="DIR">
       <div style="display: flex; align-items: center; justify-content: center; margin: 10px">
@@ -73,9 +73,9 @@
       <a-spin :spinning="globalLoading" style="margin: 20px"></a-spin>
       <router-view v-if="isRouterAlive" />
     </div>
-    <aside class="assist" v-show="showAssist">
+    <!-- <aside class="assist" v-show="showAssist">
       <div class="assist-header"></div>
-    </aside>
+    </aside> -->
   </div>
 </template>
 

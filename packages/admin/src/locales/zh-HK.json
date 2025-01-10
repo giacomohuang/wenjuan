@@ -68,20 +68,7 @@
   "signout": {
     "_title": "登出"
   },
-  "account": {
-    "_title": "帳戶",
-    "account": {
-      "_title": "帳戶資訊"
-    },
-    "accountlist": {
-      "_title": "帳戶列表",
-      "accountname": "帳戶名",
-      "realname": "姓名",
-      "email": "電郵",
-      "phone": "手機",
-      "2fa": "兩步驗證"
-    }
-  },
+
   "my": {
     "_title": "我的",
     "authentication": {
@@ -149,6 +136,20 @@
   },
   "sys": {
     "_title": "系統設置",
+    "account": {
+      "_title": "帳戶",
+      "account": {
+        "_title": "帳戶資訊"
+      },
+      "accountlist": {
+        "_title": "帳戶列表",
+        "accountname": "帳戶名",
+        "realname": "姓名",
+        "email": "電郵",
+        "phone": "手機",
+        "2fa": "兩步驗證"
+      }
+    },
     "permission": {
       "_title": "權限",
       "role": {
@@ -204,6 +205,15 @@
       "leader": "負責人",
       "orgRoles": "組織角色",
       "roles": "角色"
+    },
+    "team": {
+      "_title": "團隊",
+      "myteam": {
+        "_title": "我的團隊"
+      },
+      "teamlist": {
+        "_title": "團隊列表"
+      }
     }
   },
   "wenjuan": {

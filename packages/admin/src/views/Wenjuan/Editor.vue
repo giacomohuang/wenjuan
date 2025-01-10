@@ -36,7 +36,7 @@
         </template>
         <template #dropdownRender="{ menuNode: menu }">
           <v-nodes :vnodes="menu" />
-          <a-pagination style="margin: 10px 0" hideOnSinglePage v-model:current="versionList.page" :total="versionList.total" :page-size="versionList.limit" @change="getVersionList" size="small" />
+          <a-pagination style="margin: 10px 0" hideOnSinglePage v-model:current="versionList.page" :total="versionList.total" :page-size="versionList.limit" @change.stop="getVersionList" size="small" />
         </template>
         <template #tagRender="{ value }"> 版本: {{ value }} </template>
       </a-select>

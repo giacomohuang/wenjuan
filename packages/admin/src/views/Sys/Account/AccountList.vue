@@ -74,7 +74,7 @@ import API from '../../api/API'
 import SimpleBar from 'simplebar'
 import '@/assets/simplebar.css'
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 
 const accounts = ref([])
 const isLoading = ref(false)

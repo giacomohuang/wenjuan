@@ -6,6 +6,7 @@ import verificationRouter from './routes/verificationRouter.js'
 import wenjuanRouter from './routes/wenjuanRouter.js'
 import orgRouter from './routes/orgRouter.js'
 import ossRouter from './routes/ossRouter.js'
+import teamRouter from './routes/teamRouter.js'
 import mongoose from 'mongoose'
 import cors from '@koa/cors'
 import authSign from './middlewares/authsign.js'
@@ -50,6 +51,7 @@ app.use(ossRouter.routes(), authSign)
 app.use(permissionRouter.routes(), authSign)
 app.use(orgRouter.routes(), authSign)
 app.use(wenjuanRouter.routes(), authSign)
+app.use(teamRouter.routes(), authSign)
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)

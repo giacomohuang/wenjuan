@@ -68,20 +68,7 @@
   "signout": {
     "_title": "Sign Out"
   },
-  "account": {
-    "_title": "Account",
-    "accountlist": {
-      "_title": "Account List",
-      "accountname": "Account Name",
-      "realname": "Name",
-      "email": "Email",
-      "phone": "Mobile Phone",
-      "2fa": "2FA"
-    },
-    "account": {
-      "_title": "Account Info"
-    }
-  },
+
   "my": {
     "_title": "My",
     "authentication": {
@@ -149,6 +136,20 @@
   },
   "sys": {
     "_title": "System",
+    "account": {
+      "_title": "Account",
+      "accountlist": {
+        "_title": "Account List",
+        "accountname": "Account Name",
+        "realname": "Name",
+        "email": "Email",
+        "phone": "Mobile Phone",
+        "2fa": "2FA"
+      },
+      "account": {
+        "_title": "Account Info"
+      }
+    },
     "permission": {
       "_title": "Permission",
       "role": {
@@ -204,6 +205,15 @@
       "leader": "Leader",
       "orgRoles": "Organization Roles",
       "roles": "Roles"
+    },
+    "team": {
+      "_title": "Team",
+      "myteam": {
+        "_title": "My Team"
+      },
+      "teamlist": {
+        "_title": "Team List"
+      }
     }
   },
   "wenjuan": {

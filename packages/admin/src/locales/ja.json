@@ -68,20 +68,7 @@
   "signout": {
     "_title": "ログアウト"
   },
-  "account": {
-    "_title": "アカウント",
-    "account": {
-      "_title": "アカウント情報"
-    },
-    "accountlist": {
-      "_title": "アカウント一覧",
-      "accountname": "アカウント名",
-      "realname": "氏名",
-      "email": "メールアドレス",
-      "phone": "携帯電話",
-      "2fa": "二段階認証"
-    }
-  },
+
   "my": {
     "_title": "マイページ",
     "authentication": {
@@ -149,6 +136,20 @@
   },
   "sys": {
     "_title": "システム設定",
+    "account": {
+      "_title": "アカウント",
+      "account": {
+        "_title": "アカウント情報"
+      },
+      "accountlist": {
+        "_title": "アカウント一覧",
+        "accountname": "アカウント名",
+        "realname": "氏名",
+        "email": "メールアドレス",
+        "phone": "携帯電話",
+        "2fa": "二段階認証"
+      }
+    },
     "permission": {
       "_title": "権限",
       "role": {
@@ -204,6 +205,15 @@
       "leader": "責任者",
       "orgRoles": "組織ロール",
       "roles": "ロール"
+    },
+    "team": {
+      "_title": "チーム",
+      "myteam": {
+        "_title": "マイチーム"
+      },
+      "teamlist": {
+        "_title": "チームリスト"
+      }
     }
   },
   "wenjuan": {
