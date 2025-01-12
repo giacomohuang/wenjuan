@@ -218,11 +218,11 @@
   },
   "wenjuan": {
     "editor": {
-      "_title": "Questionnaire"
+      "_title": "Questionnaire Editor"
     },
     "_title": "Questionnaire",
     "project": {
-      "_title": "Questionnaire"
+      "_title": "Project"
     }
   },
   "comp": {

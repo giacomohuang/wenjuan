@@ -21,7 +21,7 @@
         <template v-else-if="column.key === 'operator'">
           <div class="wrapper">
             <img :src="record.operator?.avatar || defaultAvatar" class="avatar" @error="this.src = defaultAvatar" />
-            <span>{{ record.operator?.accountname }}</span>
+            <span>{{ record.operator?.realname }} ({{ record.operator?.accountname }})</span>
           </div>
         </template>
         <template v-else-if="column.key === 'action'">
@@ -60,6 +60,9 @@
           </template>
           <template v-if="column.key === 'joinedAt'">
             {{ dayjs(record.joinedAt).format('YYYY-MM-DD HH:mm:ss') }}
+          </template>
+          <template v-if="column.key === 'role'">
+            {{ record.role === 'admin' ? '管理员' : '普通成员' }}
           </template>
           <template v-if="column.key === 'action'">
             <a-popconfirm title="确定要移除该成员吗？" @confirm="handleRemoveMember(record)">

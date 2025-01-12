@@ -218,11 +218,11 @@
   },
   "wenjuan": {
     "editor": {
-      "_title": "설문조사"
+      "_title": "설문조사 편집기"
     },
-    "_title": "설문지",
+    "_title": "설문조사",
     "project": {
-      "_title": "설문지"
+      "_title": "설문조사"
     }
   },
   "comp": {

@@ -2,7 +2,7 @@
   <div class="project">
     <div class="header">
       <div class="left">
-        <div class="title">项目</div>
+        <div class="title">个人项目</div>
       </div>
     </div>
     <ul class="list">
