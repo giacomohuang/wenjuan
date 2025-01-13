@@ -68,18 +68,18 @@ watch(
     display: flex;
     flex-direction: row;
     list-style-type: none;
-    border: 1px solid var(--border-light);
+    border: 1px solid var(--border-medium);
 
     border-radius: 5px;
   }
   li {
     flex-grow: 1;
     height: 10px;
-    box-shadow: inset 0 0 0px 2px var(--bg-main);
+    box-shadow: inset 0 0 0px 2px var(--bg-primary);
 
     transition: all linear 0.15s;
     &:not(:first-child) {
-      border-left: 1px solid var(--border-light);
+      border-left: 1px solid var(--border-medium);
     }
     &:first-child {
       border-radius: 5px 0 0 5px;
