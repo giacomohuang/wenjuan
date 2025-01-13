@@ -16,6 +16,7 @@ export const router = createRouter({
   routes: [
     { path: '/', redirect: '/wenjuan/project', meta: { title: 'wenjuan.project._title' } },
     { path: '/signin', name: 'signin', component: () => import('@/views/Signin.vue'), meta: { title: 'signin._title', noAuth: true } },
+    { path: '/downauthapp', name: 'downauthapp', component: () => import('@/views/DownAuthApp.vue'), meta: { title: 'downauthapp._title', noAuth: true } },
     { path: '/404', name: '404', component: () => import('@/views/404.vue'), meta: { title: '404._title', noAuth: true } },
     { path: '/:pathMatch(.*)', redirect: '/404', meta: { title: '404._title', noAuth: true } }
   ]

@@ -138,7 +138,6 @@ const account = {
     })
   },
   list(page, limit, keywords, status) {
-    console.log('list', keywords)
     return fetch({
       baseURL: baseUrl.account,
       method: 'post',

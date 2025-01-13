@@ -35,7 +35,7 @@ const teamSchema = new mongoose.Schema(
         },
         role: {
           type: String,
-          enum: ['admin', 'member'],
+          enum: ['admin', 'member', 'creator'],
           default: 'member'
         },
         joinedAt: {
@@ -57,7 +57,7 @@ const teamSchema = new mongoose.Schema(
 )
 
 // 添加索引
-teamSchema.index({ name: 1 })
+teamSchema.index({ name: 1 }, { unique: true, partialFilterExpression: { isDeleted: false } })
 teamSchema.index({ operatorId: 1 })
 teamSchema.index({ isDeleted: 1 })
 

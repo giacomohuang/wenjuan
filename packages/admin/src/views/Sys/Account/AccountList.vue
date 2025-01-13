@@ -3,12 +3,12 @@
     <a-table
       :scroll="{ x: 1200 }"
       :columns="[
-        { title: t('account.accountlist.accountname'), dataIndex: 'accountname', key: 'accountname', fixed: 'left' },
-        { title: t('account.accountlist.realname'), dataIndex: 'realname', key: 'realname', fixed: 'left' },
-        { title: t('account.accountlist.email'), dataIndex: 'email', key: 'email' },
-        { title: t('account.accountlist.phone'), dataIndex: 'phone', key: 'phone' },
+        { title: t('sys.account.accountlist.accountname'), dataIndex: 'accountname', key: 'accountname', fixed: 'left' },
+        { title: t('sys.account.accountlist.realname'), dataIndex: 'realname', key: 'realname', fixed: 'left' },
+        { title: t('sys.account.accountlist.email'), dataIndex: 'email', key: 'email' },
+        { title: t('sys.account.accountlist.phone'), dataIndex: 'phone', key: 'phone' },
         {
-          title: t('account.accountlist.2fa'),
+          title: t('sys.account.accountlist.2fa'),
           dataIndex: 'enable2FA',
           key: 'enable2FA',
           align: 'center',
@@ -70,7 +70,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import API from '../../api/API'
+import API from '@/api/API'
 import SimpleBar from 'simplebar'
 import '@/assets/simplebar.css'
 
@@ -86,7 +86,8 @@ const defaultFilters = ref({
 const pagination = reactive({
   current: 1,
   pageSize: 10,
-  total: 0
+  total: 0,
+  hideOnSinglePage: true
 })
 
 const handleEdit = (id) => {
@@ -100,7 +101,7 @@ const onCloseEditor = () => {
 
 onMounted(async () => {
   isLoading.value = true
-  const result = await API.account.list(pagination.current, pagination.pageSize, { status: 1 })
+  const result = await API.account.list(pagination.current, pagination.pageSize, '', 1)
   accounts.value = result.accounts
   pagination.total = result.total
   isLoading.value = false

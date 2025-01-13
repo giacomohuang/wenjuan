@@ -65,7 +65,18 @@
       </div>
     </aside>
 
-    <aside class="submenu" ref="submenuRef" data-simplebar :data-simplebar-direction="DIR" :class="{ hide: submenu?.length == 0 || (isFloat && isHideSubmenu), float: isFloat }" @mouseleave.stop="mouseLeaveSubmenu">
+    <aside
+      class="submenu"
+      ref="submenuRef"
+      data-simplebar
+      :data-simplebar-direction="DIR"
+      :class="{
+        hide: !showSubmenu,
+        float: isFloat,
+        'initial-load': isInitialLoad
+      }"
+      @mouseleave.stop="mouseLeaveSubmenu"
+    >
       <SubMenu :data="submenu" :isFloat="isFloat"></SubMenu>
     </aside>
 
@@ -80,7 +91,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, toRefs, provide, watch, onUnmounted, onBeforeMount, computed, nextTick } from 'vue'
+import { ref, toRefs, provide, watch, onUnmounted, onBeforeMount, computed, nextTick } from 'vue'
 import SubMenu from './SubMenu.vue'
 import { useStore } from '../stores/stores'
 import helper from '../js/helper'
@@ -127,6 +138,11 @@ const currentMenuIdx = ref(-1)
 const mouseOverMenuIndex = ref(-1)
 // 子菜单是否浮动
 const isFloat = ref(false)
+const isInitialLoad = ref(true) // 添加初始加载标志
+// 添加一个计算属性来判断是否显示submenu
+const showSubmenu = computed(() => {
+  return submenu.value?.length > 0 && (!isFloat.value || !isHideSubmenu.value)
+})
 
 const onChangeLocale = async ({ key }) => {
   // await changeLocale(key)
@@ -275,7 +291,12 @@ onBeforeMount(async () => {
   // 构建树
   menu.value = buildTree(menudata)
   currentMenuPath = getCurrentMenuPath()
-  // console.log('tree', currentMenuPath.value)
+  // 在初始菜单加载完成后，将isInitialLoad设置为false
+  nextTick(() => {
+    setTimeout(() => {
+      isInitialLoad.value = false
+    }, 1000)
+  })
 })
 
 function buildTree(items) {
@@ -546,7 +567,6 @@ onUnmounted(() => {
 }
 
 .submenu {
-  // position: relative;
   grid-area: submenu;
   background-color: var(--bg-primary);
   border-right: 1px solid var(--border-light);
@@ -556,21 +576,29 @@ onUnmounted(() => {
   box-shadow: 2px 0 4px 0 rgba(100, 100, 100, 0.1);
   max-height: calc(100vh - 64px);
   overflow-x: hidden;
-  transition: width 0.1s ease;
+  opacity: 1;
+  visibility: visible;
+
+  &:not(.initial-load) {
+    transition: all 0.2s ease;
+  }
 
   &.float {
-    position: fixed; // 改为fixed以确保在滚动时保持位置
-    left: 98px; // 与mini menu的宽度对应
-    z-index: 1000; // 确保浮动在其他元素之上
-
+    position: fixed;
+    left: 98px;
+    z-index: 1000;
     height: min-content;
     border: 1px solid var(--border-light);
     border-radius: 10px;
     box-shadow: 1px 1px 2px 0 rgba(100, 100, 100, 0.1);
   }
+
   &.hide {
-    z-index: 0;
     width: 0;
+    padding: 0;
+    opacity: 0;
+    visibility: hidden;
+    border: none;
   }
 }
 
@@ -634,11 +662,5 @@ onUnmounted(() => {
   grid-area: main;
   overflow: auto;
   background-color: var(--bg-500);
-}
-</style>
-
-<style>
-.rtl-test {
-  margin-left: 20px;
 }
 </style>

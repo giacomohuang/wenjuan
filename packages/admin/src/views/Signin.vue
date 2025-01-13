@@ -29,7 +29,7 @@
       </div>
     </header>
     <section class="form-section" v-if="state.method === 'pwd'">
-      <a-form :model="signinForm" @finish="handleSignin" autocomplete="off" :label-col="{ span: 6 }">
+      <a-form :model="signinForm" @finish="handleSignin" autocomplete="off" :label-col="{ span: 6 }" :wrapper-col="{ span: 14 }">
         <h3 class="form-title">{{ t('signin.title') }}</h3>
         <a-form-item :label="t('signin.accountname')" name="accountname" :rules="[{ required: true, message: t('signin.peya') }]">
           <a-input autocomplete="off" size="large" large v-model:value="signinForm.accountname" />
@@ -57,53 +57,53 @@
           <VerifyInput v-model:value="state.code" :autofocus="true" :digits="6" @finish="handleSignin2FA" />
         </div>
         <div class="other-methods">
-          <template v-if="state.methodBit == 7"> 使用其他方式验证：<a href="####" @click="handleChangeMethod('phone')">手机短信验证</a>&nbsp | &nbsp<a href="####" @click="handleChangeMethod('email')">电子邮件验证</a> </template>
-          <template v-if="state.methodBit == 5"> 使用其他方式验证：<a href="####" @click="handleChangeMethod('phone')">手机短信验证</a></template>
-          <template v-if="state.methodBit == 6"> 使用其他方式验证：<a href="####" @click="handleChangeMethod('email')">电子邮件验证</a></template>
+          <template v-if="state.methodBit == 7"> 其他验证方式：<a-button type="link" @click="handleChangeMethod('phone')" size="small">手机短信验证</a-button><a-divider type="vertical" /><a-button type="link" @click="handleChangeMethod('email')" size="small">电子邮件验证</a-button> </template>
+          <template v-if="state.methodBit == 5"> 其他验证方式：<a-button type="link" @click="handleChangeMethod('phone')" size="small">手机短信验证</a-button></template>
+          <template v-if="state.methodBit == 6"> 其他验证方式：<a-button type="link" @click="handleChangeMethod('email')" size="small">电子邮件验证</a-button></template>
         </div>
       </div>
     </section>
 
     <section class="form-section" v-if="state.method == 'email'">
       <h3 class="section-title">使用电子邮件进行两步验证</h3>
-      <div class="flex items-center justify-center" style="margin-top: 40px">
-        <h4 class="ml-5 p-0 text-lg/none">{{ helper.obfuscate('email', state.email) }}</h4>
+      <div class="section-wrapper">
+        <h4 class="contact-info">{{ helper.obfuscate('email', state.email) }}</h4>
         <div v-if="emailState.isCountDown">{{ emailState.countDownTime }}秒后可重新发送</div>
         <a-button type="primary" v-else="!emailState.isCountDown" @click="handleSendEmail">发送验证码</a-button>
       </div>
-      <div v-if="emailState.isSent" style="margin: 30px 0">
-        <div class="m-3 text-sm/normal text-primary">一封验证邮件已经发送到你的邮箱，请查看邮件中的6位数字验证码，并在下面的的框中输入</div>
-        <VerifyInput style="width: 100%" class="flex items-center justify-center" v-model:value="state.code" :autofocus="true" :digits="6" @finish="handleSignin2FA"></VerifyInput>
+      <div v-if="emailState.isSent" class="verify-code-section">
+        <div class="verify-message">一封验证邮件已经发送到你的邮箱，请查看邮件中的6位数字验证码，并在下面的的框中输入</div>
+        <VerifyInput class="verify-input" v-model:value="state.code" :autofocus="true" :digits="6" @finish="handleSignin2FA"></VerifyInput>
       </div>
-      <div class="section-title">
-        <template v-if="state.methodBit == 7"> 使用其他方式验证：<a href="####" @click="handleChangeMethod('totp')">动态口令App验证(推荐)</a>&nbsp | &nbsp<a href="####" @click="handleChangeMethod('phone')">手机短信验证</a> </template>
-        <template v-else-if="state.methodBit == 6"> 使用其他方式验证：<a href="####" @click="handleChangeMethod('totp')">动态口令App验证(推荐)</a> </template>
-        <template v-else-if="state.methodBit == 3"> 使用其他方式验证：<a href="####" @click="handleChangeMethod('phone')">手机短信验证</a> </template>
+      <div class="other-methods">
+        <template v-if="state.methodBit == 7"> 其他验证方式：<a-button type="link" @click="handleChangeMethod('totp')" size="small">动态口令App验证(推荐)</a-button><a-divider type="vertical" /><a-button type="link" @click="handleChangeMethod('phone')" size="small">手机短信验证</a-button> </template>
+        <template v-else-if="state.methodBit == 6"> 其他验证方式：<a-button type="link" @click="handleChangeMethod('totp')" size="small">动态口令App验证(推荐)</a-button> </template>
+        <template v-else-if="state.methodBit == 3"> 其他验证方式：<a-button type="link" @click="handleChangeMethod('phone')" size="small">手机短信验证</a-button> </template>
       </div>
     </section>
 
     <section class="form-section" v-if="state.method == 'phone'">
       <h3 class="section-title">使用手机短信进行两步验证</h3>
-      <div class="flex items-center justify-center" style="margin-top: 40px">
-        <h4 class="ml-5 p-0 text-lg/none">{{ helper.obfuscate('phone', state.phone) }}</h4>
+      <div class="section-wrapper">
+        <h4 class="contact-info">{{ helper.obfuscate('phone', state.phone) }}</h4>
         <div v-if="phoneState.isCountDown">{{ phoneState.countDownTime }}秒后可重新发送</div>
         <a-button type="primary" v-else="!phoneState.isCountDown" @click="handleSendPhone">发送验证码</a-button>
       </div>
-      <div v-if="phoneState.isSent" style="margin: 30px 0">
-        <div class="m-3 text-sm/normal text-primary">已向你的手机发送了一条验证短信，请查看手机短信中的6位数字验证码，并在下面的的框中输入</div>
-        <VerifyInput style="width: 100%" class="flex items-center justify-center" v-model:value="state.code" :autofocus="true" :digits="6" @finish="handleSignin2FA"></VerifyInput>
+      <div v-if="phoneState.isSent" class="verify-code-section">
+        <div class="verify-message">已向你的手机发送了一条验证短信，请查看手机短信中的6位数字验证码，并在下面的的框中输入</div>
+        <VerifyInput class="verify-input" v-model:value="state.code" :autofocus="true" :digits="6" @finish="handleSignin2FA"></VerifyInput>
       </div>
-      <div class="section-title">
-        <template v-if="state.methodBit == 7"> 使用其他方式验证：<a href="####" @click="handleChangeMethod('totp')">动态口令App验证(推荐)</a>&nbsp | &nbsp<a href="####" @click="handleChangeMethod('email')">电子邮件验证</a> </template>
-        <template v-else-if="state.methodBit == 5"> 使用其他方式验证：<a href="####" @click="handleChangeMethod('totp')">动态口令App验证(推荐)</a> </template>
-        <template v-else-if="state.methodBit == 3"> 使用其他方式验证：<a href="####" @click="handleChangeMethod('email')">电子邮件验证</a> </template>
+      <div class="other-methods">
+        <template v-if="state.methodBit == 7"> 其他验证方式：<a-button type="link" @click="handleChangeMethod('totp')" size="small">动态口令App验证(推荐)</a-button><a-divider type="vertical" /><a-button type="link" @click="handleChangeMethod('email')" size="small">电子邮件验证</a-button> </template>
+        <template v-else-if="state.methodBit == 5"> 其他验证方式：<a-button type="link" @click="handleChangeMethod('totp')" size="small">动态口令App验证(推荐)</a-button> </template>
+        <template v-else-if="state.methodBit == 3"> 其他验证方式：<a-button type="link" @click="handleChangeMethod('email')" size="small">电子邮件验证</a-button> </template>
       </div>
     </section>
 
     <section class="form-section" v-if="state.method == 'initPwd'">
       <h3 class="section-title">需要更新密码</h3>
-      <div class="m-3 text-sm/normal text-primary">首次登录或长时间没有修改密码，需要重新设置密码</div>
-      <a-form ref="pwdFormRef" style="margin-top: 30px" :model="pwdForm" :rules="pwdRules" :label-col="{ span: 6 }" @finish="handleInitPwd">
+      <div class="section-wrapper">首次登录或长时间没有修改密码，需要重新设置密码</div>
+      <a-form ref="pwdFormRef" style="margin-top: 30px" :model="pwdForm" :rules="pwdRules" :label-col="{ span: 6 }" :wrapper-col="{ span: 14 }" @finish="handleInitPwd">
         <a-form-item has-feedback :label="t('signin.newpwd')" name="newPassword">
           <PasswordStrength v-if="pwdForm.newPassword" v-model:value="state.strength" :password="pwdForm.newPassword" style="position: absolute; top: -20px"></PasswordStrength>
           <a-input-password autocomplete="new-password" size="large" v-model:value="pwdForm.newPassword" />
@@ -120,20 +120,17 @@
 
     <section class="form-section" v-if="state.method == 'resetPwd'">
       <h3 class="section-title">重置密码</h3>
-      使用以下方式接收临时密码，使用临时密码登录后，再设置新的密码。
-      <a-form-item>
-        <a-radio-group v-model:value="state.resetPwdMethod">
+      <div class="section-wrapper">
+        <div class="message">使用以下方式接收临时密码，使用临时密码登录后，再设置新的密码。</div>
+        <a-radio-group v-model:value="state.resetPwdMethod" class="item">
           <a-radio value="email">{{ t('signin.email') }}</a-radio>
           <a-radio value="phone">{{ t('signin.phone') }}</a-radio>
         </a-radio-group>
-      </a-form-item>
-      <a-form-item v-if="state.resetPwdMethod">
-        <a-input size="large" placeholder="请输入与账号绑定的电子邮件地址" v-if="state.resetPwdMethod === 'email'"></a-input>
-        <a-input size="large" placeholder="请输入与账号绑定的手机号" v-if="state.resetPwdMethod === 'phone'"></a-input>
-      </a-form-item>
-      <a-form-item>
-        <a-button type="primary" @click="handleSendTempPwd">{{ t('common.send') }}</a-button>
-      </a-form-item>
+        <a-input class="item" size="large" placeholder="请输入与账号绑定的电子邮件地址" v-if="state.resetPwdMethod === 'email'"></a-input>
+        <a-input class="item" size="large" placeholder="请输入与账号绑定的手机号" v-if="state.resetPwdMethod === 'phone'"></a-input>
+        <a-button class="item" type="primary" @click="handleSendTempPwd">{{ t('common.send') }}</a-button>
+        <a-button class="item" type="link" @click="state.method = 'pwd'">重新登录</a-button>
+      </div>
     </section>
   </div>
 </template>
@@ -166,7 +163,7 @@ const state = reactive({
   strength: 0,
   enable2FA: true,
   methodBit: 0,
-  resetPwdMethod: ''
+  resetPwdMethod: 'phone'
 })
 const pwdFormRef = ref(null)
 
@@ -357,6 +354,20 @@ const handleInitPwd = async () => {
   }
 }
 
+const handleSendTempPwd = async () => {
+  let result
+  if (state.resetPwdMethod === 'email') {
+    result = await API.account.sendTempPwdByEmail(state.email, state.accountid)
+  } else if (state.resetPwdMethod === 'phone') {
+    result = await API.account.sendTempPwdByPhone(state.areacode, state.phone, state.accountid)
+  }
+  if (result) {
+    messageApi.success('临时密码已发送，请查看邮箱或手机短信')
+  } else {
+    messageApi.error('系统内部错误')
+  }
+}
+
 // 倒计时
 let emailInterval,
   phoneInterval = undefined
@@ -475,18 +486,44 @@ if (localStorage.getItem('phoneCDT')) {
 .form-section {
   margin-top: 240px;
   display: block;
-  width: 500px;
-  border-radius: 4px;
-  padding: 40px;
-  background-color: #ffffffa0;
+  width: 600px;
+  border-radius: 12px;
+  padding: 40px 0 0 0;
+  background-color: var(--bg-primary);
   backdrop-filter: blur(8px);
+  // border: 1px solid #ffffff50;
 
-  .section-title {
-    margin: 8px;
+  // 发送验证码区域
+  .section-wrapper {
     display: flex;
     align-items: center;
-    font-size: 1.125em;
+    justify-content: center;
+    margin-top: 40px;
+    gap: 12px;
+  }
+
+  .message {
+    margin-bottom: 12px;
+    // font-size: 0.875em;
+    line-height: normal;
+    color: var(--text-primary);
+  }
+
+  .form-title {
+    font-size: 1.5em;
     font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.125em;
+    // font-weight: 600;
     color: var(--text-primary);
   }
   .section-content {
@@ -498,8 +535,10 @@ if (localStorage.getItem('phoneCDT')) {
 
   // 验证相关样式
   .verify-container {
-    margin-top: 40px;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     .verify-title {
       font-size: 1.125em;
       font-weight: 600;
@@ -532,9 +571,12 @@ if (localStorage.getItem('phoneCDT')) {
     margin-top: 40px;
 
     .contact-info {
-      margin-left: 20px;
-      padding: 0;
-      font-size: 1.125em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      // margin-left: 20px;
+      // padding: 0;
+      // font-size: 1.125em;
       line-height: 1;
     }
 
@@ -543,10 +585,20 @@ if (localStorage.getItem('phoneCDT')) {
     }
   }
 
+  .reset-pwd {
+    margin: 20px 40px;
+    .item {
+      margin-top: 20px;
+    }
+  }
+
   // 其他验证方式
   .other-methods {
+    // border-top: 1px solid #ffffff50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 12px;
-    font-size: 0.875em;
     line-height: normal;
     color: var(--text-primary);
     margin-top: 40px;
@@ -559,24 +611,6 @@ if (localStorage.getItem('phoneCDT')) {
         text-decoration: underline;
       }
     }
-  }
-
-  // 密码重置表单
-  .pwd-reset-form {
-    margin-top: 30px;
-
-    .pwd-strength {
-      position: absolute;
-      top: -20px;
-    }
-  }
-
-  // 重置密码说明
-  .reset-pwd-desc {
-    margin: 12px 0;
-    font-size: 0.875em;
-    line-height: normal;
-    color: var(--text-primary);
   }
 
   // 表单按钮
@@ -595,6 +629,36 @@ if (localStorage.getItem('phoneCDT')) {
         text-decoration: underline;
       }
     }
+  }
+
+  // 验证码输入区域
+  .verify-code-section {
+    margin: 30px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .verify-message {
+      margin-bottom: 12px;
+      font-size: 0.875em;
+      line-height: normal;
+      color: var(--text-primary);
+    }
+
+    .verify-input {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  // 初始密码消息
+  .init-pwd-message {
+    margin: 12px;
+    font-size: 0.875em;
+    line-height: normal;
+    color: var(--text-primary);
   }
 }
 

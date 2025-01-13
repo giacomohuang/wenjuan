@@ -22,7 +22,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import API from '../../api/API'
+import API from '@/api/API'
 // import { permission } from '../../api/permission'
 
 let permissions = ref([])

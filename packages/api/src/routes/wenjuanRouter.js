@@ -1,7 +1,10 @@
 import Router from '@koa/router'
 import wenjuanController from '../controllers/wenjuan.js'
+import authToken from '../middlewares/authtoken.js'
 
 const wenjuanRouter = new Router()
+
+wenjuanRouter.use(authToken)
 
 wenjuanRouter.post('/wenjuan/list', wenjuanController.list)
 wenjuanRouter.post('/wenjuan/get', wenjuanController.get)

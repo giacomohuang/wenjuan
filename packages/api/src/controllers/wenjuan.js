@@ -2,11 +2,24 @@ import BaseController from './base.js'
 import Wenjuan from '../models/wenjuan/wenjuan.js'
 import Version from '../models/wenjuan/version.js'
 import Space from '../models/wenjuan/space.js'
+import CustomError from '../CustomError.js'
 
 class WenjuanController extends BaseController {
   static async list(ctx) {
-    const { page = 1, limit = 10, query = {}, sort = { updatedAt: -1 } } = ctx.request.body
+    const { page = 1, limit = 10, keywords, sort = { updatedAt: -1 } } = ctx.request.body
+    const currentAccountId = ctx.request.headers['accountid']
     // console.log('list params:', { page, limit, query, sort })
+
+    const query = {}
+    if (keywords) {
+      query.name = { $regex: keywords, $options: 'i' }
+    }
+    console.log('currentAccountId', currentAccountId)
+    if (currentAccountId) {
+      query.ownerId = currentAccountId
+    } else {
+      throw new CustomError(401, '未登录', 50100)
+    }
 
     const wenjuan = await Wenjuan.find(query, { isPublish: 1, draft: { name: 1 }, name: 1, updatedAt: 1 })
       .sort(sort)
@@ -66,6 +79,8 @@ class WenjuanController extends BaseController {
     let res
     // 如果没有 _id，创建新数据
     if (!_id) {
+      updateData.operatorId = accountId
+      updateData.ownerId = accountId
       const newWenjuan = new Wenjuan(updateData)
       res = await newWenjuan.save()
     }

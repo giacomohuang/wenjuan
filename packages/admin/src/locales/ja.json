@@ -1,10 +1,16 @@
 {
+  "403": {
+    "description": "お探しのリソースは存在しません"
+  },
   "404": {
     "_title": "404 ページが見つかりません",
     "backhome": "ホームに戻る",
     "description": "お探しのページは存在しません",
     "wenjuan": "アンケートは存在しません",
     "backwenjuan": "プロジェクト一覧ページに戻る"
+  },
+  "downauthapp": {
+    "_title": "動的認証アプリのダウンロード"
   },
   "common": {
     "appname": "アンケート",
@@ -48,7 +54,7 @@
   },
   "signin": {
     "_title": "ログイン",
-    "title": "管理運営プラットフォームログイン",
+    "title": "ログイン",
     "accountname": "アカウント",
     "password": "パスワード",
     "signin": "ログイン",
@@ -68,7 +74,6 @@
   "signout": {
     "_title": "ログアウト"
   },
-
   "my": {
     "_title": "マイページ",
     "authentication": {
@@ -241,6 +246,13 @@
     "mpInputI18n": {
       "editorTitle": "多言語エディター",
       "translate": "翻訳する"
+    },
+    "pwdstrength": {
+      "weak": "弱い",
+      "fair": "弱い",
+      "good": "中程度",
+      "strong": "強い",
+      "excellent": "非常に強い"
     }
   }
 }

@@ -1,10 +1,16 @@
 {
+  "403": {
+    "description": "The requested resource was not found"
+  },
   "404": {
     "_title": "404 Not Found",
     "backhome": "Back to home",
     "description": "Sorry, the page you visited does not exist.",
     "wenjuan": "Questionnaire does not exist",
     "backwenjuan": "Return to project list"
+  },
+  "downauthapp": {
+    "_title": "Download dynamic authentication app"
   },
   "common": {
     "appname": "Questionnaire",
@@ -48,7 +54,7 @@
   },
   "signin": {
     "_title": "Sign in",
-    "title": "Sign in to MPAdmin",
+    "title": "SignIn",
     "accountname": "Account",
     "password": "Password",
     "signin": "Sign in",
@@ -68,7 +74,6 @@
   "signout": {
     "_title": "Sign Out"
   },
-
   "my": {
     "_title": "My",
     "authentication": {
@@ -241,6 +246,13 @@
     "mpInputI18n": {
       "editorTitle": "Multilingual editor",
       "translate": "translate"
+    },
+    "pwdstrength": {
+      "weak": "Weak",
+      "fair": "Fair",
+      "good": "Good",
+      "strong": "Strong",
+      "excellent": "Excellent"
     }
   }
 }

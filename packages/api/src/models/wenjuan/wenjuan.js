@@ -11,8 +11,9 @@ const wenjuanSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  spaceId: {
-    type: String
+  teamId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Team'
   },
   version: {
     type: Number,
@@ -32,8 +33,13 @@ const wenjuanSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  ownerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Account'
+  },
   operatorId: {
-    type: String
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Account'
   }
 })
 

@@ -3,7 +3,6 @@
     <!-- 顶部操作栏 -->
     <div class="operation-bar">
       <a-space>
-        {{ currentTeamId }}
         <a-button type="primary" @click="showCreateModal">
           <template #icon><plus-outlined /></template>
           创建团队
@@ -45,12 +44,18 @@
         <a-form-item label="团队描述" name="description">
           <a-textarea v-model:value="formState.description" placeholder="请输入团队描述" :rows="4" />
         </a-form-item>
+        <a-form-item label="创建人" name="creatorId">
+          <account-selector v-model="formState.creatorId" placeholder="请选择团队创建人" />
+        </a-form-item>
       </a-form>
     </a-modal>
 
     <!-- 成员管理弹窗 -->
     <a-modal v-model:open="memberModal" title="成员管理" width="800px" @ok="handleMemberModalOk" destroy-on-close>
-      <a-table :columns="memberColumns" :data-source="teamMembers" :loading="memberLoading" row-key="id">
+      <div style="margin: 16px 0">
+        <a-button type="primary" @click="showAddMemberModal"> 添加成员 </a-button>
+      </div>
+      <a-table :columns="memberColumns" :data-source="teamMembers" :loading="memberLoading" row-key="id" :pagination="false">
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'memberInfo'">
             <div class="wrapper">
@@ -62,52 +67,30 @@
             {{ dayjs(record.joinedAt).format('YYYY-MM-DD HH:mm:ss') }}
           </template>
           <template v-if="column.key === 'role'">
-            {{ record.role === 'admin' ? '管理员' : '普通成员' }}
+            <a-select v-model:value="record.role" style="width: 120px" @change="(value) => handleRoleChange(record, value)" :disabled="record.role === 'creator'">
+              <a-select-option value="creator" :disabled="true">创建者</a-select-option>
+              <a-select-option value="admin">管理员</a-select-option>
+              <a-select-option value="member">成员</a-select-option>
+            </a-select>
           </template>
           <template v-if="column.key === 'action'">
-            <a-popconfirm title="确定要移除该成员吗？" @confirm="handleRemoveMember(record)">
-              <a-button type="link" danger>移除</a-button>
+            <a-popconfirm title="确定要移除该成员吗？" @confirm="handleRemoveMember(record)" :disabled="record.role == 'creator'">
+              <a-button :disabled="record.role == 'creator'" type="link" danger>移除</a-button>
             </a-popconfirm>
           </template>
         </template>
       </a-table>
-      <div style="margin-top: 16px">
-        <a-button type="primary" @click="showAddMemberModal"> 添加成员 </a-button>
-      </div>
     </a-modal>
-
     <!-- 添加成员弹窗 -->
     <a-modal v-model:open="addMemberModal" title="添加成员" @ok="handleAddMember" destroy-on-close>
       <a-form ref="addMemberFormRef" :model="addMemberForm" :rules="addMemberRules" :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }">
         <a-form-item label="成员" name="accountIds">
-          <a-select v-model:value="addMemberForm.memberId" show-search :filter-option="false" @search="getAccountList" :loading="accountLoading" placeholder="请选择成员" :options="accountList">
-            <template #option="{ label, avatar }">
-              <div class="wrapper">
-                <img :src="avatar || defaultAvatar" class="avatar" @error="handleAvatarError" />
-                <span>{{ label }}</span>
-              </div>
-            </template>
-            <template #dropdownRender="{ menuNode: menu }">
-              <v-nodes :vnodes="menu" />
-              <a-divider style="margin: 4px 0" />
-              <div style="padding: 8px">
-                <a-pagination v-model:current="accountPagination.page" :total="accountPagination.total" :pageSize="accountPagination.pageSize" size="small" @change="accountPageChanged" :hideOnSinglePage="true" />
-              </div>
-            </template>
-            <template #notFoundContent>
-              <template v-if="accountLoading">
-                <a-spin size="small" />
-              </template>
-              <template v-else>
-                <div style="text-align: center; padding: 8px">暂无数据</div>
-              </template>
-            </template>
-          </a-select>
+          <account-selector v-model="addMemberForm.memberId" placeholder="请选择成员" />
         </a-form-item>
         <a-form-item label="角色" name="role">
           <a-select v-model:value="addMemberForm.role" placeholder="请选择角色">
             <a-select-option value="admin">管理员</a-select-option>
-            <a-select-option value="member">普通成员</a-select-option>
+            <a-select-option value="member">成员</a-select-option>
           </a-select>
         </a-form-item>
       </a-form>
@@ -116,15 +99,14 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, defineComponent } from 'vue'
+import { ref, reactive, onMounted, defineComponent, h } from 'vue'
 import defaultAvatar from '@/assets/avatar.jpg'
 import { message } from 'ant-design-vue'
 import { PlusOutlined } from '@ant-design/icons-vue'
 import API from '@/api/API'
 import dayjs from 'dayjs'
-import { debounce } from 'lodash-es'
-import SimpleBar from 'simplebar'
 import '@/assets/simplebar.css'
+import AccountSelector from '@/components/AccountSelector.vue'
 
 const VNodes = defineComponent({
   props: {
@@ -174,15 +156,8 @@ const searchKeyword = ref('')
 const pagination = reactive({
   current: 1,
   pageSize: 10,
-  total: 0
-})
-
-// 用户选择分页相关状态
-const accountPagination = reactive({
-  page: 1,
-  pageSize: 10,
   total: 0,
-  pages: 1
+  hideOnSinglePage: true
 })
 
 // 模态框状态
@@ -200,7 +175,8 @@ const rules = {
     { required: true, message: '请输入团队名称', trigger: 'blur' },
     { min: 2, max: 50, message: '团队名称长度应在2-50个字符之间', trigger: 'blur' }
   ],
-  description: [{ max: 200, message: '描述最多200个字符', trigger: 'blur' }]
+  description: [{ max: 200, message: '描述最多200个字符', trigger: 'blur' }],
+  creatorId: [{ required: true, message: '请选择创建人', trigger: 'blur' }]
 }
 
 // 获取团队列表
@@ -235,14 +211,15 @@ const handleModalOk = async () => {
     modal.value = false
     fetchTeamList()
   } catch (error) {
-    console.error('表单提交失败:', error)
+    message.error(error.data.message)
   }
 }
 
 // 删除团队
 const handleDelete = async (record) => {
   try {
-    await API.team.delete(record._id)
+    const res = await API.team.delete(record._id)
+    console.log('deleted', res)
     message.success('删除成功')
     fetchTeamList()
   } catch (error) {
@@ -296,7 +273,25 @@ const memberColumns = [
   {
     title: '角色',
     dataIndex: 'role',
-    key: 'role'
+    key: 'role',
+    width: 200,
+    customRender: ({ record }) => {
+      if (record.role === 'creator') {
+        return h('span', '创建者')
+      }
+      return h(
+        'a-select',
+        {
+          value: record.role,
+          style: { width: '120px' },
+          onChange: (value) => handleRoleChange(record, value),
+          disabled: record.role === 'creator'
+        },
+        {
+          default: () => [h('a-select-option', { value: 'admin' }, '管理员'), h('a-select-option', { value: 'member' }, '成员')]
+        }
+      )
+    }
   },
   {
     title: '加入时间',
@@ -357,6 +352,7 @@ const addMemberFormRef = ref(null)
 // 显示添加成员弹窗
 const showAddMemberModal = () => {
   addMemberModal.value = true
+  addMemberForm.role = 'member' // 默认为普通成员
 }
 
 // 处理添加成员
@@ -375,8 +371,7 @@ const handleAddMember = async () => {
     addMemberForm.role = 'member'
     await fetchTeamMembers()
   } catch (error) {
-    console.error('添加成员失败:', error)
-    message.error('添加成员失败')
+    message.error(error.data.message)
   }
 }
 
@@ -393,51 +388,30 @@ const addMemberRules = {
   role: [{ required: true, message: '请选择角色' }]
 }
 
-// 用户选择相关状态
-const accountList = ref([])
-const accountLoading = ref(false)
-const accountKeyword = ref('')
-
-// 获取用户选项
-const getAccountList = debounce(async (value) => {
-  if (!value) return
-  accountLoading.value = true
-  if (accountKeyword.value !== value) {
-    accountPagination.page = 1
-  }
-  accountKeyword.value = value
-  try {
-    const data = await API.account.list(accountPagination.page, accountPagination.pageSize, value, 1)
-    accountList.value = data.accounts.map((item) => {
-      item.label = `${item.realname}(${item.accountname})`
-      item.value = item._id
-      item.avatar = item.avatar
-      return item
-    })
-    accountPagination.total = data.total
-    accountPagination.pages = data.pages
-  } catch (error) {
-    message.error('获取用户列表失败')
-  } finally {
-    accountLoading.value = false
-  }
-}, 300)
-
-// 用户选择分页变化
-const accountPageChanged = async (page) => {
-  accountPagination.page = page
-  await getAccountList(accountKeyword.value)
-}
-
 // 头像加载失败处理
 const handleAvatarError = (e) => {
   e.target.src = defaultAvatar
 }
 
+// 添加角色修改处理函数
+const handleRoleChange = async (record, newRole) => {
+  try {
+    await API.team.updateMemberRole({
+      teamId: currentTeamId.value,
+      accountId: record.memberInfo._id,
+      role: newRole
+    })
+    message.success('修改角色成功')
+    await fetchTeamMembers()
+  } catch (error) {
+    message.error('修改角色失败')
+  }
+}
+
 // 初始化
 onMounted(() => {
-  const eltable = document.querySelector('.ant-table-content')
-  new SimpleBar(eltable, { direction: document.dir })
+  // const eltable = document.querySelector('.ant-table-content')
+  // new SimpleBar(eltable, { direction: document.dir })
   fetchTeamList()
 })
 </script>
@@ -454,7 +428,6 @@ onMounted(() => {
 .wrapper {
   display: flex;
   align-items: center;
-  // justify-content: center;
 }
 
 .avatar {

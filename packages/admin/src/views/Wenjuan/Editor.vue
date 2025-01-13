@@ -5,7 +5,7 @@
       <div class="q-name-wrapper">
         <div class="q-name">
           <!-- <a-tag color="red">已结束</a-tag> -->
-          <span class="text" @click.stop="editQName">{{ Q.name }}{{ currentVersion }}</span>
+          <span class="text" @click.stop="editQName">{{ Q.name }}</span>
           <icon class="icon-edit" name="edit" />
         </div>
         <div class="q-status">

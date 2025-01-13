@@ -39,7 +39,7 @@ const team = {
       baseURL: baseUrl.default,
       url: 'team/delete',
       method: 'post',
-      data: JSON.stringify(data)
+      data: { id }
     })
   },
 
@@ -79,6 +79,14 @@ const team = {
       url: `/team/memberList`,
       method: 'post',
       data: JSON.stringify(data)
+    })
+  },
+  updateMemberRole(params) {
+    return fetch({
+      baseURL: baseUrl.default,
+      url: '/team/updateMemberRole',
+      method: 'post',
+      data: JSON.stringify(params)
     })
   }
 }

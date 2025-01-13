@@ -18,5 +18,6 @@ teamRouter.post('/team/delete', TeamController.delete)
 teamRouter.post('/team/memberlist', TeamController.memberList)
 teamRouter.post('/team/addmember', TeamController.addMember)
 teamRouter.post('/team/removeMember', TeamController.removeMember)
+teamRouter.post('/team/updateMemberRole', TeamController.updateMemberRole)
 
 export default teamRouter

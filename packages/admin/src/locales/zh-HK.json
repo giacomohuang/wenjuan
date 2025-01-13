@@ -1,10 +1,16 @@
 {
+  "403": {
+    "description": "你訪問的資源不存在"
+  },
   "404": {
     "_title": "404 頁面不存在",
     "backhome": "返回首頁",
     "description": "你訪問的頁面不存在",
     "wenjuan": "問卷不存在",
     "backwenjuan": "返回項目清單頁面"
+  },
+  "downauthapp": {
+    "_title": "下載動態口令APP"
   },
   "common": {
     "appname": "問卷",
@@ -48,7 +54,7 @@
   },
   "signin": {
     "_title": "登入",
-    "title": "登入管理運營平台",
+    "title": "登入",
     "accountname": "帳號",
     "password": "密碼",
     "signin": "登入",
@@ -68,7 +74,6 @@
   "signout": {
     "_title": "登出"
   },
-
   "my": {
     "_title": "我的",
     "authentication": {
@@ -241,6 +246,13 @@
     "mpInputI18n": {
       "editorTitle": "多語言編輯器",
       "translate": "翻譯"
+    },
+    "pwdstrength": {
+      "weak": "弱",
+      "fair": "較弱",
+      "good": "中等",
+      "strong": "較強",
+      "excellent": "很強"
     }
   }
 }

@@ -9,5 +9,8 @@
     "build:admin": "pnpm -F @wenjuan/admin build",
     "build:api": "pnpm -F @wenjuan/api build",
     "build:uniapp": "pnpm -F @wenjuan/uniapp build"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.3.0"
   }
 }

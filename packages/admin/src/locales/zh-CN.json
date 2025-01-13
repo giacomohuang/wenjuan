@@ -9,6 +9,9 @@
     "wenjuan": "问卷不存在",
     "backwenjuan": "返回项目列表页面"
   },
+  "downauthapp": {
+    "_title": "下载动态口令APP"
+  },
   "common": {
     "appname": "问卷",
     "lang": "语言",
@@ -51,7 +54,7 @@
   },
   "signin": {
     "_title": "登录",
-    "title": "登录管理运营平台",
+    "title": "登录",
     "accountname": "账号",
     "password": "密码",
     "signin": "登录",
@@ -71,7 +74,6 @@
   "signout": {
     "_title": "退出登录"
   },
-
   "my": {
     "_title": "我的",
     "authentication": {
@@ -82,7 +84,7 @@
       "newpwd": "新密码",
       "pep": "请输入密码",
       "pepa": "请再次输入密码",
-      "pnm": "两��入密码不一致",
+      "pnm": "两次入密码不一致",
       "cpwd": "修改密码",
       "cfpwd": "确认新密码",
       "syaeyps": "强化账户安全，确保使用强度高的密码。",
@@ -244,6 +246,13 @@
     "mpInputI18n": {
       "editorTitle": "多语言编辑器",
       "translate": "翻译"
+    },
+    "pwdstrength": {
+      "weak": "弱",
+      "fair": "较弱",
+      "good": "中等",
+      "strong": "较强",
+      "excellent": "很强"
     }
   }
 }

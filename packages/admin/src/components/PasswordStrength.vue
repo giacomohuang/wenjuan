@@ -11,12 +11,15 @@
   </div>
 </template>
 <script setup>
-import { onBeforeMount, onMounted, ref, watch } from 'vue'
+import { onMounted, watch } from 'vue'
 import zxcvbn from 'zxcvbn'
 // import { mergeCompData } from '../js/i18n'
 import { useI18n } from 'vue-i18n'
+
 const value = defineModel('value')
 const data = defineProps(['password'])
+
+const { t } = useI18n()
 // const loading = ref(false)
 
 // 载入语言包
@@ -37,11 +40,11 @@ onMounted(() => {
 })
 
 const strength = {
-  0: 'components.pwdstrength.weak',
-  1: 'components.pwdstrength.fair',
-  2: 'components.pwdstrength.good',
-  3: 'components.pwdstrength.strong',
-  4: 'components.pwdstrength.excellent'
+  0: 'comp.pwdstrength.weak',
+  1: 'comp.pwdstrength.fair',
+  2: 'comp.pwdstrength.good',
+  3: 'comp.pwdstrength.strong',
+  4: 'comp.pwdstrength.excellent'
 }
 
 watch(
@@ -65,7 +68,7 @@ watch(
     display: flex;
     flex-direction: row;
     list-style-type: none;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--border-light);
 
     border-radius: 5px;
   }
@@ -76,7 +79,7 @@ watch(
 
     transition: all linear 0.15s;
     &:not(:first-child) {
-      border-left: 1px solid var(--color-border);
+      border-left: 1px solid var(--border-light);
     }
     &:first-child {
       border-radius: 5px 0 0 5px;
@@ -97,23 +100,23 @@ watch(
 
   .s0 {
     flex-grow: 1;
-    background-color: var(--c-gray150);
+    background-color: var(--c-gray-100);
   }
   .s1 {
     flex-grow: 1;
-    background-color: var(--c-red60);
+    background-color: var(--c-red-500);
   }
   .s2 {
     flex-grow: 1;
-    background-color: var(--c-blue40);
+    background-color: var(--c-yellow-500);
   }
   .s3 {
     flex-grow: 1;
-    background-color: var(--c-green30);
+    background-color: var(--c-blue-500);
   }
   .s4 {
     flex-grow: 1;
-    background-color: var(--c-green10);
+    background-color: var(--c-green-500);
   }
 }
 </style>

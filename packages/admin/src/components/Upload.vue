@@ -122,7 +122,7 @@ const handleSelectFiles = async () => {
       multiple: props.multiple
     }
 
-    // 如果��置了文件类型限制
+    // 如果设置了文件类型限制
     if (props.type.length > 0) {
       // 根据文件扩展名推断MIME类型
       const mimeTypes = {

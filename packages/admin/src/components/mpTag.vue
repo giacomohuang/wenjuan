@@ -31,7 +31,7 @@ const { size, color } = defineProps(['size', 'color'])
   }
   &.gray {
     color: var(--text-tertiary);
-    background: var(--bg-gray-100);
+    background: var(--c-gray-100);
   }
 
   &.blue {
