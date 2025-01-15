@@ -3,6 +3,9 @@
     <a-form :model="formState" layout="vertical">
       <!-- 基础设置 -->
       <a-card title="基础设置" class="setting-card">
+        <a-form-item label="问卷描述" name="description">
+          <a-textarea v-model:value="formState.description" placeholder="请输入问卷描述" :rows="4" />
+        </a-form-item>
         <a-form-item label="问卷收集起止时间" name="collectTime">
           <a-range-picker
             v-model:value="formState.collectTime"

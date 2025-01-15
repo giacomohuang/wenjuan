@@ -21,13 +21,13 @@ const teamSchema = new mongoose.Schema(
     },
     members: [
       {
-        memberInfo: {
+        memberAcc: {
           type: mongoose.Schema.Types.ObjectId,
           ref: Account
         },
         role: {
           type: String,
-          enum: ['admin', 'member', 'creator'],
+          enum: ['admin', 'member'],
           default: 'member'
         },
         joinedAt: {

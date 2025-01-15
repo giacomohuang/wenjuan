@@ -508,8 +508,8 @@ onUnmounted(() => {
 </script>
 <style lang="scss" scoped>
 .main {
-  max-width: 950px;
   padding: 20px;
+
   .title {
     border-bottom: 1px solid var(--border-medium);
     padding-bottom: 12px;
@@ -533,11 +533,11 @@ onUnmounted(() => {
     align-items: center;
     label {
       font-weight: 500;
-      // font-size: 14px;
     }
   }
   :deep(.ant-card) {
-    width: 680px;
+    max-width: 700px;
+    min-width: 400px;
     margin-bottom: 20px;
   }
 }

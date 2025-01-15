@@ -5,12 +5,15 @@
       <div class="q-name-wrapper">
         <div class="q-name" @click.stop="editQName">
           <!-- <a-tag color="red">已结束</a-tag> -->
-          <span class="text">{{ Q.name }}</span>
+          <span class="text">
+            {{ Q.name }}
+            <!-- <mp-tag size="small" color="blue">{{ teamId }}</mp-tag> -->
+          </span>
           <icon class="icon-edit" name="edit" />
         </div>
         <div class="q-status">
-          <div class="tag small gray">自动保存: {{ savedTime }}</div>
-          <div class="tag small blue" v-if="isDraft">草稿</div>
+          <mp-tag size="small" color="gray">自动保存: {{ savedTime }}</mp-tag>
+          <mp-tag size="small" color="blue" v-if="isDraft">草稿</mp-tag>
           <div class="loading" :class="isSaving ? 'show' : 'hide'" />
         </div>
       </div>
@@ -26,8 +29,10 @@
       </a-space>
     </div>
     <div class="actions">
+      <a-button @click="openCooperatorModal" v-if="teamId">协作</a-button>
       <a-button @click="deleteDraft" :disabled="isSaving" v-if="isDraft">删除草稿</a-button>
       <a-button @click="publish" v-if="!isLoading" :disabled="isSaving || (isPublish && !isDraft)">发布</a-button>
+
       <a-select :dropdown-match-select-width="false" v-if="versionList.list.length > 0" v-model:value="versionList.selectedVersion" placement="bottomRight" :fieldNames="{ label: 'name', value: 'version' }" :disabled="isSaving" :options="versionList.list" @change="getVersion(versionList.selectedVersion)">
         <template #option="{ version, name }">
           <div class="version-name" :class="version == currentVersion ? 'current' : ''">
@@ -102,6 +107,47 @@
   <a-modal v-model:open="settingsModal" :footer="null" style="width: 800px" title="设置">
     <Settings v-if="settingsModal" />
   </a-modal>
+  <a-modal v-model:open="cooperatorModal" :footer="null" style="width: 1000px" title="管理本问卷的协作者">
+    <div class="cooperator-list">
+      <a-card title="团队成员" class="list">
+        <!-- <TeamMemberSelector v-model:value="teamMemberId" /> -->
+        <a-table :dataSource="teamMemberListFiltered" :columns="teamMemberColumns" :pagination="false" :showHeader="false" size="small">
+          <template #bodyCell="{ column, record }">
+            <template v-if="column.key === 'name'">
+              <div class="item" @click.stop="addCooperator(record.memberAcc)">
+                <img :src="record.memberAcc.avatar" style="width: 32px; height: 32px; border-radius: 50%" />
+                <span>{{ record.memberAcc.realname }} ({{ record.memberAcc.accountname }})</span>
+              </div>
+            </template>
+          </template>
+        </a-table>
+      </a-card>
+      <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 20px 0">
+        <icon name="arrow-right" />
+      </div>
+      <a-card title="协作者">
+        <a-table :dataSource="cooperatorList" :columns="cooperatorColumns" :pagination="false" :showHeader="false" size="small">
+          <template #bodyCell="{ column, record }">
+            <template v-if="column.key === 'avatar'">
+              <img :src="record.account.avatar" style="width: 32px; height: 32px; border-radius: 50%" />
+            </template>
+            <template v-if="column.key === 'name'"> {{ record.account.realname }} ({{ record.account.accountname }}) </template>
+            <template v-if="column.key === 'role'">
+              <a-select v-model:value="record.role">
+                <a-select-option value="editor">可编辑</a-select-option>
+                <a-select-option value="viewer" :disabled="cooperatorEditorCount <= 1">仅查看</a-select-option>
+              </a-select>
+            </template>
+            <template v-if="column.key === 'action'">
+              <a-button type="link" @click="removeCooperator(record.account._id)" :disabled="record.role == 'editor' && cooperatorEditorCount <= 1">
+                <icon name="remove" />
+              </a-button>
+            </template>
+          </template>
+        </a-table>
+      </a-card>
+    </div>
+  </a-modal>
 </template>
 
 <router lang="json">
@@ -111,7 +157,7 @@
 </router>
 
 <script setup>
-import { provide, ref, reactive, nextTick, onBeforeMount, onBeforeUnmount, defineAsyncComponent, watch, onMounted, defineComponent } from 'vue'
+import { provide, ref, reactive, nextTick, onBeforeMount, onBeforeUnmount, defineAsyncComponent, watch, onMounted, defineComponent, computed } from 'vue'
 import XEditer from '@/components/XEditer.vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import 'simplebar'
@@ -186,6 +232,9 @@ const previewModal = ref(false)
 const settingsModal = ref(false)
 const currentVersion = ref(null)
 const teamId = ref(null)
+const cooperatorModal = ref(false)
+const cooperatorList = ref([])
+const teamMemberList = ref([])
 
 const versionList = reactive({
   list: [],
@@ -317,6 +366,11 @@ async function getVersionList() {
   console.log('getVersionList', versionList)
 }
 
+async function addCooperator(account) {
+  const res = await API.wenjuan.addCooperator(qId.value, account._id, 'editor')
+  cooperatorList.value.push({ _id: account._id, role: 'editor', name: '可编辑', account: account })
+}
+
 async function publish() {
   const res = await save({ isPublish: true, data: Q.data, name: Q.name, settings: Q.settings, draft: null })
   await getVersionList()
@@ -345,6 +399,44 @@ async function getVersion(version) {
   })
 }
 
+async function openCooperatorModal() {
+  cooperatorModal.value = true
+  const res = await API.wenjuan.cooperatorList(qId.value)
+  const list = res.cooperator.map((item) => {
+    item.name = item.role === 'editor' ? '可编辑' : '仅查看'
+    return item
+  })
+  console.log('list', list, teamId.value)
+  cooperatorList.value = list
+  if (!teamId.value) return
+  const member = await API.team.memberList({ teamId: teamId.value })
+  teamMemberList.value = member.members
+  console.log('teamMemberList', teamMemberList.value)
+}
+
+const teamMemberListFiltered = computed(() => {
+  if (!teamMemberList.value) return []
+  return teamMemberList.value.filter((item) => !cooperatorList.value.some((cooperator) => cooperator.account._id === item.memberAcc._id))
+})
+
+const cooperatorEditorCount = computed(() => {
+  return cooperatorList.value.filter((item) => item.role === 'editor').length
+})
+
+async function updateCooperatorRole(accountId, role) {
+  const res = await API.wenjuan.updateCooperatorRole(qId.value, accountId, role)
+  console.log('updateCooperatorRole', res)
+}
+
+async function removeCooperator(accountId) {
+  try {
+    const res = await API.wenjuan.removeCooperator(qId.value, accountId)
+    cooperatorList.value = cooperatorList.value.filter((item) => item.account._id !== accountId)
+  } catch (e) {
+    message.error(e.data.message)
+  }
+}
+
 // 自动保存草稿
 const saveDraft = debounce(async (data) => {
   // delete data.version
@@ -366,6 +458,7 @@ onBeforeMount(async () => {
       router.replace(`/wenjuan/editor/${res._id}`)
     } else {
       res = await API.wenjuan.get(id)
+      teamId.value = res.team
     }
     qId.value = res._id
     if (res.draft) {
@@ -429,6 +522,35 @@ function closeLogicDrawer() {
   showLogicContent.value = false
   logicDrawer.value = false
 }
+
+const cooperatorColumns = [
+  {
+    title: '头像',
+    key: 'avatar',
+    width: 80
+  },
+  {
+    title: '姓名',
+    key: 'name'
+  },
+  {
+    title: '角色',
+    dataIndex: 'role',
+    key: 'role'
+  },
+  {
+    title: '操作',
+    key: 'action',
+    width: 80
+  }
+]
+
+const teamMemberColumns = [
+  {
+    title: '团队成员',
+    key: 'name'
+  }
+]
 </script>
 
 <style scoped lang="scss">
@@ -614,7 +736,7 @@ function closeLogicDrawer() {
   overflow: auto;
   max-height: calc(100vh - 124px);
   min-width: 600px;
-  background: var(--bg-secondary);
+  background: var(--bg-main-content);
 
   .selected {
     outline: 2px solid var(--c-brand-500);
@@ -811,6 +933,23 @@ function closeLogicDrawer() {
   }
 }
 
+.cooperator-list {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  margin-top: 20px;
+  .list {
+    flex: 1;
+    .item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      // justify-content:
+      gap: 8px;
+    }
+  }
+}
+
 @keyframes drawer-open {
   from {
     transform: scale(0);
@@ -832,13 +971,13 @@ function closeLogicDrawer() {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--c-white);
-  background: var(--c-gray-300);
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
   border-radius: 5px 0 3px 0;
   cursor: pointer;
 
   &:hover:not(.enabled) {
-    background: var(--c-gray-600);
+    color: var(--text-primary);
   }
 
   &:hover.enabled {
@@ -846,6 +985,7 @@ function closeLogicDrawer() {
   }
 
   &.enabled {
+    color: var(--c-white);
     background: var(--c-brand);
   }
 }
@@ -869,25 +1009,6 @@ function closeLogicDrawer() {
   &:hover {
     background: var(--bg-secondary);
     color: var(--c-brand);
-  }
-}
-.tag {
-  border-radius: 3px;
-  transition: opacity 0.15s ease;
-  text-wrap: nowrap;
-  &.small {
-    font-size: 0.8em;
-    padding: 2px 4px;
-  }
-  &.gray {
-    color: var(--text-tertiary);
-    background: var(--bg-tertiary);
-    border-color: var(--border-light);
-  }
-  &.blue {
-    color: #1677ff;
-    background: #e6f4ff;
-    border-color: #91caff;
   }
 }
 

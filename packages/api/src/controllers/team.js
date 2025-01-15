@@ -32,7 +32,7 @@ class TeamController extends BaseController {
 
   // 创建团队
   static async create(ctx) {
-    const { name, description, creatorId } = ctx.request.body
+    const { name, description, memberId } = ctx.request.body
     const accountId = ctx.request.headers['accountid']
     console.log('accountId', accountId)
 
@@ -46,7 +46,7 @@ class TeamController extends BaseController {
       name,
       description,
       operator: accountId,
-      members: [{ memberInfo: creatorId, role: 'creator' }]
+      members: [{ memberAcc: memberId, role: 'admin' }]
     })
 
     try {
@@ -117,11 +117,11 @@ class TeamController extends BaseController {
       throw new CustomError(404, '团队不存在', 4002)
     }
     // 检查用户是否已经是成员
-    if (team.members.some((m) => m.memberInfo.toString() === accountId)) {
+    if (team.members.some((m) => m.memberAcc.toString() === accountId)) {
       throw new CustomError(400, '该用户已经是团队成员', 4001)
     }
 
-    team.members.push({ memberInfo: accountId, role })
+    team.members.push({ memberAcc: accountId, role })
     await team.save()
 
     ctx.body = team
@@ -131,16 +131,20 @@ class TeamController extends BaseController {
   static async removeMember(ctx) {
     const { teamId, accountId } = ctx.request.body
     const currentAccountId = ctx.request.headers['accountid']
-    console.log('removeMember', teamId, accountId)
+    // console.log('removeMember', teamId, accountId)
+    // 不能移除自己
+    if (accountId === currentAccountId) {
+      throw new CustomError(400, '不能移除自己', 4001)
+    }
 
     const res = await Team.updateOne(
       {
         _id: teamId,
-        'members.memberInfo': accountId
+        'members.memberAcc': accountId
       },
       {
         $pull: {
-          members: { memberInfo: accountId }
+          members: { memberAcc: accountId }
         }
       }
     )
@@ -155,7 +159,7 @@ class TeamController extends BaseController {
     //   ctx.throw(400, '不能移除团队创建者')
     // }
 
-    // team.members = team.members.filter((m) => m.memberInfo.toString() !== accountId)
+    // team.members = team.members.filter((m) => m.memberAcc.toString() !== accountId)
     // await team.save()
 
     ctx.body = res
@@ -169,8 +173,9 @@ class TeamController extends BaseController {
       _id: teamId,
       isDeleted: false
     })
+      .select('members')
       .populate('operator', '_id accountname realname avatar')
-      .populate('members.memberInfo', '_id accountname realname avatar')
+      .populate('members.memberAcc', '_id accountname realname avatar')
 
     console.log(team)
     if (!team) {
@@ -186,7 +191,7 @@ class TeamController extends BaseController {
   static async updateMemberRole(ctx) {
     const { teamId, accountId, role } = ctx.request.body
 
-    await Team.updateOne({ _id: teamId, 'members.memberInfo': accountId }, { $set: { 'members.$.role': role } })
+    await Team.updateOne({ _id: teamId, 'members.memberAcc': accountId }, { $set: { 'members.$.role': role } })
 
     ctx.body = {
       code: 200,
@@ -197,7 +202,7 @@ class TeamController extends BaseController {
   // 获取用户所属团队列表
   static async listByAccountId(ctx) {
     const accountId = ctx.request.headers['accountid']
-    const res = await Team.find({ 'members.memberInfo': accountId }).select('_id name members memberCount')
+    const res = await Team.find({ 'members.memberAcc': accountId, isDeleted: false }).select('_id name members memberCount')
     ctx.body = res
     console.log('res', res)
   }

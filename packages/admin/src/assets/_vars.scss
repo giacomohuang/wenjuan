@@ -42,7 +42,7 @@ $color-sets: (
   --bg-secondary: var(--c-gray-50);
   --bg-tertiary: #ebecf5;
   --bg-0: var(--c-white);
-  --bg-500: rgb(244, 247, 249);
+  --bg-main-content: rgb(244, 247, 249);
   --bg-brand: var(--c-brand-100);
 
   // 文字颜色s
@@ -71,7 +71,7 @@ $color-sets: (
     --bg-secondary: var(--c-gray-800);
     --bg-tertiary: var(--c-gray-700);
     --bg-0: var(--c-black);
-    --bg-500: var(--c-gray-950);
+    --bg-main-content: rgb(44, 46, 48);
 
     --bg-brand: var(--c-brand-950);
 

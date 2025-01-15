@@ -52,6 +52,38 @@ const wenjuan = {
       data: { id: id, page: page, limit: limit },
       url: '/wenjuan/getVersionList'
     })
+  },
+  cooperatorList(id) {
+    return fetch({
+      baseURL: baseUrl.wenjuan,
+      method: 'post',
+      data: { id: id },
+      url: '/wenjuan/cooperatorList'
+    })
+  },
+  addCooperator(id, accountId, role) {
+    return fetch({
+      baseURL: baseUrl.wenjuan,
+      method: 'post',
+      data: { id: id, accountId: accountId, role: role },
+      url: '/wenjuan/addCooperator'
+    })
+  },
+  removeCooperator(id, accountId) {
+    return fetch({
+      baseURL: baseUrl.wenjuan,
+      method: 'post',
+      data: { id: id, accountId: accountId },
+      url: '/wenjuan/removeCooperator'
+    })
+  },
+  updateCooperatorRole(id, accountId, role) {
+    return fetch({
+      baseURL: baseUrl.wenjuan,
+      method: 'post',
+      data: { id: id, accountId: accountId, role: role },
+      url: '/wenjuan/updateCooperatorRole'
+    })
   }
 }
 export default wenjuan

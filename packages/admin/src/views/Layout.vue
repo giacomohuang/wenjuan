@@ -272,6 +272,7 @@ async function signout() {
   await API.account.signout()
   store.accountid = undefined
   helper.removeToken()
+  localStorage.removeItem('teamId')
   router.push('/signin')
 }
 
@@ -653,6 +654,6 @@ onUnmounted(() => {
   position: relative;
   grid-area: main;
   overflow: auto;
-  background-color: var(--bg-500);
+  background-color: var(--bg-main-content);
 }
 </style>

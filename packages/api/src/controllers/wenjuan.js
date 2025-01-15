@@ -6,7 +6,7 @@ import CustomError from '../CustomError.js'
 class WenjuanController extends BaseController {
   static async list(ctx) {
     const { page = 1, limit = 10, keywords, teamId, sort = { updatedAt: -1 } } = ctx.request.body
-    const currentAccountId = ctx.request.headers['accountid']
+    const accId = ctx.request.headers['accountid']
     // console.log('list params:', { page, limit, query, sort })
 
     const query = {}
@@ -14,13 +14,11 @@ class WenjuanController extends BaseController {
       query.name = { $regex: keywords, $options: 'i' }
     }
     query.team = teamId
-    console.log('currentAccountId', currentAccountId)
-    if (currentAccountId) {
-      query.owner = currentAccountId
+    if (accId) {
+      query['cooperator.account'] = accId
     } else {
       throw new CustomError(401, '未登录', 50100)
     }
-    console.log('query', query)
     const wenjuan = await Wenjuan.find(query, { updatedAt: 1 })
       .select('isPublish name draft.name updatedAt')
       .populate('operator', 'accountname realname avatar')
@@ -43,7 +41,7 @@ class WenjuanController extends BaseController {
   static async get(ctx) {
     console.log('get')
     const { id } = ctx.request.body
-    const res = await Wenjuan.findOne({ _id: id })
+    const res = await Wenjuan.findOne({ _id: id }).populate('team', 'name')
     ctx.body = res
     console.log(res)
   }
@@ -84,7 +82,7 @@ class WenjuanController extends BaseController {
     // 如果没有 _id，创建新数据
     if (!_id) {
       updateData.operator = accountId
-      updateData.owner = accountId
+      updateData.cooperator = [{ account: accountId, role: 'editor' }]
       const newWenjuan = new Wenjuan(updateData)
       res = await newWenjuan.save()
     }
@@ -125,6 +123,42 @@ class WenjuanController extends BaseController {
     // console.log(ids)
     // 删除问卷及其所有子问卷
     const res = await Wenjuan.deleteMany({ _id: { $in: ids } })
+    ctx.body = res
+  }
+
+  static async cooperatorList(ctx) {
+    const { id } = ctx.request.body
+    const res = await Wenjuan.findOne({ _id: id }).select('cooperator').populate('cooperator.account', 'accountname realname avatar')
+    ctx.body = res
+    console.log(res)
+  }
+
+  static async addCooperator(ctx) {
+    const { id, accountId, role } = ctx.request.body
+    // 检查用户是否已经是成员
+    const wenjuan = await Wenjuan.findOne({ _id: id })
+    if (wenjuan.cooperator.some((m) => m.account.toString() === accountId)) {
+      throw new CustomError(400, '该用户已经是协作者', 4001)
+    }
+
+    wenjuan.cooperator.push({ account: accountId, role: role })
+    await wenjuan.save()
+    ctx.body = wenjuan
+  }
+
+  static async updateCooperatorRole(ctx) {
+    const { id, accountId, role } = ctx.request.body
+    const res = await Wenjuan.findOneAndUpdate({ _id: id, 'cooperator.account': accountId }, { $set: { 'cooperator.$.role': role } }, { new: true })
+    ctx.body = res
+  }
+
+  static async removeCooperator(ctx) {
+    const { id, accountId } = ctx.request.body
+    const currentAccountId = ctx.request.headers['accountid']
+    if (currentAccountId == accountId) {
+      throw new CustomError(400, '不能移除自己', 4003)
+    }
+    const res = await Wenjuan.findOneAndUpdate({ _id: id }, { $pull: { cooperator: { account: accountId } } }, { new: true })
     ctx.body = res
   }
 }

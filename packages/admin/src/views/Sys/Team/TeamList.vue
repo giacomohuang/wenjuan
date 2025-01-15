@@ -44,8 +44,8 @@
         <a-form-item label="团队描述" name="description">
           <a-textarea v-model:value="formState.description" placeholder="请输入团队描述" :rows="4" />
         </a-form-item>
-        <a-form-item label="创建人" name="creatorId">
-          <account-selector v-model="formState.creatorId" placeholder="请选择团队创建人" />
+        <a-form-item label="管理员账户" name="memberId">
+          <account-selector v-model="formState.memberId" placeholder="请选择团队管理员账户" />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -57,25 +57,24 @@
       </div>
       <a-table :columns="memberColumns" :data-source="teamMembers" :loading="memberLoading" row-key="id" :pagination="false">
         <template #bodyCell="{ column, record }">
-          <template v-if="column.key === 'memberInfo'">
+          <template v-if="column.key === 'memberAcc'">
             <div class="wrapper">
-              <img :src="record.memberInfo.avatar || defaultAvatar" class="avatar" @error="handleAvatarError" />
-              <span>{{ record.memberInfo.realname }} ({{ record.memberInfo.accountname }})</span>
+              <img :src="record.memberAcc?.avatar || defaultAvatar" class="avatar" @error="handleAvatarError" />
+              <span>{{ record.memberAcc?.realname }} ({{ record.memberAcc?.accountname }})</span>
             </div>
           </template>
           <template v-if="column.key === 'joinedAt'">
             {{ dayjs(record.joinedAt).format('YYYY-MM-DD HH:mm:ss') }}
           </template>
           <template v-if="column.key === 'role'">
-            <a-select v-model:value="record.role" style="width: 120px" @change="(value) => handleRoleChange(record, value)" :disabled="record.role === 'creator'">
-              <a-select-option value="creator" :disabled="true">创建者</a-select-option>
+            <a-select v-model:value="record.role" style="width: 120px" @change="(value) => handleRoleChange(record, value)">
               <a-select-option value="admin">管理员</a-select-option>
-              <a-select-option value="member">成员</a-select-option>
+              <a-select-option value="member" :disabled="adminCount <= 1">成员</a-select-option>
             </a-select>
           </template>
           <template v-if="column.key === 'action'">
-            <a-popconfirm title="确定要移除该成员吗？" @confirm="handleRemoveMember(record)" :disabled="record.role == 'creator'">
-              <a-button :disabled="record.role == 'creator'" type="link" danger>移除</a-button>
+            <a-popconfirm title="确定要移除该成员吗？" @confirm="handleRemoveMember(record)" :disabled="record.role === 'admin' && adminCount <= 1">
+              <a-button type="link" danger :disabled="record.role === 'admin' && adminCount <= 1">移除</a-button>
             </a-popconfirm>
           </template>
         </template>
@@ -99,7 +98,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, defineComponent, h } from 'vue'
+import { ref, reactive, onMounted, defineComponent, h, computed } from 'vue'
 import defaultAvatar from '@/assets/avatar.jpg'
 import { message } from 'ant-design-vue'
 import { PlusOutlined } from '@ant-design/icons-vue'
@@ -118,6 +117,10 @@ const VNodes = defineComponent({
   render() {
     return this.vnodes
   }
+})
+
+const adminCount = computed(() => {
+  return teamMembers.value.filter((member) => member.role === 'admin').length
 })
 
 // 表格列定义
@@ -176,7 +179,7 @@ const rules = {
     { min: 2, max: 50, message: '团队名称长度应在2-50个字符之间', trigger: 'blur' }
   ],
   description: [{ max: 200, message: '描述最多200个字符', trigger: 'blur' }],
-  creatorId: [{ required: true, message: '请选择创建人', trigger: 'blur' }]
+  memberId: [{ required: true, message: '请选择管理员账户', trigger: 'blur' }]
 }
 
 // 获取团队列表
@@ -267,8 +270,8 @@ const currentTeamId = ref(null)
 const memberColumns = [
   {
     title: '用户名',
-    dataIndex: ['memberInfo'],
-    key: 'memberInfo'
+    dataIndex: ['memberAcc'],
+    key: 'memberAcc'
   },
   {
     title: '角色',
@@ -276,16 +279,12 @@ const memberColumns = [
     key: 'role',
     width: 200,
     customRender: ({ record }) => {
-      if (record.role === 'creator') {
-        return h('span', '创建者')
-      }
       return h(
         'a-select',
         {
           value: record.role,
           style: { width: '120px' },
-          onChange: (value) => handleRoleChange(record, value),
-          disabled: record.role === 'creator'
+          onChange: (value) => handleRoleChange(record, value)
         },
         {
           default: () => [h('a-select-option', { value: 'admin' }, '管理员'), h('a-select-option', { value: 'member' }, '成员')]
@@ -333,7 +332,7 @@ const fetchTeamMembers = async () => {
 // 移除团队成员
 const handleRemoveMember = async (record) => {
   try {
-    await API.team.removeMember({ teamId: currentTeamId.value, accountId: record.memberInfo._id })
+    await API.team.removeMember({ teamId: currentTeamId.value, accountId: record.memberAcc._id })
     message.success('移除成员成功')
     await fetchTeamMembers()
   } catch (error) {
@@ -395,10 +394,11 @@ const handleAvatarError = (e) => {
 
 // 添加角色修改处理函数
 const handleRoleChange = async (record, newRole) => {
+  console.log('handleRoleChange', record, newRole)
   try {
     await API.team.updateMemberRole({
       teamId: currentTeamId.value,
-      accountId: record.memberInfo._id,
+      accountId: record.memberAcc._id,
       role: newRole
     })
     message.success('修改角色成功')

@@ -29,7 +29,11 @@
         <div v-else-if="isOnCoverPage" class="cover-page">
           <div style="height: 100%; width: 100%; background-size: cover; background-position: center" :style="{ backgroundImage: `url(${OSS_PREFIX}${Q.settings.coverImage})` }" alt="封面图片" class="cover-image" v-if="Q.settings?.coverImage" />
 
-          <div class="title">{{ Q.name }}</div>
+          <div class="title">
+            {{ Q.name }}
+            <pre class="description">{{ Q.settings.description }}</pre>
+          </div>
+
           <div class="start-button">
             <a-button type="primary" size="large" @click="startAnswering">
               滑动屏幕开始
@@ -706,16 +710,17 @@ const answeredProgress = computed(() => {
   }
 }
 
-.title {
-  text-wrap: wrap;
-  word-break: break-all;
-  margin-bottom: 16px;
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--text-primary);
-  display: flex;
-  // align-items: center;
-}
+// .title {
+//   text-wrap: wrap;
+//   word-break: break-all;
+//   margin-bottom: 16px;
+//   font-size: 16px;
+//   line-height: 1.5;
+//   color: var(--text-primary);
+//   display: flex;
+//   // align-items: center;
+// }
+
 .required {
   color: #ff4d4f;
   margin-right: 4px;
@@ -799,15 +804,12 @@ const answeredProgress = computed(() => {
     justify-content: center;
     font-size: 20px;
     font-weight: 600;
-    // 根据背景图片颜色，设置文字颜色
-    color: #fff;
-
-    &.top {
-      top: 10%;
-    }
-    &.bottom {
-      bottom: 10%;
-    }
+  }
+  .description {
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-top: 12px;
   }
 
   .start-button {

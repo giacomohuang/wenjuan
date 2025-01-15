@@ -27,10 +27,19 @@ const wenjuanSchema = new mongoose.Schema(
     data: {
       type: Object
     },
-    owner: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Account'
-    },
+    cooperator: [
+      {
+        account: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Account'
+        },
+        role: {
+          type: String,
+          enum: ['viewer', 'editor'],
+          default: 'editor'
+        }
+      }
+    ],
     operator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Account'
