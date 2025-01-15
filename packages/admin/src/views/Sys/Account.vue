@@ -1,14 +1,17 @@
 <template>
   <div class="main-wrap">
+    <div class="opr">
+      <a-button type="primary" @click="handleAddAccount">{{ t('sys.account.addaccount') }}</a-button>
+    </div>
     <a-table
       :scroll="{ x: 1200 }"
       :columns="[
-        { title: t('sys.account.accountlist.accountname'), dataIndex: 'accountname', key: 'accountname', fixed: 'left' },
-        { title: t('sys.account.accountlist.realname'), dataIndex: 'realname', key: 'realname', fixed: 'left' },
-        { title: t('sys.account.accountlist.email'), dataIndex: 'email', key: 'email' },
-        { title: t('sys.account.accountlist.phone'), dataIndex: 'phone', key: 'phone' },
+        { title: t('sys.account.accountname'), dataIndex: 'accountname', key: 'accountname', fixed: 'left' },
+        { title: t('sys.account.realname'), dataIndex: 'realname', key: 'realname', fixed: 'left' },
+        { title: t('sys.account.email'), dataIndex: 'email', key: 'email' },
+        { title: t('sys.account.phone'), dataIndex: 'phone', key: 'phone' },
         {
-          title: t('sys.account.accountlist.2fa'),
+          title: t('sys.account.2fa'),
           dataIndex: 'enable2FA',
           key: 'enable2FA',
           align: 'center',
@@ -62,7 +65,7 @@
         <a-button style="margin-right: 8px" @click="onCloseEditor">Cancel</a-button>
         <a-button type="primary" @click="onCloseEditor">Submit</a-button>
       </template>
-      <p>{{ editForm.id }}</p>
+      <p>{{ accountForm.id }}</p>
     </a-drawer>
   </div>
 </template>
@@ -79,7 +82,7 @@ const { t } = useI18n()
 const accounts = ref([])
 const isLoading = ref(false)
 const openEditor = ref(false)
-const editForm = reactive({})
+const accountForm = reactive({})
 const defaultFilters = ref({
   status: ['1']
 })
@@ -92,11 +95,15 @@ const pagination = reactive({
 
 const handleEdit = (id) => {
   openEditor.value = true
-  editForm.id = id
+  accountForm.id = id
 }
 
 const onCloseEditor = () => {
   openEditor.value = false
+}
+
+const handleAddAccount = () => {
+  openEditor.value = true
 }
 
 onMounted(async () => {
@@ -139,5 +146,9 @@ const handleTableChange = async (p, filters, sorter) => {
 .main-wrap {
   padding: 20px;
   max-height: calc(100vh - 65px);
+  .opr {
+    margin-bottom: 10px;
+    display: flex;
+  }
 }
 </style>

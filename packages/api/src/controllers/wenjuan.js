@@ -1,12 +1,11 @@
 import BaseController from './base.js'
 import Wenjuan from '../models/wenjuan/wenjuan.js'
 import Version from '../models/wenjuan/version.js'
-import Space from '../models/wenjuan/space.js'
 import CustomError from '../CustomError.js'
 
 class WenjuanController extends BaseController {
   static async list(ctx) {
-    const { page = 1, limit = 10, keywords, sort = { updatedAt: -1 } } = ctx.request.body
+    const { page = 1, limit = 10, keywords, teamId, sort = { updatedAt: -1 } } = ctx.request.body
     const currentAccountId = ctx.request.headers['accountid']
     // console.log('list params:', { page, limit, query, sort })
 
@@ -14,14 +13,18 @@ class WenjuanController extends BaseController {
     if (keywords) {
       query.name = { $regex: keywords, $options: 'i' }
     }
+    query.team = teamId
     console.log('currentAccountId', currentAccountId)
     if (currentAccountId) {
-      query.ownerId = currentAccountId
+      query.owner = currentAccountId
     } else {
       throw new CustomError(401, '未登录', 50100)
     }
-
-    const wenjuan = await Wenjuan.find(query, { isPublish: 1, draft: { name: 1 }, name: 1, updatedAt: 1 })
+    console.log('query', query)
+    const wenjuan = await Wenjuan.find(query, { updatedAt: 1 })
+      .select('isPublish name draft.name updatedAt')
+      .populate('operator', 'accountname realname avatar')
+      // .populate('team', '_id name')
       .sort(sort)
       .skip((page - 1) * limit)
       .limit(limit)
@@ -34,6 +37,7 @@ class WenjuanController extends BaseController {
       page: page,
       limit: limit
     }
+    console.log('wenjuan', wenjuan)
   }
 
   static async get(ctx) {
@@ -55,7 +59,7 @@ class WenjuanController extends BaseController {
     const { id, page = 1, limit = 10 } = ctx.request.body
 
     const res = await Version.find({ wenjuanId: id })
-      .select('version operatorId createdAt')
+      .select('version operator createdAt')
       .sort({ version: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
@@ -79,8 +83,8 @@ class WenjuanController extends BaseController {
     let res
     // 如果没有 _id，创建新数据
     if (!_id) {
-      updateData.operatorId = accountId
-      updateData.ownerId = accountId
+      updateData.operator = accountId
+      updateData.owner = accountId
       const newWenjuan = new Wenjuan(updateData)
       res = await newWenjuan.save()
     }
@@ -97,7 +101,7 @@ class WenjuanController extends BaseController {
             name: updateData.name,
             settings: updateData.settings,
             data: updateData.data,
-            operatorId: accountId
+            operator: accountId
           })
           await newVersion.save()
         } catch (error) {
@@ -122,34 +126,6 @@ class WenjuanController extends BaseController {
     // 删除问卷及其所有子问卷
     const res = await Wenjuan.deleteMany({ _id: { $in: ids } })
     ctx.body = res
-  }
-
-  static async createSpace(ctx) {
-    const { name, members } = ctx.request.body
-    const res = await Space.create({ name, members: members })
-    ctx.body = res
-  }
-
-  static async getSpace(ctx) {
-    const { id } = ctx.request.body
-    const res = await Space.findOne({ _id: id })
-    ctx.body = res
-  }
-
-  static async getSpaceList(ctx) {
-    const { page = 1, limit = 10 } = ctx.request.body
-    const res = await Space.find()
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .exec()
-    const total = await Space.countDocuments()
-    ctx.body = {
-      list: res,
-      total: total,
-      pages: Math.ceil(total / limit),
-      page: page,
-      limit: limit
-    }
   }
 }
 

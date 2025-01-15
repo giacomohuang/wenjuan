@@ -22,7 +22,7 @@
           <template #overlay>
             <a-menu>
               <a-menu-item>
-                <a @click="router.push('/my/profile')">{{ t('my.profile._title') }}</a>
+                <a @click="router.push('/my/authentication')">{{ t('my.profile._title') }}</a>
               </a-menu-item>
               <a-menu-item>
                 <a @click="signout">{{ t('signout._title') }}</a>
@@ -82,7 +82,7 @@
 
     <div class="main-content">
       <a-spin :spinning="globalLoading" style="margin: 20px"></a-spin>
-      <router-view v-if="isRouterAlive" />
+      <router-view v-if="isRouterAlive" :key="route.fullPath" />
     </div>
     <!-- <aside class="assist" v-show="showAssist">
       <div class="assist-header"></div>
@@ -108,14 +108,6 @@ const globalLoading = ref(false)
 const isHideSubmenu = ref(false)
 provide('globalLoading', globalLoading)
 provide('isHideSubmenu', isHideSubmenu)
-
-const reload = () => {
-  isRouterAlive.value = false
-  nextTick(() => {
-    isRouterAlive.value = true
-  })
-}
-provide('pageReload', reload)
 
 const store = useStore()
 const { accountname, accountid, realname } = toRefs(store)

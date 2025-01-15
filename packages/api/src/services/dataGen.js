@@ -19,7 +19,7 @@ const genAccounts = async (num) => {
       enable2FA: faker.datatype.boolean(),
       initPwd: faker.datatype.boolean(),
       status: 1,
-      OperatorId: faker.database.mongodbObjectId(),
+      operator: faker.database.mongodbObjectId(),
       OperateTime: faker.date.recent()
     })
   }

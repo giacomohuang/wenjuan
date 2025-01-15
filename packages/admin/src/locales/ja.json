@@ -143,17 +143,12 @@
     "_title": "システム設定",
     "account": {
       "_title": "アカウント",
-      "account": {
-        "_title": "アカウント情報"
-      },
-      "accountlist": {
-        "_title": "アカウント一覧",
-        "accountname": "アカウント名",
-        "realname": "氏名",
-        "email": "メールアドレス",
-        "phone": "携帯電話",
-        "2fa": "二段階認証"
-      }
+      "accountname": "アカウント名",
+      "realname": "氏名",
+      "email": "メールアドレス",
+      "phone": "携帯電話",
+      "2fa": "二段階認証",
+      "addaccount": "アカウントを作成する"
     },
     "permission": {
       "_title": "権限",

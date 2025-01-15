@@ -21,7 +21,7 @@ const defaultAccount = {
   enable2FA: false,
   initPwd: true,
   status: 1,
-  OperatorId: null,
+  operator: null,
   OperateTime: faker.date.past(),
 };
 const defaultAccount1 = {
@@ -42,7 +42,7 @@ const defaultAccount1 = {
   enable2FA: false,
   initPwd: false,
   status: 1,
-  OperatorId: null,
+  operator: null,
   OperateTime: faker.date.past(),
 };
 
@@ -70,7 +70,7 @@ const generateTestData = (count) => {
       enable2FA: false,
       initPwd: true,
       status: faker.number.int({ min: 0, max: 1 }),
-      OperatorId: null,
+      operator: null,
       OperateTime: faker.date.past(),
     };
     accounts.push(account);

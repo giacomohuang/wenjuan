@@ -143,17 +143,12 @@
     "_title": "System",
     "account": {
       "_title": "Account",
-      "accountlist": {
-        "_title": "Account List",
-        "accountname": "Account Name",
-        "realname": "Name",
-        "email": "Email",
-        "phone": "Mobile Phone",
-        "2fa": "2FA"
-      },
-      "account": {
-        "_title": "Account Info"
-      }
+      "accountname": "Account Name",
+      "realname": "Name",
+      "email": "Email",
+      "phone": "Mobile Phone",
+      "2fa": "2FA",
+      "addaccount": "create Account"
     },
     "permission": {
       "_title": "Permission",

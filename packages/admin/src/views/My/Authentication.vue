@@ -1,11 +1,10 @@
 <template>
   <context-holder />
   <div class="main" v-show="!globalLoading">
-    <section>
-      <div class="title">
-        <h2>{{ t('my.authentication.pwd') }}</h2>
+    <a-card :title="t('my.authentication.pwd')">
+      <template #extra>
         <a-button @click.stop="state.toggleChangePwd = !state.toggleChangePwd">{{ state.toggleChangePwd ? t('my.authentication.hide') : t('my.authentication.cpwd') }}</a-button>
-      </div>
+      </template>
       <div class="tips">{{ t('my.authentication.syaeyps') }}</div>
       <div v-if="state.toggleChangePwd" class="content">
         <a-form ref="pwdFormRef" :model="pwdForm" :rules="pwdRules" :label-col="{ span: 6 }" :wrapper-col="{ span: 12 }" @validate="handlePwdValidate" @finish="handleUpdatePwd">
@@ -25,11 +24,8 @@
           </a-form-item>
         </a-form>
       </div>
-    </section>
-    <section>
-      <div class="title">
-        <h2>{{ t('my.authentication.mobi') }}</h2>
-      </div>
+    </a-card>
+    <a-card :title="t('my.authentication.mobi')">
       <div class="tips">{{ t('my.authentication.enhphone') }}</div>
       <div class="item">
         <label>{{ phoneForm.phone ? (phoneForm.areacode ? phoneForm.areacode + ' ' : '') + helper.obfuscate('phone', phoneForm.phone) : t('my.authentication.notset') }}</label>
@@ -55,12 +51,8 @@
           <VerifyInput v-model="phoneState.verifyCode" :autofocus="true" :digits="6" @finish="handleUpdatePhone"></VerifyInput>
         </div>
       </a-modal>
-    </section>
-
-    <section>
-      <div class="title">
-        <h2>{{ t('my.authentication.email') }}</h2>
-      </div>
+    </a-card>
+    <a-card :title="t('my.authentication.email')">
       <div class="tips">{{ t('my.authentication.enhemail') }}</div>
       <div class="item">
         <label>{{ emailForm.email ? helper.obfuscate('email', emailForm.email) : t('my.authentication.notset') }}</label>
@@ -81,12 +73,8 @@
           <VerifyInput v-model="emailState.verifyCode" :autofocus="true" :digits="6" @finish="handleUpdateEmail"></VerifyInput>
         </div>
       </a-modal>
-    </section>
-
-    <section>
-      <div class="title">
-        <h2>{{ t('my.authentication.totp') }}</h2>
-      </div>
+    </a-card>
+    <a-card :title="t('my.authentication.totp')">
       <div class="tips">{{ t('my.authentication.enhtotp') }}</div>
       <div class="item">
         <label>{{ totpForm.totpSecret ? t('my.authentication.havset') : t('my.authentication.notset') }}</label>
@@ -108,12 +96,8 @@
           <VerifyInput style="margin: 10px 0 30px 30px" v-model:value="totpState.verifyCode" :autofocus="true" @finish="handleUpdateTotpSecret" :digits="6"></VerifyInput>
         </div>
       </a-modal>
-    </section>
-
-    <section>
-      <div class="title">
-        <h2>{{ t('my.authentication.2fa') }}</h2>
-      </div>
+    </a-card>
+    <a-card :title="t('my.authentication.2fa')">
       <div class="tips">{{ t('my.authentication.enh2fa') }}</div>
       <div class="item">
         <label>{{ state.enable2FA ? t('common.enabled') : t('common.disabled') }}</label>
@@ -122,7 +106,7 @@
       <div class="item">
         <a-alert :message="t('my.authentication.2faWarning')" type="warning" show-icon v-if="!(emailForm.email || phoneForm.phone || totpForm.totpSecret)" />
       </div>
-    </section>
+    </a-card>
   </div>
 </template>
 
@@ -526,9 +510,6 @@ onUnmounted(() => {
 .main {
   max-width: 950px;
   padding: 20px;
-}
-section {
-  margin-bottom: 60px;
   .title {
     border-bottom: 1px solid var(--border-medium);
     padding-bottom: 12px;
@@ -554,6 +535,10 @@ section {
       font-weight: 500;
       // font-size: 14px;
     }
+  }
+  :deep(.ant-card) {
+    width: 680px;
+    margin-bottom: 20px;
   }
 }
 

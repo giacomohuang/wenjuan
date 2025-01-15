@@ -19,5 +19,5 @@ teamRouter.post('/team/memberlist', TeamController.memberList)
 teamRouter.post('/team/addmember', TeamController.addMember)
 teamRouter.post('/team/removeMember', TeamController.removeMember)
 teamRouter.post('/team/updateMemberRole', TeamController.updateMemberRole)
-
+teamRouter.post('/team/listByAccountId', TeamController.listByAccountId)
 export default teamRouter

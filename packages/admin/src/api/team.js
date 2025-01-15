@@ -13,6 +13,16 @@ const team = {
     })
   },
 
+  // 获取用户所属团队列表s
+  listByAccountId(params = {}) {
+    return fetch({
+      baseURL: baseUrl.default,
+      url: 'team/listByAccountId',
+      method: 'post',
+      data: params
+    })
+  },
+
   // 创建团队
   create(data) {
     return fetch({

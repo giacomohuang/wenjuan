@@ -1,19 +1,33 @@
 <template>
   <div class="project">
+    {{}}
     <div class="header">
       <div class="left">
-        <div class="title">项目</div>
+        <div class="title">{{ teamId ? teamList.find((item) => item._id === teamId)?.name : '个人' }}项目</div>
+        <a-dropdown>
+          <a class="ant-dropdown-link" @click.prevent> 切换团队<icon name="arrow-down" /> </a>
+          <template #overlay>
+            <a-menu>
+              <a-menu-item>
+                <div @click="changeTeam(null)">个人</div>
+              </a-menu-item>
+              <a-menu-item v-for="item in teamList" :key="item._id">
+                <div @click="changeTeam(item._id)">{{ item.name }}</div>
+              </a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
       </div>
     </div>
     <ul class="list">
       <li class="item" v-for="item in wenjuan" :key="item._id" @click="handleEdit(item._id)">
         <icon name="remove" class="ico-remove" @click.stop="handleRemove(item._id)" />
-        <div class="title">{{ item.isDraft ? item.draft.name : item.name }}</div>
+        <div class="title">{{ item.draft ? item.draft.name : item.name }}</div>
         <div class="time">{{ dayjs(item.updatedAt).fromNow() }}更新</div>
         <div class="footer">
           <div class="status">
             <mp-tag size="small" :color="item.isPublish ? (dayjs(item.endTime).isAfter(dayjs()) ? 'gray' : 'green') : 'gray'">{{ item.isPublish ? (dayjs(item.endTime).isAfter(dayjs()) ? '已结束' : '收集中') : '未发布' }}</mp-tag>
-            <mp-tag size="small" color="blue" v-if="item.isDraft">草稿模式</mp-tag>
+            <mp-tag size="small" color="blue" v-if="item.draft">草稿模式</mp-tag>
           </div>
         </div>
       </li>
@@ -27,12 +41,19 @@
   </div>
 </template>
 
+<router lang="json">
+{
+  "param": "/:teamId?"
+}
+</router>
+
 <script setup>
 import { ref, onMounted } from 'vue'
 import dayjs from 'dayjs'
 import API from '@/api/API'
 import { useRouter } from 'vue-router'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import { useStorage } from '@vueuse/core'
 
 dayjs.extend(relativeTime)
 
@@ -41,6 +62,10 @@ const wenjuan = ref([])
 const current = ref(1)
 const pageSize = ref(10)
 const total = ref(0)
+const teamList = ref([])
+const teamId = ref(router.currentRoute.value.params.teamId || localStorage.getItem('teamId'))
+
+console.log('teamId', teamId.value)
 
 const handleEdit = (id) => {
   router.push(`/wenjuan/editor/${id}`)
@@ -70,12 +95,30 @@ const handlePageChange = (page) => {
 }
 
 const loadData = async () => {
-  const res = await API.wenjuan.list(current.value, pageSize.value, {}, { updatedAt: -1 })
+  const teamRes = await API.team.listByAccountId()
+  teamList.value = teamRes
+  if (teamId.value) {
+    // 验证合法性
+    if (!teamList.value.find((item) => item._id === teamId.value)) {
+      teamId.value = null
+    }
+  }
+  const res = await API.wenjuan.list(current.value, pageSize.value, '', teamId.value, { updatedAt: -1 })
   wenjuan.value = res.wenjuan
   total.value = res.total
 }
+const changeTeam = (id) => {
+  if (id) {
+    localStorage.setItem('teamId', id)
+    router.push(`/wenjuan/project/${id}`)
+  } else {
+    localStorage.removeItem('teamId')
+    router.push(`/wenjuan/project?refresh=${Date.now()}`)
+  }
+}
 
 onMounted(() => {
+  console.log('onMounted')
   loadData()
 })
 </script>
@@ -97,6 +140,12 @@ onMounted(() => {
     font-weight: 600;
     color: var(--text-primary);
     position: relative;
+  }
+
+  .left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
   }
 }
 

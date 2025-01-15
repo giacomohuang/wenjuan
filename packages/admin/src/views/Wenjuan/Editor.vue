@@ -1,11 +1,11 @@
-<template v-if="!isLoading">
+<template>
   <div class="header">
     <div class="left">
       <icon name="arrow-right" class="ico-back" size="2em" @click="router.push('/wenjuan/project')" />
       <div class="q-name-wrapper">
-        <div class="q-name">
+        <div class="q-name" @click.stop="editQName">
           <!-- <a-tag color="red">已结束</a-tag> -->
-          <span class="text" @click.stop="editQName">{{ Q.name }}</span>
+          <span class="text">{{ Q.name }}</span>
           <icon class="icon-edit" name="edit" />
         </div>
         <div class="q-status">
@@ -27,7 +27,7 @@
     </div>
     <div class="actions">
       <a-button @click="deleteDraft" :disabled="isSaving" v-if="isDraft">删除草稿</a-button>
-      <a-button @click="publish" :disabled="isSaving || (isPublish && !isDraft)">发布</a-button>
+      <a-button @click="publish" v-if="!isLoading" :disabled="isSaving || (isPublish && !isDraft)">发布</a-button>
       <a-select :dropdown-match-select-width="false" v-if="versionList.list.length > 0" v-model:value="versionList.selectedVersion" placement="bottomRight" :fieldNames="{ label: 'name', value: 'version' }" :disabled="isSaving" :options="versionList.list" @change="getVersion(versionList.selectedVersion)">
         <template #option="{ version, name }">
           <div class="version-name" :class="version == currentVersion ? 'current' : ''">
@@ -52,7 +52,7 @@
     <main class="q-items" data-simplebar>
       <div class="tips" v-if="!Q.data || Q.data.length == 0">请点击题型按钮或将题型拖动到这里</div>
       <VueDraggable v-model="Q.data" tag="ul" handle=".handle" animation="100" group="group" ghostClass="dragging" @end.stop="onDropped">
-        <li v-for="(item, index) in Q.data" class="q-item" :id="item.id" :key="item.id" :class="index == currentItemIndex ? 'selected' : ''" @mouseup="changeEditingItem(index)">
+        <li v-for="(item, index) in Q.data" class="q-item" :id="item.id" :key="item.id" :class="index == seleItemIndex ? 'selected' : ''" @mouseup="changeEditingItem(index)">
           <div class="title">
             <div class="number">
               <icon name="handle" class="handle"></icon>
@@ -66,7 +66,7 @@
               <a-tooltip title="删除" placement="top"><icon name="remove" class="items" @click="removeItem(index)" /></a-tooltip>
             </div>
           </div>
-          <div class="content"><component :is="QtypeComponents[item.type]" :qItemIndex="index" :key="item.id"></component></div>
+          <div class="content"><component :is="QtypeComponents[item.type]" :itemIndex="index" :itemId="item.id" :key="item.id"></component></div>
           <div class="logic-tag" @click="logicDrawer = true" :class="hasLogic(item) ? 'enabled' : ''"><icon name="logic" /></div>
         </li>
       </VueDraggable>
@@ -111,7 +111,7 @@
 </router>
 
 <script setup>
-import { provide, ref, reactive, nextTick, onBeforeMount, onBeforeUnmount, defineAsyncComponent, watch, onMounted, inject, defineComponent } from 'vue'
+import { provide, ref, reactive, nextTick, onBeforeMount, onBeforeUnmount, defineAsyncComponent, watch, onMounted, defineComponent } from 'vue'
 import XEditer from '@/components/XEditer.vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import 'simplebar'
@@ -165,10 +165,10 @@ const QtypeComponents = {
   NPS: defineAsyncComponent(() => import('./components/NPS.vue'))
 }
 const Q = reactive({ data: [] })
-const currentItemIndex = ref(0)
+const seleItemIndex = ref(0)
 // const qItems = reactive([])
 const qId = ref(null)
-const pageReload = inject('pageReload')
+const seleItemId = ref(null)
 // 是否是发布状态
 const isPublish = ref(false)
 const isSaving = ref(false)
@@ -185,6 +185,7 @@ const qNameInput = ref('')
 const previewModal = ref(false)
 const settingsModal = ref(false)
 const currentVersion = ref(null)
+const teamId = ref(null)
 
 const versionList = reactive({
   list: [],
@@ -196,7 +197,8 @@ const versionList = reactive({
 })
 
 provide('Q', Q)
-provide('currentItemIndex', currentItemIndex)
+provide('seleItemIndex', seleItemIndex)
+provide('seleItemId', seleItemId)
 provide('settingsModal', settingsModal)
 
 async function updateQName() {
@@ -215,7 +217,8 @@ function addItem(payload) {
   const data = JSON.parse(JSON.stringify(payload))
   data.id = nanoid()
   Q.data.push(data)
-  currentItemIndex.value = Q.data.length - 1
+  seleItemIndex.value = Q.data.length - 1
+  seleItemId.value = data.id
   nextTick(() => {
     const el = document.getElementById(data.id)
     el.scrollIntoView({ block: 'nearest' })
@@ -225,11 +228,24 @@ function addItem(payload) {
 
 function removeItem(index) {
   Q.data.splice(index, 1)
-  if (Q.data.length == 1) {
-    currentItemIndex.value = 0
+  // if (Q.data.length == 1) {
+  //   seleItemIndex.value = 0
+  //   seleItemId.value = Q.data[0].id
+  // } else {
+  //   seleItemIndex.value = Math.max(0, index - 1)
+  //   seleItemId.value = Q.data[seleItemIndex.value].id
+  // }
+  if (index < seleItemIndex.value) {
+    seleItemIndex.value = Math.max(0, seleItemIndex.value - 1)
   } else {
-    currentItemIndex.value = index - 1
+    seleItemIndex.value = Math.min(Q.data.length - 1, index)
   }
+  if (Q.data.length !== 0) {
+    seleItemId.value = Q.data[seleItemIndex.value].id
+  } else {
+    seleItemId.value = null
+  }
+
   cleanupConditions(Q.data)
 }
 
@@ -237,7 +253,8 @@ function duplicateItem(index) {
   const item = JSON.parse(JSON.stringify(Q.data[index]))
   item.id = nanoid()
   Q.data.splice(index, 0, item)
-  currentItemIndex.value = index + 1
+  seleItemIndex.value = index + 1
+  seleItemId.value = item.id
   nextTick(() => {
     const el = document.getElementById(Q.data[index + 1].id)
     el.scrollIntoView({ block: 'nearest' })
@@ -247,12 +264,15 @@ function duplicateItem(index) {
 
 function onDropped(e) {
   e.stopPropagation()
-  currentItemIndex.value = e.newIndex
+  seleItemIndex.value = e.newIndex
+  seleItemId.value = Q.data[e.newIndex].id
   cleanupConditions(Q.data)
 }
 
 function changeEditingItem(index) {
-  currentItemIndex.value = index
+  seleItemIndex.value = index
+  seleItemId.value = Q.data[index].id
+  // console.log('changeEditingItem', seleItemId.value)
 }
 
 function preview() {
@@ -309,7 +329,7 @@ async function publish() {
 function deleteDraft() {
   save({ draft: null })
   isDraft.value = false
-  pageReload()
+  router.replace(`/wenjuan/editor/${qId.value}?refresh=${Date.now()}`)
 }
 
 async function getVersion(version) {
@@ -331,53 +351,54 @@ const saveDraft = debounce(async (data) => {
   console.log('saveDraft', qId.value)
   if (!qId.value) return
   save({ draft: { name: data.name, data: data.data, settings: data.settings } })
-}, 1000)
+}, 500)
 
 onBeforeMount(async () => {
-  const id = router.currentRoute.value.params.id
-  let t = {}
-  let res = {}
-  if (!id) {
-    t = { _id: null, isPublish: false, name: '未命名问卷', settings: {}, draft: null, data: [] }
+  try {
     isLoading.value = true
-    try {
+    const id = router.currentRoute.value.params.id
+    let t = {}
+    let res = {}
+    if (!id) {
+      teamId.value = localStorage.getItem('teamId')
+      t = { _id: null, isPublish: false, name: '未命名问卷', settings: {}, draft: null, data: [], team: teamId.value }
       res = await API.wenjuan.update(t) // console.res
       router.replace(`/wenjuan/editor/${res._id}`)
-    } catch (e) {
-      router.replace('/404?type=wenjuan')
-    } finally {
-      isLoading.value = false
-    }
-  } else {
-    isLoading.value = true
-    try {
+    } else {
       res = await API.wenjuan.get(id)
-    } catch (e) {
-      router.replace('/404?type=wenjuan')
-    } finally {
-      isLoading.value = false
     }
+    qId.value = res._id
+    if (res.draft) {
+      Q.name = res.draft.name
+      Q.data = res.draft.data
+      Q.team = res.team
+      Q.settings = res.draft.settings
+      isDraft.value = true
+    } else {
+      Q.name = res.name
+      Q.data = res.data
+      Q.team = res.team
+      Q.settings = res.settings
+      isDraft.value = false
+    }
+    Q.version = res.version
+    currentVersion.value = res.version
+    versionList.selectedVersion = res.version
+
+    Q.data = [...Q.data]
+    isPublish.value = res.isPublish
+    qSettings.value = Q.settings
+    savedTime.value = dayjs(res.updatedAt).format('MM-DD HH:mm:ss')
+    if (Q.data.length > 0) {
+      seleItemId.value = Q.data[0].id
+    }
+
+    await getVersionList()
+  } catch (e) {
+    router.replace('/404?type=wenjuan')
+  } finally {
+    isLoading.value = false
   }
-  qId.value = res._id
-  if (res.draft) {
-    Q.name = res.draft.name
-    Q.data = res.draft.data
-    Q.settings = res.draft.settings
-    isDraft.value = true
-  } else {
-    Q.name = res.name
-    Q.data = res.data
-    Q.settings = res.settings
-    isDraft.value = false
-  }
-  Q.version = res.version
-  currentVersion.value = res.version
-  versionList.selectedVersion = res.version
-  await getVersionList()
-  Q.data = [...Q.data]
-  isPublish.value = res.isPublish
-  qSettings.value = Q.settings
-  savedTime.value = dayjs(res.updatedAt).format('MM-DD HH:mm:ss')
   // zzz = Q.data
 
   watch(

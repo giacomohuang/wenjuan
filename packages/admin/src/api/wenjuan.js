@@ -2,12 +2,12 @@ import fetch from './fetch'
 import baseUrl from './baseUrl'
 
 const wenjuan = {
-  list(page, limit, query = {}, sort) {
+  list(page, limit, keywords, teamId, sort) {
     console.log('list')
     return fetch({
       baseURL: baseUrl.wenjuan,
       method: 'post',
-      data: { page, limit, query, sort },
+      data: { page, limit, keywords, teamId, sort },
       url: '/wenjuan/list'
     })
   },

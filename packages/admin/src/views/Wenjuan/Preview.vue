@@ -33,7 +33,7 @@
           <div class="start-button">
             <a-button type="primary" size="large" @click="startAnswering">
               滑动屏幕开始
-              <template #icon><RightOutlined /></template>
+              <template #icon><icon name="arrow-right" /></template>
             </a-button>
           </div>
         </div>
@@ -96,7 +96,7 @@
 
 <script setup>
 import { ref, inject, onMounted, watch, computed, onUnmounted, provide } from 'vue'
-import { message, Image } from 'ant-design-vue'
+import { message } from 'ant-design-vue'
 import { RightOutlined, CheckCircleFilled } from '@ant-design/icons-vue'
 import QuestionContent from './components/QuestionContent.vue'
 import 'simplebar'
@@ -246,19 +246,18 @@ const isInCollectTime = computed(() => {
 
 // 检查提交次数限制
 const checkSubmitLimit = () => {
-  const { submitLimitType, submitLimitCount } = Q.settings
-  if (submitLimitType === 'none') return true
+  if (!Q.settings?.submitLimitType || Q.settings?.submitLimitType === 'none') return true
 
   // TODO: 这里需要从后端获取用户的提交次数
   const userSubmitCount = 0
 
-  switch (submitLimitType) {
+  switch (Q.settings?.submitLimitType) {
     case 'once':
       return userSubmitCount === 0
     case 'daily':
     case 'weekly':
     case 'monthly':
-      return userSubmitCount < submitLimitCount
+      return userSubmitCount < Q.settings?.submitLimitCount
     default:
       return true
   }

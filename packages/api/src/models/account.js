@@ -98,7 +98,7 @@ const accountSchema = new mongoose.Schema({
     required: false
   },
   // 操作人id
-  OperatorId: {
+  operator: {
     type: String,
     required: false
   },

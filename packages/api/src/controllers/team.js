@@ -193,6 +193,14 @@ class TeamController extends BaseController {
       message: '更新成员角色成功'
     }
   }
+
+  // 获取用户所属团队列表
+  static async listByAccountId(ctx) {
+    const accountId = ctx.request.headers['accountid']
+    const res = await Team.find({ 'members.memberInfo': accountId }).select('_id name members memberCount')
+    ctx.body = res
+    console.log('res', res)
+  }
 }
 
 export default TeamController

@@ -1,26 +1,26 @@
 <template>
-  <VueDraggable v-model="Q.data[qItemIndex].options" tag="ul" class="options" ghostClass="ghost-opt">
-    <li v-for="(item, index) in Q.data[qItemIndex].options" :id="item.id" :key="item.id" class="item" @click.stop="clickOption($event, index)">
+  <VueDraggable v-model="currentItem.options" tag="ul" class="options" ghostClass="ghost-opt">
+    <li v-for="(item, index) in currentItem.options" :id="item.id" :key="item.id" class="item" @click.stop="clickOption($event, index)">
       <div class="image-container">
         <ImgUpload v-model="item.imageUrl" width="150px" height="180px" />
       </div>
       <XEditer class="text" :class="{ fillbox: item.fill?.show }" v-model="item.text"></XEditer>
       <icon name="del" class="remove" size="1.5em" title="删除" @click.stop="removeOption(index)" />
     </li>
-    <div v-if="Q.data[qItemIndex].options.length < 10" @click.stop="addOption" class="add-option" disabled="false" :draggable="false">
+    <div v-if="currentItem.options.length < 10" @click.stop="addOption" class="add-option" disabled="false" :draggable="false">
       <div class="btn"><icon name="plus" />添加选项</div>
     </div>
   </VueDraggable>
 
   <!-- 选项设置 -->
-  <Teleport to="#__WENJUAN_SETTINGS_CONTENT" v-if="currentItemIndex === qItemIndex">
-    <div class="num">{{ qItemIndex + 1 }}. 图片选择题</div>
+  <Teleport to="#__WENJUAN_SETTINGS_CONTENT" v-if="seleItemId === itemId">
+    <div class="num">{{ itemIndex + 1 }}. 图片选择题</div>
     <a-tabs v-model:activeKey="tabName" type="card" class="tabs">
       <!-- Tabs:题目设置 -->
       <a-tab-pane key="item" tab="题目设置">
         <div class="prop-item">
           <h4>本题必答</h4>
-          <a-switch v-model:checked="Q.data[qItemIndex].required" size="small" />
+          <a-switch v-model:checked="currentItem.required" size="small" />
         </div>
       </a-tab-pane>
     </a-tabs>
@@ -39,12 +39,17 @@ import { VueDraggable } from 'vue-draggable-plus'
 import { customAlphabet } from 'nanoid'
 import { cleanupOptions } from '../cleanup'
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890', 6)
-const { qItemIndex } = defineProps(['qItemIndex'])
+const { itemIndex, itemId } = defineProps(['itemIndex', 'itemId'])
 
 const Q = inject('Q')
-const currentItemIndex = inject('currentItemIndex')
+const seleItemIndex = inject('seleItemIndex')
+const seleItemId = inject('seleItemId')
 const currentOptionIndex = ref(-1)
 // const hoveredOptionIndex = ref(-1)
+
+const currentItem = computed(() => {
+  return Q.data.find((item) => item.id === itemId)
+})
 
 const tabName = ref('')
 
@@ -53,20 +58,20 @@ watch(currentOptionIndex, () => {
 })
 
 function addOption() {
-  Q.data[qItemIndex].options.push({
-    text: '选项' + (Q.data[qItemIndex].options.length + 1),
+  currentItem.value.options.push({
+    text: '选项' + (currentItem.value.options.length + 1),
     id: nanoid()
   })
-  currentOptionIndex.value = Q.data[qItemIndex].options.length - 1
+  currentOptionIndex.value = currentItem.value.options.length - 1
 }
 
 function removeOption(index) {
-  if (Q.data[qItemIndex].options.length <= 1) {
-    Q.data[qItemIndex].options[0].text = ''
-    Q.data[qItemIndex].options[0].imageUrl = ''
+  if (currentItem.value.options.length <= 1) {
+    currentItem.value.options[0].text = ''
+    currentItem.value.options[0].imageUrl = ''
     return
   }
-  Q.data[qItemIndex].options.splice(index, 1)
+  currentItem.value.options.splice(index, 1)
   currentOptionIndex.value = -1
   cleanupOptions(Q.data)
 }
@@ -106,15 +111,15 @@ function setTab() {
 }
 
 onBeforeMount(() => {
-  if (!Q.data[qItemIndex].options) {
-    Q.data[qItemIndex].options = [
+  if (!currentItem.value.options) {
+    currentItem.value.options = [
       {
         text: '选项1',
         id: nanoid()
       }
     ]
   }
-  // qItems.value[qItemIndex].options.forEach((option) => {
+  // qItems.value[itemIndex].options.forEach((option) => {
   //   if (!option.id) {
   //     option.id = nanoid()
   //   }

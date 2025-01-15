@@ -143,17 +143,12 @@
     "_title": "系统设置",
     "account": {
       "_title": "账户",
-      "account": {
-        "_title": "账户信息"
-      },
-      "accountlist": {
-        "_title": "账户列表",
-        "accountname": "帐户名",
-        "realname": "姓名",
-        "email": "邮箱",
-        "phone": "手机",
-        "2fa": "两步验证"
-      }
+      "accountname": "帐户名",
+      "realname": "姓名",
+      "email": "邮箱",
+      "phone": "手机",
+      "2fa": "两步验证",
+      "addaccount": "创建账户"
     },
     "permission": {
       "_title": "权限",
