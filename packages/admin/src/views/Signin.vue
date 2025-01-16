@@ -43,7 +43,7 @@
           <a-button type="primary" :loading="state.loading" html-type="submit" class="primary-btn">
             {{ t('signin.signin') }}
           </a-button>
-          <a href="####" @click="state.method = 'resetPwd'" class="link-btn">{{ t('signin.forgotpwd') }}</a>
+          <a-button type="link" size="small" @click="state.method = 'resetPwd'">{{ t('signin.forgotpwd') }}</a-button>
         </a-form-item>
       </a-form>
       <!-- <div style="margin: 0 0 0 90px; font-size: 12px">30天内没有访问将重新登录</div> -->

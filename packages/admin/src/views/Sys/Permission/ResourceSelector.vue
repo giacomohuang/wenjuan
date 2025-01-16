@@ -24,7 +24,7 @@
     <div class="items-outline">
       <div v-if="keywords && !resourceTree.children" class="hint">
         {{ t('sys.permission.resource.noMatchingData') }}
-        <a href="####" @click="keywords = ''">{{ t('sys.permission.resource.clearSearchKeywords') }}</a>
+        <a-button type="link" size="small" @click="keywords = ''">{{ t('sys.permission.resource.clearSearchKeywords') }}</a-button>
       </div>
       <div ref="listRef">
         <ResourceSelectorList :data="resourceTree.children" pidEnabled="true" @toggleCollapse="toggleCollapse" @toggleSelect="toggleSelect" v-if="resourceTree" />

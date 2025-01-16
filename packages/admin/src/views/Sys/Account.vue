@@ -36,7 +36,7 @@
           filterMultiple: false,
           width: 80
         },
-        { title: t('common.action'), key: 'action', width: 128, align: 'center', fixed: 'right' }
+        { title: t('common.action'), key: 'action', align: 'center', fixed: 'right' }
       ]"
       :dataSource="accounts"
       :pagination="pagination"
@@ -52,9 +52,9 @@
           <a-tag :color="record.enable2FA ? 'green' : 'red'">{{ record.enable2FA ? '已开启' : '未开启' }}</a-tag>
         </template>
         <template v-else-if="column.key === 'action'">
-          <a @click="handleEdit(record._id)" href="####">{{ t('common.edit') }}</a>
+          <a-button type="link" size="small" @click="handleEdit(record._id)">{{ t('common.edit') }}</a-button>
           <a-divider type="vertical" />
-          <a href="####">{{ t('common.disable') }}</a>
+          <a-button type="link" size="small" danger>{{ t('common.disable') }}</a-button>
         </template>
         <template v-else-if="column.key === 'status'">
           <a-tag :color="record.status ? 'green' : 'red'">{{ record.status ? t('common.enabled') : t('common.disabled') }}</a-tag>
@@ -104,13 +104,12 @@
 </template>
 
 <script setup>
-import { ref, reactive, onBeforeMount } from 'vue'
+import { ref, reactive, onBeforeMount, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import API from '@/api/API'
 import SimpleBar from 'simplebar'
 import '@/assets/simplebar.css'
 import areaCode from '@/js/areacode'
-import account from '@/api/account'
 
 const { t, locale } = useI18n()
 
@@ -171,6 +170,9 @@ const handleAddAccount = () => {
   openEditor.value = true
   accountForm.status = 1
 }
+watch(openEditor, (newVal) => {
+  console.log('newVal', newVal)
+})
 
 const list = async () => {
   try {

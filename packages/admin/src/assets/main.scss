@@ -51,4 +51,15 @@ div[aria-hidden='true'] {
 .show {
   opacity: 1;
 }
+
+.danger {
+  color: #ff4d4f;
+}
+
+a {
+  &.danger:hover {
+    color: rgb(231, 39, 42);
+  }
+}
+
 /*rtl:end:ignore*/

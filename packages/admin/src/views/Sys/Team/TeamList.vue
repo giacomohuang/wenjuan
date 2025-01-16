@@ -25,10 +25,12 @@
         </template>
         <template v-else-if="column.key === 'action'">
           <a-space size="small">
-            <a-button type="link" @click="handleEdit(record)">编辑</a-button>
-            <a-button type="link" @click="handleMembers(record)">成员管理</a-button>
+            <a-button type="link" size="small" @click="handleEdit(record)">编辑</a-button>
+            <a-divider type="vertical" />
+            <a-button type="link" size="small" @click="handleMembers(record)">成员管理</a-button>
+            <a-divider type="vertical" />
             <a-popconfirm title="确定要删除这个团队吗？" @confirm="handleDelete(record)">
-              <a-button type="link" danger>删除</a-button>
+              <a-button type="link" size="small" danger>删除</a-button>
             </a-popconfirm>
           </a-space>
         </template>
@@ -148,7 +150,8 @@ const columns = [
   {
     title: '操作',
     key: 'action',
-    fixed: 'right'
+    fixed: 'right',
+    align: 'center'
   }
 ]
 

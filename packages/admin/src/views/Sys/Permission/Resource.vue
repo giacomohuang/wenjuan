@@ -29,9 +29,9 @@
       <div class="main-content hl-area">
         <div v-if="keywords && !resourceTree.children" class="empty-state">
           {{ t('sys.permission.resource.noMatchingData') }}
-          <a href="####" @click="keywords = ''">
+          <a-button type="link" size="small" @click="keywords = ''">
             {{ t('sys.permission.resource.clearSearchKeywords') }}
-          </a>
+          </a-button>
         </div>
         <div class="list" ref="listRef">
           <ResourceList :data="resourceTree.children" @open="openEditor" @remove="remove" @reorder="reorder" @toggleCollapse="toggleCollapse" v-if="resourceTree"> </ResourceList>
