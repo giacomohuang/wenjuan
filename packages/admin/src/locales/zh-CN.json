@@ -41,7 +41,9 @@
         "excellent": "很强"
       }
     },
-    "deleteSuccess": "删除成功"
+    "deleteSuccess": "删除成功",
+    "enabled1": "已开启",
+    "disabled1": "未开启"
   },
   "workspace": {
     "_title": "工作台",
@@ -148,7 +150,10 @@
       "email": "邮箱",
       "phone": "手机",
       "2fa": "两步验证",
-      "addaccount": "创建账户"
+      "addaccount": "创建账户",
+      "editaccount": "编辑账户",
+      "password": "密码",
+      "confirmpassword": "确认密码"
     },
     "permission": {
       "_title": "权限",

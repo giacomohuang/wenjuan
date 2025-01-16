@@ -107,7 +107,7 @@
   <a-modal v-model:open="settingsModal" :footer="null" style="width: 800px" title="设置">
     <Settings v-if="settingsModal" />
   </a-modal>
-  <a-modal v-model:open="cooperatorModal" :footer="null" style="width: 1000px" title="管理本问卷的协作者">
+  <a-modal v-model:open="cooperatorModal" :footer="null" style="width: 1000px" title="将团队成员添加为本问卷的协作者">
     <div class="cooperator-list">
       <a-card title="团队成员" class="list">
         <!-- <TeamMemberSelector v-model:value="teamMemberId" /> -->
@@ -125,13 +125,15 @@
       <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 20px 0">
         <icon name="arrow-right" />
       </div>
-      <a-card title="协作者">
+      <a-card title="协作者" class="list">
         <a-table :dataSource="cooperatorList" :columns="cooperatorColumns" :pagination="false" :showHeader="false" size="small">
           <template #bodyCell="{ column, record }">
             <template v-if="column.key === 'avatar'">
-              <img :src="record.account.avatar" style="width: 32px; height: 32px; border-radius: 50%" />
+              <div class="item">
+                <img :src="record.account.avatar" style="width: 32px; height: 32px; border-radius: 50%" />
+                {{ record.account.realname }} ({{ record.account.accountname }})
+              </div>
             </template>
-            <template v-if="column.key === 'name'"> {{ record.account.realname }} ({{ record.account.accountname }}) </template>
             <template v-if="column.key === 'role'">
               <a-select v-model:value="record.role">
                 <a-select-option value="editor">可编辑</a-select-option>
@@ -139,9 +141,7 @@
               </a-select>
             </template>
             <template v-if="column.key === 'action'">
-              <a-button type="link" @click="removeCooperator(record.account._id)" :disabled="record.role == 'editor' && cooperatorEditorCount <= 1">
-                <icon name="remove" />
-              </a-button>
+              <a-button type="link" danger @click="removeCooperator(record.account._id)" :disabled="record.role == 'editor' && cooperatorEditorCount <= 1">移除</a-button>
             </template>
           </template>
         </a-table>
@@ -526,12 +526,7 @@ function closeLogicDrawer() {
 const cooperatorColumns = [
   {
     title: '头像',
-    key: 'avatar',
-    width: 80
-  },
-  {
-    title: '姓名',
-    key: 'name'
+    key: 'avatar'
   },
   {
     title: '角色',

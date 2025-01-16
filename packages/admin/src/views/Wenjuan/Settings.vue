@@ -4,6 +4,7 @@
       <!-- 基础设置 -->
       <a-card title="基础设置" class="setting-card">
         <a-form-item label="问卷描述" name="description">
+          <template #extra> 该内容会在问卷封面中展示 </template>
           <a-textarea v-model:value="formState.description" placeholder="请输入问卷描述" :rows="4" />
         </a-form-item>
         <a-form-item label="问卷收集起止时间" name="collectTime">
@@ -41,13 +42,7 @@
       </a-card>
 
       <!-- 外观和封面设置 -->
-      <a-card title="外观和封面设置" class="setting-card">
-        <a-form-item label="封面图片" name="coverImage">
-          <div class="img-upload"><ImageUpload v-model="formState.coverImage" width="150px" height="150px" /></div>
-        </a-form-item>
-        <a-form-item label="背景图片" name="backgroundImage">
-          <div class="img-upload"><ImageUpload v-model="formState.backgroundImage" width="150px" height="150px" /></div>
-        </a-form-item>
+      <a-card title="外观设置" class="setting-card">
         <a-form-item label="主题色" name="themeColor">
           <a-radio-group v-model:value="formState.themeColorMode" style="margin-bottom: 16px">
             <a-radio-button value="custom">自定义</a-radio-button>
@@ -57,13 +52,47 @@
             <div class="color-block custom" v-if="formState.themeColorMode === 'custom'">
               <input type="color" v-model="formState.themeColor" class="color-input" />
             </div>
-            <!-- <ColorPicker v-model="formState.themeColor" v-if="formState.themeColorMode === 'custom'" /> -->
             <div class="color-presets" v-if="formState.themeColorMode === 'system'">
               <div v-for="(color, name) in colorSchemes" :key="name" class="color-block" :class="{ active: formState.themeColor === color }" @click="handleColorSchemeSelect(color, name)">
                 <div class="inner" :style="{ backgroundColor: color }"></div>
               </div>
             </div>
           </div>
+        </a-form-item>
+        <a-form-item label="文字颜色" name="textColor">
+          <div class="theme-color-container">
+            <div class="color-block custom">
+              <input type="color" v-model="formState.textColor" class="color-input" />
+            </div>
+          </div>
+        </a-form-item>
+        <a-form-item label="背景颜色" name="bgColor">
+          <div class="theme-color-container">
+            <div class="color-block custom">
+              <input type="color" v-model="formState.bgColor" class="color-input" />
+            </div>
+          </div>
+        </a-form-item>
+        <a-form-item label="背景图片" name="backgroundImage">
+          <div class="img-upload"><ImageUpload v-model="formState.backgroundImage" width="150px" height="150px" /><icon name="remove" class="ico-remove" @click.stop="clearItem('backgroundImage')" /></div>
+        </a-form-item>
+        <a-divider />
+        <a-form-item label="封面背景颜色" name="coverBgColor">
+          <div class="theme-color-container">
+            <div class="color-block custom">
+              <input type="color" v-model="formState.coverBgColor" class="color-input" />
+            </div>
+          </div>
+        </a-form-item>
+        <a-form-item label="封面文字颜色" name="coverTextColor">
+          <div class="theme-color-container">
+            <div class="color-block custom">
+              <input type="color" v-model="formState.coverTextColor" class="color-input" />
+            </div>
+          </div>
+        </a-form-item>
+        <a-form-item label="封面图片" name="coverImage">
+          <div class="img-upload"><ImageUpload v-model="formState.coverImage" width="150px" height="150px" /><icon name="remove" class="ico-remove" @click.stop="clearItem('coverImage')" /></div>
         </a-form-item>
       </a-card>
 
@@ -111,6 +140,8 @@ const settingsModal = inject('settingsModal')
 const formState = reactive({
   // 基础设置
   description: Q.settings?.description ?? '',
+  bgColor: Q.settings?.bgColor ?? '#ffffff',
+  textColor: Q.settings?.textColor ?? '#000000',
   status: Q.settings?.status ?? true,
   tags: Q.settings?.tags ?? [],
   timeLimit: Q.settings?.timeLimit ?? 0,
@@ -119,6 +150,8 @@ const formState = reactive({
   collectTime: Q.settings?.collectTime ? [dayjs(Q.settings?.collectTime?.[0]), dayjs(Q.settings?.collectTime?.[1])] : [],
   // 外观和封面设置
   coverImage: Q.settings?.coverImage ?? '',
+  coverBgColor: Q.settings?.coverBgColor ?? '#ffffff',
+  coverTextColor: Q.settings?.coverTextColor ?? '#000000',
   backgroundImage: Q.settings?.backgroundImage ?? '',
   themeColorMode: Q.settings?.themeColorMode ?? 'custom',
   themeColor: Q.settings?.themeColor ?? '#0090ff',
@@ -155,6 +188,10 @@ const colorSchemes = {
 const handleColorSchemeSelect = (color, name) => {
   formState.themeColor = color
 }
+
+const clearItem = (item) => {
+  delete formState[item]
+}
 </script>
 
 <style scoped lang="scss">
@@ -182,8 +219,15 @@ const handleColorSchemeSelect = (color, name) => {
   outline: 1px solid var(--border-medium);
   cursor: pointer;
   border-radius: 4px;
+  transition: all 0.3s ease;
   &:hover {
+    transform: translateY(-2px);
     outline: 1px solid var(--c-brand);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    .ico-remove {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 }
 
@@ -235,6 +279,28 @@ const handleColorSchemeSelect = (color, name) => {
       border: none;
       border-radius: 2px;
     }
+  }
+}
+
+.ico-remove {
+  opacity: 0;
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--c-brand);
+  border-radius: 50%;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--c-brand);
+  transform: scale(0.8);
+  transition: all 0.3s ease;
+  z-index: 2;
+
+  &:hover {
+    border-color: var(--c-red);
+    color: var(--c-red);
+    transform: scale(1.1) !important;
   }
 }
 </style>

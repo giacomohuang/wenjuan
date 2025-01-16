@@ -41,7 +41,9 @@
     "upload": "رفع",
     "ok": "يتأكد",
     "delete": "يمسح",
-    "deleteSuccess": "تم الحذف بنجاح"
+    "deleteSuccess": "تم الحذف بنجاح",
+    "enabled1": "يُمكَِن",
+    "disabled1": "إبطال"
   },
   "workspace": {
     "_title": "مساحة العمل",
@@ -148,7 +150,10 @@
       "email": "البريد الإلكتروني",
       "phone": "الهاتف المحمول",
       "2fa": "التحقق بخطوتين",
-      "addaccount": "إنشاء حساب"
+      "addaccount": "إنشاء حساب",
+      "editaccount": "تحرير الحساب",
+      "password": "كلمة المرور",
+      "confirmpassword": "تأكيد كلمة المرور"
     },
     "permission": {
       "_title": "الصلاحيات",

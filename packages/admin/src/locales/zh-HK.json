@@ -41,7 +41,9 @@
         "excellent": "很強"
       }
     },
-    "deleteSuccess": "刪除成功"
+    "deleteSuccess": "刪除成功",
+    "enabled1": "啟用",
+    "disabled1": "未開啟"
   },
   "workspace": {
     "_title": "工作台",
@@ -148,7 +150,10 @@
       "email": "電郵",
       "phone": "手機",
       "2fa": "兩步驗證",
-      "addaccount": "建立帳戶"
+      "addaccount": "建立帳戶",
+      "editaccount": "編輯帳戶",
+      "password": "密碼",
+      "confirmpassword": "確認密碼"
     },
     "permission": {
       "_title": "權限",

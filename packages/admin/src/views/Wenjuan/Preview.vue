@@ -31,7 +31,7 @@
 
           <div class="title">
             {{ Q.name }}
-            <pre class="description">{{ Q.settings.description }}</pre>
+            <pre class="description">{{ Q.settings?.description }}</pre>
           </div>
 
           <div class="start-button">
@@ -101,7 +101,7 @@
 <script setup>
 import { ref, inject, onMounted, watch, computed, onUnmounted, provide } from 'vue'
 import { message } from 'ant-design-vue'
-import { RightOutlined, CheckCircleFilled } from '@ant-design/icons-vue'
+import { CheckCircleFilled } from '@ant-design/icons-vue'
 import QuestionContent from './components/QuestionContent.vue'
 import 'simplebar'
 import '@/assets/simplebar.css'
@@ -581,7 +581,7 @@ const answeredProgress = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  // background: #f5f5f5;
+  // background: #f5f5f5;//
 }
 
 .mobile-frame {
@@ -665,6 +665,7 @@ const answeredProgress = computed(() => {
   flex-direction: column;
   overflow: hidden;
   user-select: none; // 防止拖动时选中文本
+  background: v-bind('Q.settings.bgColor');
 
   &.dragging {
     cursor: grabbing;
@@ -699,14 +700,18 @@ const answeredProgress = computed(() => {
 }
 .q-item {
   // margin: 6px;
-  padding: 20px;
+  padding: 0 20px;
   border-radius: 10px;
-  background: #00000050;
+  // background: #00000050;
   // box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
   // border: 1px solid #ffffff70;
   &.gap {
-    margin-bottom: 20px;
+    margin-bottom: 40px;
+  }
+  .title {
+    font-size: 16px;
+    margin-bottom: 8px;
   }
 }
 
@@ -785,7 +790,7 @@ const answeredProgress = computed(() => {
   flex-direction: column;
   padding: 0;
   margin: 0;
-
+  background: v-bind('Q.settings.coverBgColor');
   .cover-image {
     max-height: 100%;
     max-width: 100%;
@@ -800,16 +805,31 @@ const answeredProgress = computed(() => {
     height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
+    top: 20%;
+    font-size: 24px;
     font-weight: 600;
+    padding: 0 40px;
   }
   .description {
     font-size: 14px;
-    color: var(--text-primary);
+    font-weight: 400;
+    font-family:
+      '-apple-system',
+      'BlinkMacSystemFont',
+      'Segoe UI',
+      'PingFang SC',
+      'Hiragino Sans GB',
+      'Microsoft YaHei',
+      'Helvetica Neue',
+      Helvetica,
+      Arial,
+      sans-serif,
+      'Apple Color Emoji',
+      'Segoe UI Emoji',
+      'Segoe UI Symbol' /*rtl:prepend:'NeoSansArabic','Droid Arabic Kufi','dubai',*/;
+    color: v-bind('Q.settings.coverTextColor');
     line-height: 1.2;
-    margin-top: 12px;
+    margin-top: 20px;
   }
 
   .start-button {
@@ -832,12 +852,15 @@ const answeredProgress = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
-  padding: 20px;
+  // background: v-bind('Q.settings.bgColor');
+  padding: 0 20px;
 }
 
 .complete-content {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
   .complete-icon {
     margin-bottom: 24px;
@@ -847,7 +870,7 @@ const answeredProgress = computed(() => {
     font-size: 18px;
     color: var(--text-primary);
     line-height: 1.6;
-    max-width: 80%;
+    // max-width: 80%;
     margin: 0 auto;
   }
 }

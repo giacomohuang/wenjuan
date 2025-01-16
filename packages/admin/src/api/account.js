@@ -137,11 +137,11 @@ const account = {
       url: '/account/hello1'
     })
   },
-  list(page, limit, keywords, status) {
+  list(page, limit, keywords, status, enable2FA) {
     return fetch({
       baseURL: baseUrl.account,
       method: 'post',
-      data: { page, limit, keywords, status },
+      data: { page, limit, keywords, status, enable2FA },
       url: '/account/list'
     })
   },
@@ -159,6 +159,14 @@ const account = {
       method: 'post',
       data: { keyword, page, limit },
       url: '/account/searchbyname'
+    })
+  },
+  save(data) {
+    return fetch({
+      baseURL: baseUrl.account,
+      method: 'post',
+      data,
+      url: '/account/save'
     })
   }
 }

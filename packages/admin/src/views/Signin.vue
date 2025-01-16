@@ -341,6 +341,7 @@ const handleResetPwdForm = () => {
 const handleInitPwd = async () => {
   try {
     const resp = await API.account.initPassword(signinForm.password, pwdForm.newPassword, state.accountid)
+    console.log(resp)
     if (resp.result) {
       messageApi.success('密码更新成功，请重新登录!')
       pwdFormRef.value.resetFields()

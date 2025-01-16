@@ -1,7 +1,8 @@
 <template>
   <div class="main-wrap">
     <div class="opr">
-      <a-button type="primary" @click="handleAddAccount">{{ t('sys.account.addaccount') }}</a-button>
+      <a-input-search v-model:value="keywords" placeholder="请输入账户名或真实姓名查询" autocomplete="new-password" allowClear style="width: 400px" @search="handleSearch" />
+      <a-button @click="handleAddAccount">{{ t('sys.account.addaccount') }}</a-button>
     </div>
     <a-table
       :scroll="{ x: 1200 }"
@@ -16,8 +17,8 @@
           key: 'enable2FA',
           align: 'center',
           filters: [
-            { text: t('common.enabled'), value: true },
-            { text: t('common.disabled'), value: false }
+            { text: t('common.enabled1'), value: true },
+            { text: t('common.disabled1'), value: false }
           ],
           filterMultiple: false
         },
@@ -27,7 +28,7 @@
           dataIndex: 'status',
           key: 'status',
           align: 'center',
-          defaultFilteredValue: defaultFilters['status'],
+          defaultFilteredValue: filters['status'],
           filters: [
             { text: t('common.enabled'), value: 1 },
             { text: t('common.disabled'), value: 0 }
@@ -60,31 +61,66 @@
         </template>
       </template>
     </a-table>
-    <a-drawer title="Basic Drawer" size="large" :open="openEditor" @close="onCloseEditor">
-      <template #extra>
-        <a-button style="margin-right: 8px" @click="onCloseEditor">Cancel</a-button>
-        <a-button type="primary" @click="onCloseEditor">Submit</a-button>
+    <a-drawer :title="accountForm.id ? t('sys.account.editaccount') : t('sys.account.addaccount')" size="large" :open="openEditor" @close="onCloseEditor">
+      <a-form :model="accountForm" :rules="rules" ref="formRef" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
+        <a-form-item :label="t('sys.account.accountname')" name="accountname">
+          <a-input v-model:value="accountForm.accountname" :disabled="!!accountForm.id" autocomplete="new-password" />
+        </a-form-item>
+        <a-form-item :label="t('sys.account.realname')" name="realname">
+          <a-input v-model:value="accountForm.realname" autocomplete="new-password" />
+        </a-form-item>
+        <a-form-item :label="t('sys.account.email')" name="email">
+          <a-input v-model:value="accountForm.email" autocomplete="new-password" />
+        </a-form-item>
+        <a-form-item :label="t('sys.account.phone')" name="phone">
+          <a-input v-model:value="accountForm.phone" autocomplete="new-password">
+            <template #addonBefore>
+              <a-select show-search v-model:value="accountForm.areacode" style="width: 100px" :placeholder="t('my.authentication.areacode')" allowClear :dropdown-match-select-width="false">
+                <a-select-option v-for="(item, index) in areaCode" :key="index" :value="item.code">{{ item.code }}({{ item[locale] }})</a-select-option>
+              </a-select>
+            </template>
+          </a-input>
+        </a-form-item>
+        <a-form-item :label="t('common.status')" name="status">
+          <a-switch v-model:checked="accountForm.status" :checkedValue="1" :unCheckedValue="0" :checkedChildren="t('common.enabled')" :unCheckedChildren="t('common.disabled')" />
+        </a-form-item>
+        <template v-if="!accountForm.id">
+          <a-form-item :label="t('sys.account.password')" name="password">
+            <a-input-password v-model:value="accountForm.password" autocomplete="new-password" />
+          </a-form-item>
+          <a-form-item :label="t('sys.account.confirmpassword')" name="confirmPassword">
+            <a-input-password v-model:value="accountForm.confirmPassword" autocomplete="new-password" />
+          </a-form-item>
+        </template>
+      </a-form>
+      <template #footer>
+        <a-space>
+          <a-button @click="onCloseEditor">{{ t('common.cancel') }}</a-button>
+          <a-button type="primary" @click="handleSubmit" :loading="submitting">{{ t('common.submit') }}</a-button>
+        </a-space>
       </template>
-      <p>{{ accountForm.id }}</p>
     </a-drawer>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onBeforeMount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import API from '@/api/API'
 import SimpleBar from 'simplebar'
 import '@/assets/simplebar.css'
+import areaCode from '@/js/areacode'
+import account from '@/api/account'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const accounts = ref([])
 const isLoading = ref(false)
 const openEditor = ref(false)
 const accountForm = reactive({})
-const defaultFilters = ref({
-  status: ['1']
+const filters = ref({
+  status: ['1'],
+  enable2FA: [undefined]
 })
 const pagination = reactive({
   current: 1,
@@ -92,26 +128,68 @@ const pagination = reactive({
   total: 0,
   hideOnSinglePage: true
 })
+const keywords = ref('')
 
-const handleEdit = (id) => {
+const formRef = ref()
+const submitting = ref(false)
+
+const rules = {
+  accountname: [{ required: true, message: '请输入账户名', trigger: 'blur' }],
+  realname: [{ required: true, message: '请输入真实姓名', trigger: 'blur' }],
+  password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+  confirmPassword: [
+    { required: true, message: '请确认密码', trigger: 'blur' },
+    {
+      validator: async (rule, value) => {
+        if (value && value !== accountForm.password) {
+          throw new Error('两次输入的密码不一致')
+        }
+      },
+      trigger: 'change'
+    }
+  ]
+}
+
+const handleEdit = async (id) => {
   openEditor.value = true
-  accountForm.id = id
+  if (id) {
+    const result = await API.account.get(id)
+    Object.assign(accountForm, result)
+    accountForm.id = id
+  }
 }
 
 const onCloseEditor = () => {
   openEditor.value = false
+  formRef.value?.resetFields()
+  Object.keys(accountForm).forEach((key) => {
+    delete accountForm[key]
+  })
 }
 
 const handleAddAccount = () => {
   openEditor.value = true
+  accountForm.status = 1
 }
 
-onMounted(async () => {
+const list = async () => {
+  try {
+    isLoading.value = true
+    const result = await API.account.list(pagination.current, pagination.pageSize, keywords.value, filters.value.status?.[0], filters.value.enable2FA?.[0])
+    accounts.value = result.accounts
+    pagination.total = result.total
+    pagination.current = pagination.current
+    pagination.pageSize = pagination.pageSize
+  } catch (error) {
+    console.error(error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onBeforeMount(async () => {
   isLoading.value = true
-  const result = await API.account.list(pagination.current, pagination.pageSize, '', 1)
-  accounts.value = result.accounts
-  pagination.total = result.total
-  isLoading.value = false
+  await list()
   const el = document.querySelector('.main-wrap')
 
   new SimpleBar(el, { direction: document.dir })
@@ -119,27 +197,37 @@ onMounted(async () => {
   new SimpleBar(eltable, { direction: document.dir })
 })
 
-const handleTableChange = async (p, filters, sorter) => {
-  const query = {}
-  if (filters.enable2FA) {
-    query.enable2FA = filters.enable2FA[0]
+const handleTableChange = async (page, f, sorter) => {
+  console.log('f', f)
+  pagination.current = page.current
+  pagination.pageSize = page.pageSize
+  filters.value.status = f.status
+  filters.value.enable2FA = f.enable2FA
+  await list()
+}
+
+const handleSearch = async () => {
+  await list()
+}
+
+const handleSubmit = async () => {
+  try {
+    await formRef.value.validate()
+    submitting.value = true
+    if (!accountForm.id) {
+      accountForm.initPwd = false
+    }
+    console.log(accountForm)
+    const result = await API.account.save(accountForm)
+    if (result.result) {
+      onCloseEditor()
+      await list()
+    }
+  } catch (error) {
+    console.error(error)
+  } finally {
+    submitting.value = false
   }
-  if (filters.status) {
-    query.status = filters.status[0]
-  }
-  console.log('query', filters, query)
-  // for (const filter in filters) {
-  //   if (filter) {
-  //     query[filter] = filters[filter][0]
-  //   }
-  // }
-  isLoading.value = true
-  const result = await API.account.list(p.current, p.pageSize, query)
-  accounts.value = result.accounts
-  pagination.total = result.total
-  pagination.current = p.current
-  pagination.pageSize = p.pageSize
-  isLoading.value = false
 }
 </script>
 <style lang="scss" scoped>
@@ -149,6 +237,9 @@ const handleTableChange = async (p, filters, sorter) => {
   .opr {
     margin-bottom: 10px;
     display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
 }
 </style>

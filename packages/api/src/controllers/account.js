@@ -19,19 +19,24 @@ class AccountController extends BaseController {
 
   static async list(ctx) {
     // console.log('aaaa')
-    const { page, limit, keywords, status } = ctx.request.body
+    const { page, limit, keywords, status, enable2FA } = ctx.request.body
     const query = {}
     if (keywords) {
-      query.$or = [{ accountname: { $regex: keywords, $options: 'i' } }, { realname: { $regex: keywords, $options: 'i' } }, { engname: { $regex: keywords, $options: 'i' } }, { aliasname: { $regex: keywords, $options: 'i' } }, { pinyin: { $regex: keywords, $options: 'i' } }]
+      console.log(keywords)
+      query.$or = [{ accountname: { $regex: keywords, $options: 'i' } }, { realname: { $regex: keywords, $options: 'i' } }, { pinyin: { $regex: keywords, $options: 'i' } }]
     }
-    if (status) {
+    if (status !== undefined) {
       query.status = status
     }
+    if (enable2FA !== undefined) {
+      query.enable2FA = enable2FA
+    }
+    console.log(query)
     const accounts = await Account.find(query)
       .skip((page - 1) * limit)
       .limit(limit)
       .exec()
-    console.log(accounts)
+    // console.log(accounts)
     const total = await Account.countDocuments(query)
     ctx.body = {
       accounts,
@@ -221,6 +226,7 @@ class AccountController extends BaseController {
     const cryptoOldPwd = crypto.createHmac('sha256', process.env.PWD_KEY).update(oldPassword).digest('hex')
     const cryptoNewPwd = crypto.createHmac('sha256', process.env.PWD_KEY).update(newPassword).digest('hex')
     const result = await Account.findOneAndUpdate({ _id: accountid, password: cryptoOldPwd }, { password: cryptoNewPwd })
+
     if (result) {
       ctx.body = { result: true }
     } else {
@@ -232,10 +238,13 @@ class AccountController extends BaseController {
   static async initPassword(ctx) {
     //
     const { accountid, oldPassword, newPassword } = ctx.request.body
+    console.log(accountid, oldPassword, newPassword)
     // TODO 验证verifycode
     const cryptoOldPwd = crypto.createHmac('sha256', process.env.PWD_KEY).update(oldPassword).digest('hex')
     const cryptoNewPwd = crypto.createHmac('sha256', process.env.PWD_KEY).update(newPassword).digest('hex')
-    const result = await Account.findOneAndUpdate({ _id: accountid, password: cryptoOldPwd, initPwd: false }, { password: cryptoNewPwd, initPwd: true })
+    console.log(cryptoOldPwd, cryptoNewPwd)
+    const result = await Account.findOneAndUpdate({ _id: accountid, password: cryptoOldPwd }, { password: cryptoNewPwd, initPwd: true })
+    console.log(result)
     if (result) {
       ctx.body = { result: true }
     } else {
@@ -324,6 +333,37 @@ class AccountController extends BaseController {
   static async hello1(ctx) {
     const { num } = ctx.request.body
     ctx.body = 'hello:' + num
+  }
+
+  static async save(ctx) {
+    const { _id, password, confirmPassword, ...accountData } = ctx.request.body
+
+    // 如果是新增用户，需要加密密码
+    if (!_id) {
+      if (!password) {
+        throw new CustomError(400, '密码不能为空', 1003)
+      }
+      accountData.password = crypto.createHmac('sha256', process.env.PWD_KEY).update(password).digest('hex')
+    }
+
+    let result
+    if (_id) {
+      // 更新
+      // 安全：不更新accountname和password
+      delete accountData.accountname
+      delete accountData.password
+      result = await Account.findByIdAndUpdate(_id, accountData, { new: true })
+    } else {
+      // 新增
+      const account = new Account(accountData)
+      result = await account.save()
+    }
+
+    if (result) {
+      ctx.body = { result: true }
+    } else {
+      throw new CustomError(500, '保存失败', 1004)
+    }
   }
 }
 

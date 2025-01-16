@@ -13,12 +13,6 @@ const accountSchema = new mongoose.Schema({
     required: true,
     unique: false
   },
-  // 英文名
-  engname: {
-    type: String,
-    unique: false,
-    required: false
-  },
   // 别名
   aliasname: {
     type: String,
@@ -73,6 +67,7 @@ const accountSchema = new mongoose.Schema({
     required: false
   },
   // 账户类型
+  // 1: 平台管理账户  2: 用户账户
   type: {
     type: Number,
     required: false
@@ -109,4 +104,5 @@ const accountSchema = new mongoose.Schema({
   }
 })
 
+accountSchema.index({ accountname: 1, realname: 1, pinyin: 1 })
 export default mongoose.model('Account', accountSchema)

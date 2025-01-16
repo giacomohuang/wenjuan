@@ -41,7 +41,9 @@
         "excellent": "excellent"
       }
     },
-    "deleteSuccess": "Delete successfully"
+    "deleteSuccess": "Delete successfully",
+    "enabled1": "Enabled",
+    "disabled1": "Disabled"
   },
   "workspace": {
     "_title": "Workspace",
@@ -148,7 +150,10 @@
       "email": "Email",
       "phone": "Mobile Phone",
       "2fa": "2FA",
-      "addaccount": "create Account"
+      "addaccount": "create Account",
+      "editaccount": "Edit Account",
+      "password": "password",
+      "confirmpassword": "Confirm Password"
     },
     "permission": {
       "_title": "Permission",

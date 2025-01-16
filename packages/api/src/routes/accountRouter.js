@@ -28,5 +28,6 @@ accountRouter.post('/account/update2fa', authToken, AccountController.update2FA)
 accountRouter.post('/account/list', authToken, AccountController.list)
 accountRouter.post('/account/get', authToken, AccountController.get)
 accountRouter.post('/account/searchbyname', authToken, AccountController.searchByName)
+accountRouter.post('/account/save', authToken, AccountController.save)
 
 export default accountRouter

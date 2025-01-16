@@ -41,7 +41,9 @@
         "excellent": "非常に強い"
       }
     },
-    "deleteSuccess": "削除しました"
+    "deleteSuccess": "削除しました",
+    "enabled1": "有効にする",
+    "disabled1": "無効にする"
   },
   "workspace": {
     "_title": "ワークスペース",
@@ -148,7 +150,10 @@
       "email": "メールアドレス",
       "phone": "携帯電話",
       "2fa": "二段階認証",
-      "addaccount": "アカウントを作成する"
+      "addaccount": "アカウントを作成する",
+      "editaccount": "アカウントの編集",
+      "password": "パスワード",
+      "confirmpassword": "パスワードを認証する"
     },
     "permission": {
       "_title": "権限",

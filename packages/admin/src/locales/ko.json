@@ -41,7 +41,9 @@
         "excellent": "매우 강함"
       }
     },
-    "deleteSuccess": "삭제 완료"
+    "deleteSuccess": "삭제 완료",
+    "enabled1": "~할 수 있게 하다",
+    "disabled1": "장애를 입히다"
   },
   "workspace": {
     "_title": "작업대",
@@ -148,7 +150,10 @@
       "email": "이메일",
       "phone": "휴대폰",
       "2fa": "2단계 인증",
-      "addaccount": "계정 만들기"
+      "addaccount": "계정 만들기",
+      "editaccount": "계정 수정",
+      "password": "비밀번호",
+      "confirmpassword": "비밀번호 확인"
     },
     "permission": {
       "_title": "권한",
