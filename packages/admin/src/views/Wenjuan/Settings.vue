@@ -73,8 +73,8 @@
             </div>
           </div>
         </a-form-item>
-        <a-form-item label="背景图片" name="backgroundImage">
-          <div class="img-upload"><ImageUpload v-model="formState.backgroundImage" width="150px" height="150px" /><icon name="remove" class="ico-remove" @click.stop="clearItem('backgroundImage')" /></div>
+        <a-form-item label="背景图片" name="bgImage">
+          <div class="img-upload"><ImageUpload v-model="formState.bgImage" width="150px" height="150px" /><icon name="remove" class="ico-remove" @click.stop="clearItem('bgImage')" /></div>
         </a-form-item>
         <a-divider />
         <a-form-item label="封面背景颜色" name="coverBgColor">
@@ -138,34 +138,33 @@ const settingsModal = inject('settingsModal')
 
 // 表单数据
 const formState = reactive({
-  // 基础设置
-  description: Q.settings?.description ?? '',
-  bgColor: Q.settings?.bgColor ?? '#ffffff',
-  textColor: Q.settings?.textColor ?? '#000000',
-  status: Q.settings?.status ?? true,
-  tags: Q.settings?.tags ?? [],
-  timeLimit: Q.settings?.timeLimit ?? 0,
-  submitLimitType: Q.settings?.submitLimitType ?? 'none',
-  submitLimitCount: Q.settings?.submitLimitCount ?? 1,
-  collectTime: Q.settings?.collectTime ? [dayjs(Q.settings?.collectTime?.[0]), dayjs(Q.settings?.collectTime?.[1])] : [],
-  // 外观和封面设置
-  coverImage: Q.settings?.coverImage ?? '',
-  coverBgColor: Q.settings?.coverBgColor ?? '#ffffff',
-  coverTextColor: Q.settings?.coverTextColor ?? '#000000',
-  backgroundImage: Q.settings?.backgroundImage ?? '',
-  themeColorMode: Q.settings?.themeColorMode ?? 'custom',
-  themeColor: Q.settings?.themeColor ?? '#0090ff',
-  // 显示设置
-  showProgress: Q.settings?.showProgress ?? true,
-  showQuestionNumber: Q.settings?.showQuestionNumber ?? true,
-  showOnePerPage: Q.settings?.showOnePerPage ?? false,
-  questionsPerPage: Q.settings?.questionsPerPage ?? 5,
-
-  // 提交设置
-  allowMultiSubmit: Q.settings?.allowMultiSubmit ?? false,
-  submitSuccessMessage: Q.settings?.submitSuccessMessage ?? '感谢您的参与！'
+  // // 基础设置
+  // description: Q.settings?.description || '',
+  // status: Q.settings?.status || true,
+  // tags: Q.settings?.tags || [],
+  // timeLimit: Q.settings?.timeLimit || 0,
+  // submitLimitType: Q.settings?.submitLimitType || 'none',
+  // submitLimitCount: Q.settings?.submitLimitCount || 1,
+  // collectTime: Q.settings?.collectTime ? [dayjs(Q.settings?.collectTime?.[0]), dayjs(Q.settings?.collectTime?.[1])] : [],
+  // // 外观和封面设置
+  // bgColor: Q.settings?.bgColor || '#ffffff',
+  // textColor: Q.settings?.textColor || '#000000',
+  // coverImage: Q.settings?.coverImage || '',
+  // coverBgColor: Q.settings?.coverBgColor || '#ffffff',
+  // coverTextColor: Q.settings?.coverTextColor || '#000000',
+  // bgImage: Q.settings?.bgImage || '',
+  // themeColorMode: Q.settings?.themeColorMode || 'custom',
+  // themeColor: Q.settings?.themeColor || '#0090ff',
+  // // 显示设置
+  // showProgress: Q.settings?.showProgress || true,
+  // showQuestionNumber: Q.settings?.showQuestionNumber || true,
+  // showOnePerPage: Q.settings?.showOnePerPage || false,
+  // questionsPerPage: Q.settings?.questionsPerPage || 5,
+  // // 提交设置
+  // allowMultiSubmit: Q.settings?.allowMultiSubmit || false,
+  // submitSuccessMessage: Q.settings?.submitSuccessMessage || '感谢您的参与！'
 })
-console.log(formState.collectTime)
+console.log(JSON.stringify(formState, null, 2))
 
 // 初始化数据
 onMounted(() => {})

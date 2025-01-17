@@ -1,6 +1,6 @@
 <template>
   <div class="mobile-container">
-    <div class="mobile-frame" :style="Q.settings?.backgroundImage ? { backgroundImage: `url(${OSS_PREFIX}${Q.settings.backgroundImage})` } : {}">
+    <div class="mobile-frame" :style="Q.settings?.bgImage ? { bgImage: `url(${OSS_PREFIX}${Q.settings.bgImage})` } : {}">
       <!-- 手机状态栏 -->
       <div class="status-bar">
         <span class="time">{{ currentTime }}</span>
@@ -27,7 +27,7 @@
         </div>
         <!-- 封面页 -->
         <div v-else-if="isOnCoverPage" class="cover-page">
-          <div style="height: 100%; width: 100%; background-size: cover; background-position: center" :style="{ backgroundImage: `url(${OSS_PREFIX}${Q.settings.coverImage})` }" alt="封面图片" class="cover-image" v-if="Q.settings?.coverImage" />
+          <div style="height: 100%; width: 100%; background-size: cover; background-position: center" :style="{ bgImage: `url(${OSS_PREFIX}${Q.settings.coverImage})` }" alt="封面图片" class="cover-image" v-if="Q.settings?.coverImage" />
 
           <div class="title">
             {{ Q.name }}

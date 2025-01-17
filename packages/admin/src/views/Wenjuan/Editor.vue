@@ -168,11 +168,12 @@ import Logic from './Logic.vue'
 import Settings from './Settings.vue'
 import { router } from '@/router/router'
 import Preview from './Preview.vue'
-const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890', 12)
 import { debounce } from 'lodash-es'
 import { cleanupConditions } from './cleanup'
 import { message, Modal } from 'ant-design-vue'
 import dayjs from 'dayjs'
+
+const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890', 12)
 
 const VNodes = defineComponent({
   props: {

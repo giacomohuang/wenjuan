@@ -83,6 +83,35 @@ class WenjuanController extends BaseController {
     if (!_id) {
       updateData.operator = accountId
       updateData.cooperator = [{ account: accountId, role: 'editor' }]
+      updateData.settings = {
+        // 基础设置
+        description: '',
+        status: true,
+        tags: [],
+        timeLimit: 0,
+        submitLimitType: 'none',
+        submitLimitCount: 1,
+        collectTime: [],
+        // 外观和封面设置
+        bgColor: '#ffffff',
+        textColor: '#000000',
+        coverImage: '',
+        coverBgColor: '#ffffff',
+        coverTextColor: '#000000',
+        bgImage: '',
+        themeColorMode: 'custom',
+        themeColor: '#0090ff',
+        // 显示设置
+        showProgress: true,
+        showQuestionNumber: true,
+        showOnePerPage: false,
+        questionsPerPage: 5,
+        // 提交设置
+        allowMultiSubmit: false,
+        submitSuccessMessage: '感谢您的参与！'
+      }
+
+      // updateData.data = []
       const newWenjuan = new Wenjuan(updateData)
       res = await newWenjuan.save()
     }
