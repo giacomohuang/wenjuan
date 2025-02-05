@@ -91,7 +91,7 @@ class WenjuanController extends BaseController {
         timeLimit: 0,
         submitLimitType: 'none',
         submitLimitCount: 1,
-        collectTime: [],
+        collectTime: null,
         // 外观和封面设置
         bgColor: '#ffffff',
         textColor: '#000000',
@@ -108,7 +108,7 @@ class WenjuanController extends BaseController {
         questionsPerPage: 5,
         // 提交设置
         allowMultiSubmit: false,
-        submitSuccessMessage: '感谢您的参与！'
+        submitSuccessMessage: null
       }
 
       // updateData.data = []
