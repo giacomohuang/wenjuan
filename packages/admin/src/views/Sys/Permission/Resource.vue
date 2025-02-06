@@ -40,6 +40,7 @@
     </div>
   </div>
   <a-drawer :title="t('sys.permission.resource.resourceEditor')" width="500px" :open="resourceEditor" @close="resourceEditor = false">
+    <LangSelector />
     <a-form ref="resourceFormRef" autocomplete="off" :model="resourceForm" :rules="vRules" :label-col="{ span: 6 }" :wrapper-col="{ span: 20 }" @finish="submit">
       <a-form-item :label="t('sys.permission.resource.name')" :wrapper-col="{ span: 12 }" name="name">
         <mpInputI18n v-model="resourceForm.name" />
@@ -540,11 +541,11 @@ watch(resourceType, (val) => {
 // 表单验证规则
 const vRules = {
   name: [
-    { required: true, message: t('sys.permission.resource.nameRequired') },
+    { required: true },
     {
       validator: async (_rule, value) => {
-        if (value == 'huangjia') {
-          return Promise.reject(t('sys.permission.resource.nameDuplicate'))
+        if (!value[locale.value]) {
+          return Promise.reject('名称不能为空')
         } else {
           return Promise.resolve()
         }

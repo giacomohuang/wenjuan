@@ -245,7 +245,8 @@
     },
     "mpInputI18n": {
       "editorTitle": "多語言編輯器",
-      "translate": "翻譯"
+      "translate": "翻譯",
+      "translateAll": "翻譯全部"
     },
     "pwdstrength": {
       "weak": "弱",

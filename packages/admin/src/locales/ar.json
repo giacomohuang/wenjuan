@@ -245,7 +245,8 @@
     },
     "mpInputI18n": {
       "editorTitle": "محرر متعدد اللغات",
-      "translate": "يترجم"
+      "translate": "يترجم",
+      "translateAll": "ترجمة كل شيء"
     },
     "pwdstrength": {
       "weak": "ضعيف",

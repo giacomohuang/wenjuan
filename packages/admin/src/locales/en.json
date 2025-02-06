@@ -245,7 +245,8 @@
     },
     "mpInputI18n": {
       "editorTitle": "Multilingual editor",
-      "translate": "translate"
+      "translate": "translate",
+      "translateAll": "Translate All"
     },
     "pwdstrength": {
       "weak": "Weak",

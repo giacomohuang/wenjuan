@@ -46,10 +46,10 @@ export async function changeLocale(locale) {
   localStorage.setItem('locale', locale)
   document.querySelector('html').setAttribute('lang', locale)
 
+  // 设置语言方向
   document.dir = RTL_LANGS.includes(locale) ? 'rtl' : 'ltr'
 
   const title = router.currentRoute.value.meta.title
-  // console.log(title)
   if (title) {
     document.title = `${i18n.global.t('common.appname')} - ${i18n.global.t(title)}`
   } else {

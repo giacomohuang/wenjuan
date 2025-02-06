@@ -245,7 +245,8 @@
     },
     "mpInputI18n": {
       "editorTitle": "多言語エディター",
-      "translate": "翻訳する"
+      "translate": "翻訳する",
+      "translateAll": "すべてを翻訳します"
     },
     "pwdstrength": {
       "weak": "弱い",

@@ -245,7 +245,8 @@
     },
     "mpInputI18n": {
       "editorTitle": "다국어 편집기",
-      "translate": "번역하다"
+      "translate": "번역하다",
+      "translateAll": "모든 것을 번역하십시오"
     },
     "pwdstrength": {
       "weak": "약함",

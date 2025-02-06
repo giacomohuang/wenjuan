@@ -8,6 +8,9 @@
 
     <!-- 编辑器模态框 -->
     <a-modal v-model:open="editorVisible" :title="t('comp.mpInputI18n.editorTitle')" @ok="handleOk" @cancel="handleCancel">
+      <div class="translate-all-btn">
+        <a-button size="small" @click="translateAll">{{ t('comp.mpInputI18n.translateAll') }}</a-button>
+      </div>
       <div class="lang-container">
         <a-form-item-rest>
           <div v-for="lang in languages" :key="lang" class="lang-item">
@@ -165,11 +168,34 @@ const autoTranslate = async (targetLang) => {
 
     if (result.trans_result && result.trans_result[0]) {
       translationData.value[targetLang] = result.trans_result[0].dst
-      message.success('翻译完成')
+      message.success(`${targetLang}翻译完成`, { key: 'translate' })
     } else {
       throw new Error(result.error_msg || '翻译失败')
     }
   } catch (error) {
+    message.error(`翻译失败: ${error.message}`)
+  }
+}
+
+// 添加全部翻译功能
+const translateAll = async () => {
+  const sourceText = translationData.value[currentLang]
+  if (!sourceText) {
+    message.warning('请先输入默认语言的文本')
+    return
+  }
+
+  const otherLangs = languages.value.filter((lang) => lang !== currentLang)
+  message.loading('正在翻译所有语言...', 0)
+
+  try {
+    for (const targetLang of otherLangs) {
+      await autoTranslate(targetLang)
+    }
+    message.destroy()
+    message.success('所有语言翻译完成')
+  } catch (error) {
+    message.destroy()
     message.error(`翻译失败: ${error.message}`)
   }
 }
@@ -212,5 +238,10 @@ const autoTranslate = async (targetLang) => {
   &:after {
     content: ':';
   }
+}
+
+.translate-all-btn {
+  margin: 16px 0;
+  text-align: right;
 }
 </style>
