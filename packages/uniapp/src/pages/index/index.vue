@@ -1,5 +1,5 @@
 <template>
-  <view class="preview-container">
+  <view class="main-container">
     <view v-if="loading" class="loading"> loading... </view>
     <template v-else>
       <view v-if="timeLeft && !isOnCoverPage && !isSubmitted" class="time-left">{{ formatTimeLeft }}</view>
@@ -15,27 +15,24 @@
         </view>
       </view>
 
-      <swiper v-else class="swiper" :current="currentPage + 1" @change="handleSwiperChange" :disable-touch="!Q.settings?.showOnePerPage">
-        <!-- 封面页 -->
-        <swiper-item>
-          <view class="cover-page">
-            <image v-if="Q.settings?.coverImage" :src="OSS_PREFIX + Q.settings.coverImage" mode="aspectFill" class="cover-image" />
-            <view class="title">
-              {{ Q.name }}
-              <text class="description">{{ Q.settings?.description }}</text>
-            </view>
-            <view class="start-button">
-              <button type="primary" size="default" @click="startAnswering">
-                开始答题
-                <uni-icons type="forward" size="16"></uni-icons>
-              </button>
-            </view>
-          </view>
-        </swiper-item>
+      <view class="cover-page" v-if="currentPage === 1">
+        <image v-if="Q.settings?.coverImage" :src="OSS_PREFIX + Q.settings.coverImage" mode="aspectFill" class="cover-image" />
+        <view class="title">
+          {{ Q.name }}
+          <text class="description">{{ Q.settings?.description }}</text>
+        </view>
+        <view class="start-button">
+          <button type="primary" size="default" @click="startAnswering">
+            开始答题
+            <uni-icons type="forward" size="16"></uni-icons>
+          </button>
+        </view>
+      </view>
 
+      <view v-else class="swiper" :current="currentPage + 1" @change="handleSwiperChange" :disable-touch="!Q.settings?.showOnePerPage">
         <!-- 题目页面 -->
         <template v-if="Q.settings?.showOnePerPage">
-          <swiper-item v-for="(item, index) in visibleQuestions" :key="item.id">
+          <view v-for="(item, index) in visibleQuestions" :key="item.id">
             <view class="main">
               <view class="q-item">
                 <!-- 题目标题 -->
@@ -48,11 +45,11 @@
                 <question-content :item="item" />
               </view>
             </view>
-          </swiper-item>
+          </view>
         </template>
 
         <!-- 普通模式 -->
-        <swiper-item v-else>
+        <view v-else>
           <view class="main">
             <view v-for="item in Q.data" :key="item.id" v-show="!isHidden(item.id)" class="q-item gap">
               <!-- 题目标题 -->
@@ -65,8 +62,8 @@
               <question-content :item="item" />
             </view>
           </view>
-        </swiper-item>
-      </swiper>
+        </view>
+      </view>
 
       <!-- 分页导航和提交按钮 -->
       <view class="footer" :class="{ 'one-per-page': Q.settings?.showOnePerPage }" v-if="!isOnCoverPage && !isSubmitted">
@@ -478,7 +475,7 @@ watch(
 onMounted(async () => {
   try {
     loading.value = true;
-    const id = "67a2d66f0e0e9cf25986b066";
+    const id = "67a9ce9d048539194100506a";
     const data = await wenjuanApi.getDetail(id);
     Q.value = data;
   } catch (error) {
@@ -522,16 +519,11 @@ const handleSwiperChange = (e) => {
 </script>
 
 <style lang="scss">
-.swiper {
-  flex: 1;
-  width: 100%;
-  height: calc(100vh - 200rpx);
-}
-
-.preview-container {
+.main-container {
   position: relative;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
+  max-width: 100vw;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -552,10 +544,10 @@ const handleSwiperChange = (e) => {
 
 .main {
   flex-grow: 1;
-  padding: 40rpx;
+  // padding: 40rpx;
   height: calc(100vh - 200rpx);
-  width: 100%;
   box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .q-item {
@@ -571,6 +563,9 @@ const handleSwiperChange = (e) => {
     font-size: 32rpx;
     margin-bottom: 16rpx;
     padding: 20rpx 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 }
 
@@ -625,7 +620,7 @@ const handleSwiperChange = (e) => {
 }
 
 .cover-page {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -637,6 +632,7 @@ const handleSwiperChange = (e) => {
   padding: 0;
   margin: 0;
   background: v-bind("Q.settings.coverBgColor");
+  overflow: hidden;
 
   .cover-image {
     width: 100%;

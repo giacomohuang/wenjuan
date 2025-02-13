@@ -1,16 +1,17 @@
 <template>
+  {{ (item.id, answers[item.id]) }}
   <!-- 填空题 -->
   <template v-if="item.type === 'FillBlank'">
     <view v-if="!item.multiMode" class="fill-blank">
-      <uni-easyinput v-model="answers[item.id]" :placeholder="item.options[0]?.placeholder || '请填写'" :maxlength="item.options[0]?.maxLength" />
+      <up-input v-model="answers[item.id]" />
     </view>
     <view v-else class="fill-blank">
       <view v-for="opt in item.options" :key="opt.id" class="blank-item">
         <view class="blank-title">
           <text class="required" v-if="opt.required">*</text>
-          <rich-text :nodes="opt.text"></rich-text>
+          <rich-text :nodes="opt.text" style="font-size: 28rpx"></rich-text>
         </view>
-        <uni-easyinput v-model="answers[item.id + '_' + opt.id]" :placeholder="opt.placeholder || '请填写'" :maxlength="opt.maxLength" />
+        <up-input v-model="answers[item.id + '_' + opt.id]" :placeholder="opt.placeholder || '请填写'" :maxlength="opt.maxLength" />
       </view>
     </view>
   </template>
@@ -18,7 +19,13 @@
   <!-- 单选题 -->
   <template v-if="item.type === 'SingleChoice'">
     <view class="radio-group">
-      <uni-data-checkbox v-model="answers[item.id]" :localdata="item.options.map((opt) => ({ value: opt.id, text: opt.text }))" mode="default" />
+      <up-radio-group v-model="answers[item.id]" placement="column">
+        <up-radio v-for="opt in item.options" :key="opt.id" :name="opt.id">
+          <template #label>
+            <rich-text :nodes="opt.text" style="font-size: 28rpx"></rich-text>
+          </template>
+        </up-radio>
+      </up-radio-group>
       <view v-for="opt in item.options" :key="opt.id">
         <uni-easyinput v-if="opt.fill?.show && answers[item.id] === opt.id" v-model="answers[item.id + '_fill']" :placeholder="opt.fill.placeholder || '请填写'" :maxlength="opt.fill.length" />
       </view>
@@ -28,38 +35,34 @@
   <!-- 多选题 -->
   <template v-if="item.type === 'MultiChoice'">
     <view class="checkbox-group">
-      <uni-data-checkbox v-model="answers[item.id]" :localdata="item.options.map((opt) => ({ value: opt.id, text: opt.text }))" multiple :min="item.minRange || 0" :max="item.maxRange || item.options.length" />
+      <up-checkbox-group v-model="answers[item.id]" placement="column">
+        <up-checkbox v-for="(item, index) in item.options" :key="index" :name="item.id">
+          <template #label>
+            <rich-text :nodes="item.text" style="font-size: 28rpx"></rich-text>
+          </template>
+        </up-checkbox>
+      </up-checkbox-group>
       <view v-for="opt in item.options" :key="opt.id">
-        <uni-easyinput v-if="opt.fill?.show && answers[item.id]?.includes(opt.id)" v-model="answers[item.id + '_' + opt.id]" :placeholder="opt.fill.placeholder || '请填写'" :maxlength="opt.fill.length" />
+        <up-input v-if="opt.fill?.show && answers[item.id]?.includes(opt.id)" v-model="answers[item.id + '_' + opt.id]" :placeholder="opt.fill.placeholder || '请填写'" :maxlength="opt.fill.length" border="surround" />
       </view>
     </view>
   </template>
 
-  <!-- 图片选择 -->
+  <!-- 图片选择-->
   <template v-if="item.type === 'ImageChoice'">
     <view class="image-choice">
-      <uni-data-checkbox
-        v-model="answers[item.id]"
-        :localdata="
-          item.options.map((opt) => ({
-            value: opt.id,
-            text: opt.text,
-            extra: OSS_PREFIX + opt.imageUrl,
-          }))
-        "
-        mode="default"
-      >
-        <template #default="{ item }">
-          <view class="image-item">
-            <view class="image-preview">
-              <image :src="item.extra" :alt="item.text" mode="aspectFill" @tap="previewImage(item.extra)" />
-            </view>
-            <view class="image-text">
-              <rich-text :nodes="item.text"></rich-text>
-            </view>
+      <up-radio-group v-model="answers[item.id]">
+        <view class="image-choice-wrap">
+          <view v-for="opt in item.options" :key="opt.id" class="image-item">
+            <image :src="OSS_PREFIX + opt.imageUrl" :alt="opt.text" mode="aspectFit" style="align-self: center; width: 100%; max-height: 250rpx" lazy-load="true" @tap="previewImage(OSS_PREFIX + opt.imageUrl)" />
+            <up-radio :label="opt.text" :name="opt.id" :custom-style="{ display: 'grid', gridTemplateColumns: 'auto 1fr', padding: '0 16rpx' }">
+              <template #label>
+                <rich-text :nodes="opt.text" style="font-size: 28rpx"></rich-text>
+              </template>
+            </up-radio>
           </view>
-        </template>
-      </uni-data-checkbox>
+        </view>
+      </up-radio-group>
     </view>
   </template>
 
@@ -67,10 +70,10 @@
   <template v-if="item.type === 'Rate'">
     <view class="rate-wrap">
       <template v-if="item.maxScore <= 10">
-        <uni-rate v-model="answers[item.id]" :max="item.maxScore" :allow-half="item.step === 0.5" :is-fill="true" :value="answers[item.id]" />
+        <up-rate v-model="answers[item.id]" :count="item.maxScore" :score="0.5" :allowHalf="item.step === 0.5" size="24" />
       </template>
       <template v-else>
-        <uni-number-box v-model="answers[item.id]" :min="item.minScore" :max="item.maxScore" :step="item.step" />
+        <up-slider v-model="answers[item.id]" :min="item.minScore" :max="item.maxScore" :step="item.step" />
       </template>
       <view v-if="item.showLabels" class="rate-labels">
         <text>{{ item.minLabel }}</text>
@@ -95,18 +98,21 @@
   </template>
 </template>
 
+import { getNVueFlexDirection } from "@dcloudio/uni-cli-shared";
 <script setup>
-import { inject, ref } from "vue";
-
+import { inject } from "vue";
+defineOptions({
+  styleIsolation: "shared",
+});
 const props = defineProps({
   item: {
     type: Object,
     required: true,
   },
 });
-
 const answers = inject("answers");
-const OSS_PREFIX = uni.getStorageSync("VITE_UPLOAD_URL_PREFIX");
+
+const OSS_PREFIX = "http://localhost:9000/mpadmin/";
 
 const previewImage = (url) => {
   uni.previewImage({
@@ -135,7 +141,7 @@ const previewImage = (url) => {
       display: flex;
       flex-direction: row;
       margin-bottom: 16rpx;
-      color: var(--text-secondary);
+      color: #999;
       font-size: 28rpx;
     }
   }
@@ -151,55 +157,30 @@ const previewImage = (url) => {
 }
 
 .image-choice {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320rpx, 1fr));
-  gap: 32rpx;
-  padding: 20rpx;
   text-wrap: wrap;
   word-break: break-all;
 
+  .image-choice-wrap {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24rpx;
+  }
   .image-item {
-    border: 1rpx solid var(--border-light);
+    border: 1rpx solid #f1f1f1;
     border-radius: 24rpx;
-    overflow: hidden;
-    transition: all 0.3s ease;
-
-    &:active {
-      opacity: 0.8;
-    }
-
-    .image-preview {
-      width: 100%;
-      height: 320rpx;
-      position: relative;
-      overflow: hidden;
-
-      image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-
-    .image-text {
-      padding: 24rpx;
-      background: #fff;
-      border-top: 1rpx solid var(--border-light);
-      font-size: 28rpx;
-    }
   }
 }
 
 .rate-wrap,
 .nps-wrap {
-  padding: 20rpx 32rpx;
+  // padding: 20rpx 32rpx;
 
   .rate-labels,
   .nps-labels {
     display: flex;
     justify-content: space-between;
     margin-top: 24rpx;
-    color: var(--text-secondary);
+    color: #999;
     font-size: 26rpx;
   }
 }
@@ -207,18 +188,20 @@ const previewImage = (url) => {
 .nps-scores {
   display: flex;
   justify-content: space-between;
-  padding: 16rpx 0;
+  gap: 2%;
+  width: 100%;
+  // padding: 16rpx 0;
 
   .score-item {
-    width: 64rpx;
-    height: 64rpx;
-    flex-shrink: 0;
+    flex: 1;
+    aspect-ratio: 1;
+    min-width: 0; // 防止内容溢出
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 3rpx solid var(--border-medium);
+    border: 3rpx solid #e5e6eb;
     border-radius: 50%;
-    font-size: 30rpx;
+    font-size: 24rpx; // 稍微减小字体大小以适应小屏幕
     transition: all 0.2s ease;
 
     &:active {
@@ -226,9 +209,9 @@ const previewImage = (url) => {
     }
 
     &.active {
-      background: var(--c-brand);
+      background: #007aff;
       color: white;
-      border-color: var(--c-brand);
+      border-color: #007aff;
     }
   }
 }

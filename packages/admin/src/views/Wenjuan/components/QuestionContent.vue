@@ -244,19 +244,18 @@ const OSS_PREFIX = import.meta.env.VITE_UPLOAD_URL_PREFIX
 .nps-scores {
   display: flex;
   justify-content: space-between;
-  padding: 8px 0;
+  gap: 2%;
 
   .score-item {
-    width: 32px;
-    height: 32px;
-    flex-shrink: 0;
+    flex: 1;
+    aspect-ratio: 1;
+    min-width: 0; // 防止内容溢出
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1.5px solid var(--border-medium);
+    border: 1px solid var(--border-light);
     border-radius: 50%;
-    cursor: pointer;
-    font-size: 15px;
+    font-size: 14px; // 稍微减小字体大小以适应小屏幕
     transition: all 0.2s ease;
 
     &:hover {

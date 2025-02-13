@@ -575,7 +575,8 @@ const router = useRouter()
 
 const routes = router.getRoutes().map((route) => ({
   name: route.meta?.title ? t(route.meta.title) : route.name || route.path,
-  path: route.path
+  // 过滤路由参数,包含字符和？
+  path: route.path.replace(/:\w+|\?/g, '')
 }))
 
 // console.log(routes)

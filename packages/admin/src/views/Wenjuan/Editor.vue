@@ -24,14 +24,14 @@
           <a-divider type="vertical" style="border-color: var(--border-dark)" />
         </template>
         <a-button type="text" size="large" :disabled="isSaving" @click="settingsModal = true"><icon name="settings" />设置</a-button>
-        <a-button type="text" size="large" :disabled="isSaving" @click="logicDrawer = true"><icon name="logic" />逻辑</a-button>
-        <a-button type="text" size="large" :disabled="isSaving" @click="preview"><icon name="preview" />预览</a-button>
+        <a-button type="text" size="large" :disabled="isSaving || !Q.data.length" @click="logicDrawer = true"><icon name="logic" />逻辑</a-button>
+        <a-button type="text" size="large" :disabled="isSaving || !Q.data.length" @click="preview"><icon name="preview" />预览</a-button>
       </a-space>
     </div>
     <div class="actions">
       <a-button @click="openCooperatorModal" v-if="teamId">协作</a-button>
       <a-button @click="deleteDraft" :disabled="isSaving" v-if="isDraft">删除草稿</a-button>
-      <a-button @click="publish" v-if="!isLoading" :disabled="isSaving || (isPublish && !isDraft)">发布</a-button>
+      <a-button @click="publish" v-if="!isLoading" :disabled="isSaving || (isPublish && !isDraft) || !Q.data.length">发布</a-button>
 
       <a-select :dropdown-match-select-width="false" v-if="versionList.list.length > 0" v-model:value="versionList.selectedVersion" placement="bottomRight" :fieldNames="{ label: 'name', value: 'version' }" :disabled="isSaving" :options="versionList.list" @change="getVersion(versionList.selectedVersion)">
         <template #option="{ version, name }">
