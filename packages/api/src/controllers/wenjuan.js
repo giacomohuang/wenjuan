@@ -2,6 +2,7 @@ import BaseController from './base.js'
 import Wenjuan from '../models/wenjuan/wenjuan.js'
 import Version from '../models/wenjuan/version.js'
 import CustomError from '../CustomError.js'
+import Answer from '../models/wenjuan/answer.js'
 
 class WenjuanController extends BaseController {
   static async list(ctx) {
@@ -155,6 +156,7 @@ class WenjuanController extends BaseController {
     ctx.body = res
   }
 
+  // 获取问卷协作者列表
   static async cooperatorList(ctx) {
     const { id } = ctx.request.body
     const res = await Wenjuan.findOne({ _id: id }).select('cooperator').populate('cooperator.account', 'accountname realname avatar')
@@ -162,6 +164,7 @@ class WenjuanController extends BaseController {
     console.log(res)
   }
 
+  // 添加协作者
   static async addCooperator(ctx) {
     const { id, accountId, role } = ctx.request.body
     // 检查用户是否已经是成员
@@ -175,12 +178,14 @@ class WenjuanController extends BaseController {
     ctx.body = wenjuan
   }
 
+  // 更新协作者角色
   static async updateCooperatorRole(ctx) {
     const { id, accountId, role } = ctx.request.body
     const res = await Wenjuan.findOneAndUpdate({ _id: id, 'cooperator.account': accountId }, { $set: { 'cooperator.$.role': role } }, { new: true })
     ctx.body = res
   }
 
+  // 移除协作者
   static async removeCooperator(ctx) {
     const { id, accountId } = ctx.request.body
     const currentAccountId = ctx.request.headers['accountid']
@@ -189,6 +194,143 @@ class WenjuanController extends BaseController {
     }
     const res = await Wenjuan.findOneAndUpdate({ _id: id }, { $pull: { cooperator: { account: accountId } } }, { new: true })
     ctx.body = res
+  }
+
+  // 获取问卷统计数据
+  static async getStat(ctx) {
+    const { id, page = 1, limit = 10 } = ctx.request.body
+
+    try {
+      // 获取问卷基本信息
+      const wenjuan = await Wenjuan.findById(id)
+      if (!wenjuan) {
+        throw new CustomError(404, '问卷不存在')
+      }
+
+      // 获取答卷总数
+      const totalAnswers = await Answer.countDocuments({ wenjuanId: id })
+
+      // 获取答卷列表
+      const answerList = await Answer.find({ wenjuanId: id })
+        .sort({ submitTime: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .lean()
+
+      // 获取所有答卷数据用于统计
+      const allAnswers = await Answer.find({ wenjuanId: id }).lean()
+
+      // 统计每个题目的答案分布
+      const statistics = {}
+      wenjuan.data.forEach((question) => {
+        if (['SingleChoice', 'MultiChoice'].includes(question.type)) {
+          // 选择题统计
+          statistics[question.id] = question.options.reduce((acc, opt) => {
+            acc[opt.id] = 0
+            return acc
+          }, {})
+        } else if (['Rate', 'NPS'].includes(question.type)) {
+          // 评分题统计
+          const min = question.type === 'NPS' ? 0 : question.minScore
+          const max = question.type === 'NPS' ? 10 : question.maxScore
+          statistics[question.id] = Array(max - min + 1).fill(0)
+        }
+      })
+
+      // 计算统计数据
+      allAnswers.forEach((answer) => {
+        Object.entries(answer.answers).forEach(([qId, value]) => {
+          const question = wenjuan.data.find((q) => q.id === qId)
+          if (!question) return
+
+          if (['SingleChoice'].includes(question.type)) {
+            // 单选题
+            if (statistics[qId] && statistics[qId][value]) {
+              statistics[qId][value]++
+            }
+          } else if (['MultiChoice'].includes(question.type)) {
+            // 多选题
+            if (Array.isArray(value)) {
+              value.forEach((optId) => {
+                if (statistics[qId] && statistics[qId][optId]) {
+                  statistics[qId][optId]++
+                }
+              })
+            }
+          } else if (['Rate', 'NPS'].includes(question.type)) {
+            // 评分题和NPS
+            const min = question.type === 'NPS' ? 0 : question.minScore
+            if (typeof value === 'number' && statistics[qId]) {
+              const index = value - min
+              if (index >= 0 && index < statistics[qId].length) {
+                statistics[qId][index]++
+              }
+            }
+          }
+        })
+      })
+
+      ctx.body = {
+        wenjuan,
+        totalAnswers,
+        answerList,
+        statistics,
+        pagination: {
+          total: totalAnswers,
+          current: page,
+          pageSize: limit
+        }
+      }
+    } catch (error) {
+      if (error instanceof CustomError) {
+        throw error
+      }
+      throw new CustomError(500, '获取统计数据失败')
+    }
+  }
+
+  // 提交问卷答案
+  static async submit(ctx) {
+    const { id } = ctx.params
+    const answers = ctx.request.body
+    const ip = ctx.request.ip
+    const userAgent = ctx.request.headers['user-agent']
+
+    try {
+      // 检查问卷是否存在
+      const wenjuan = await Wenjuan.findById(id)
+      if (!wenjuan) {
+        throw new CustomError(404, '问卷不存在')
+      }
+
+      // 检查问卷是否在收集时间范围内
+      if (wenjuan.settings?.collectTime) {
+        const [start, end] = wenjuan.settings.collectTime
+        const now = new Date()
+        if (now < new Date(start) || now > new Date(end)) {
+          throw new CustomError(403, '当前不在问卷收集时间范围内')
+        }
+      }
+
+      // 创建答案记录
+      const answer = new Answer({
+        wenjuanId: id,
+        answers,
+        submitIp: ip,
+        submitDevice: userAgent
+      })
+
+      await answer.save()
+
+      ctx.body = {
+        message: '提交成功'
+      }
+    } catch (error) {
+      if (error instanceof CustomError) {
+        throw error
+      }
+      throw new CustomError(500, '提交答案失败')
+    }
   }
 }
 

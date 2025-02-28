@@ -5,19 +5,19 @@
       <template v-if="currentItem.maxScore <= 10">
         <div class="rate-inner">
           <a-rate v-model:value="currentItem.value" :count="currentItem.maxScore" :allow-half="currentItem.step === 0.5" :tooltips="currentItem.tips.map((tip) => tip.text)" v-bind="rateProps" />
-          <div v-if="currentItem.showLabels" class="rate-labels">
+          <!-- <div v-if="currentItem.showLabels" class="rate-labels">
             <span class="min-label">{{ currentItem.minLabel }}</span>
             <span class="max-label">{{ currentItem.maxLabel }}</span>
-          </div>
+          </div> -->
         </div>
       </template>
       <template v-else>
         <div class="slider-inner">
           <a-slider v-model:value="currentItem.value" :min="currentItem.minScore" :max="currentItem.maxScore" :step="currentItem.step" />
-          <div v-if="currentItem.showLabels" class="slider-labels">
+          <!-- <div v-if="currentItem.showLabels" class="slider-labels">
             <span class="min-label">{{ currentItem.minLabel || currentItem.minScore }}</span>
             <span class="max-label">{{ currentItem.maxLabel || currentItem.maxScore }}</span>
-          </div>
+          </div> -->
         </div>
       </template>
     </div>
@@ -64,12 +64,12 @@
       </div>
     </div>
 
-    <div class="prop-item">
+    <!-- <div class="prop-item">
       <h4>极值标签</h4>
       <a-switch v-model:checked="currentItem.showLabels" size="small" />
-    </div>
+    </div> -->
 
-    <template v-if="currentItem.showLabels">
+    <!-- <template v-if="currentItem.showLabels">
       <div class="prop-item">
         <h4>最低分标签</h4>
         <a-input v-model:value="currentItem.minLabel" size="small" placeholder="最低" style="width: 120px" />
@@ -78,7 +78,7 @@
         <h4>最高分标签</h4>
         <a-input v-model:value="currentItem.maxLabel" size="small" placeholder="最高" style="width: 120px" />
       </div>
-    </template>
+    </template> -->
 
     <!-- 评分提示设置 -->
     <div class="prop-item column">
@@ -118,7 +118,7 @@ import { cleanupScoreRanges, cleanupConditions } from '../cleanup'
 const { itemIndex, itemId } = defineProps(['itemIndex', 'itemId'])
 
 const Q = inject('Q')
-const seleItemIndex = inject('seleItemIndex')
+// const seleItemIndex = inject('seleItemIndex')
 const seleItemId = inject('seleItemId')
 const showIconSelect = ref(false)
 
@@ -227,7 +227,7 @@ onBeforeMount(() => {
   currentItem.value.value ??= 0
   currentItem.value.tips ??= []
   currentItem.value.customIcon ??= null
-  currentItem.value.showLabels ??= false
+  // currentItem.value.showLabels ??= false
   currentItem.value.minLabel ??= ''
   currentItem.value.maxLabel ??= ''
 })

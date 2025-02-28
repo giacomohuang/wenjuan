@@ -526,7 +526,7 @@ const handleSwiperChange = (e) => {
   max-width: 100vw;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-x: hidden;
   background: v-bind("Q.settings.bgColor");
 }
 
@@ -575,7 +575,7 @@ const handleSwiperChange = (e) => {
 }
 
 .number {
-  color: #999999;
+  // color: #999999;
   margin-right: 8rpx;
 }
 

@@ -148,7 +148,10 @@ const handleCustomUpload = async ({ file, onSuccess, onError }) => {
 }
 
 // 处理分页变化
-const handlePageChange = (page) => {
+const handlePageChange = (page, e) => {
+  if (e && e.stopPropagation) {
+    e.stopPropagation()
+  }
   loadCustomIcons(page)
 }
 

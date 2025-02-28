@@ -70,15 +70,15 @@
   <template v-if="item.type === 'Rate'">
     <view class="rate-wrap">
       <template v-if="item.maxScore <= 10">
-        <up-rate v-model="answers[item.id]" :count="item.maxScore" :score="0.5" :allowHalf="item.step === 0.5" size="24" />
+        <up-rate v-model="answers[item.id]" :count="item.maxScore" :minCount="0" :allowHalf="item.step === 0.5" size="24" />
       </template>
       <template v-else>
         <up-slider v-model="answers[item.id]" :min="item.minScore" :max="item.maxScore" :step="item.step" />
       </template>
-      <view v-if="item.showLabels" class="rate-labels">
+      <!-- <view v-if="item.showLabels" class="rate-labels">
         <text>{{ item.minLabel }}</text>
         <text>{{ item.maxLabel }}</text>
-      </view>
+      </view> -->
     </view>
   </template>
 
@@ -111,6 +111,9 @@ const props = defineProps({
   },
 });
 const answers = inject("answers");
+if (props.item.type === "Rate") {
+  answers[props.item.id] = 0;
+}
 
 const OSS_PREFIX = "http://localhost:9000/mpadmin/";
 

@@ -84,6 +84,24 @@ const wenjuan = {
       data: { id: id, accountId: accountId, role: role },
       url: '/wenjuan/updateCooperatorRole'
     })
+  },
+  // 获取问卷统计数据
+  getStat(id, page = 1, limit = 10) {
+    return fetch({
+      baseURL: baseUrl.wenjuan,
+      method: 'post',
+      data: { id, page, limit },
+      url: '/wenjuan/stat'
+    })
+  },
+  // 提交问卷答案
+  submit(id, data) {
+    return fetch({
+      baseURL: baseUrl.wenjuan,
+      method: 'post',
+      data,
+      url: `/wenjuan/submit/${id}`
+    })
   }
 }
 export default wenjuan

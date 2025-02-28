@@ -71,10 +71,10 @@
       <template v-else>
         <a-slider v-model:value="answers[item.id]" :min="item.minScore" :max="item.maxScore" :step="item.step" />
       </template>
-      <div v-if="item.showLabels" class="rate-labels">
+      <!-- <div v-if="item.showLabels" class="rate-labels">
         <span>{{ item.minLabel }}</span>
         <span>{{ item.maxLabel }}</span>
-      </div>
+      </div> -->
     </div>
   </template>
 

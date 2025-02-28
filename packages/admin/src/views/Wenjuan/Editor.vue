@@ -41,7 +41,7 @@
         </template>
         <template #dropdownRender="{ menuNode: menu }">
           <v-nodes :vnodes="menu" />
-          <a-pagination style="margin: 10px 0" hideOnSinglePage v-model:current="versionList.page" :total="versionList.total" :page-size="versionList.limit" @change.stop="getVersionList" size="small" />
+          <a-pagination style="margin: 10px 0" hideOnSinglePage v-model:current="versionList.page" :total="versionList.total" :page-size="versionList.limit" @change="getVersionList" size="small" />
         </template>
         <template #tagRender="{ value }"> 版本: {{ value }} </template>
       </a-select>
@@ -392,10 +392,13 @@ async function getVersion(version) {
     title: '确定要载入版本' + version + '吗？',
     onOk: async () => {
       const res = await API.wenjuan.getVersion(qId.value, version)
-      console.log('getVersion', res)
+      currentVersion.value = version
       Q.name = res.name
       Q.data = res.data
       Q.settings = res.settings
+    },
+    onCancel: () => {
+      versionList.selectedVersion = '版本' + currentVersion.value
     }
   })
 }
