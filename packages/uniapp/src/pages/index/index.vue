@@ -99,6 +99,7 @@ const Q = ref({
 const loading = ref(true);
 const answers = ref({});
 provide("answers", answers);
+console.log('mai',answers.value);
 const submitting = ref(false);
 const currentTime = ref("");
 const OSS_PREFIX = uni.getStorageSync("VITE_UPLOAD_URL_PREFIX");

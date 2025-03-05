@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>my</title>
+    <g id="my" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="椭圆形" stroke="#000000" stroke-width="4" cx="24" cy="24" r="18"></circle>
+        <path d="M24,29 C26.9526034,29 29.7062169,29.8525316 32.0272061,31.3260473 C34.0615818,32.617602 35.7641166,34.3851932 36.9771389,36.4726838 C33.7023488,39.8797706 29.0988441,42 24,42 C18.9007066,42 14.2968519,39.8794092 11.0224547,36.4720896 C12.2361008,34.3850873 13.9385291,32.6176492 15.9726718,31.3261805 C18.2937298,29.8525506 21.0473678,29 24,29 Z" id="形状结合" stroke="#000000" stroke-width="4"></path>
+        <circle id="椭圆形" stroke="#000000" stroke-width="4" cx="24" cy="19" r="5"></circle>
+    </g>
+</svg>

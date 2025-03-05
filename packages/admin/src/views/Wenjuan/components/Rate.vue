@@ -28,7 +28,7 @@
     <div class="num">{{ itemIndex + 1 }}. 评分题</div>
 
     <div class="prop-item">
-      <h4>此题必答</h4>
+      <h4>本题必答</h4>
       <a-switch v-model:checked="currentItem.required" size="small" />
     </div>
     <div class="prop-item">

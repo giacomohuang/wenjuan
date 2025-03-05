@@ -17,6 +17,9 @@ wenjuanRouter.post('/wenjuan/addCooperator', authToken, wenjuanController.addCoo
 wenjuanRouter.post('/wenjuan/updateCooperatorRole', authToken, wenjuanController.updateCooperatorRole)
 wenjuanRouter.post('/wenjuan/removeCooperator', authToken, wenjuanController.removeCooperator)
 
+wenjuanRouter.post('/wenjuan/client_get', wenjuanController.get)
+
+
 // 新增统计相关路由
 wenjuanRouter.post('/wenjuan/stat', authToken, wenjuanController.getStat)
 wenjuanRouter.post('/wenjuan/submit/:id', wenjuanController.submit)

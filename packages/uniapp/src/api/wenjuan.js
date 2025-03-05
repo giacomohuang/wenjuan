@@ -9,7 +9,7 @@ export const wenjuanApi = {
 
   // 获取问卷详情
   getDetail(id) {
-    return post(`/wenjuan/getclient`, { id: id });
+    return post(`/wenjuan/client_get`, { id: id });
   },
   // 提交问卷答案
   submit(id, data) {

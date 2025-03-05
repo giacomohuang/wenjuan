@@ -1,5 +1,11 @@
 <template>
-  <div class="header">
+  <div class="loading-wrapper" v-show="isLoading">
+    <div class="loading-content">
+      <a-spin />
+    </div>
+  </div>
+
+  <div class="header" v-show="!isLoading">
     <div class="left">
       <icon name="arrow-right" class="ico-back" size="2em" @click="router.push('/wenjuan/project')" />
       <div class="q-name-wrapper">
@@ -48,7 +54,7 @@
     </div>
   </div>
 
-  <div class="main">
+  <div class="main" v-show="!isLoading">
     <aside class="q-types" width="200">
       <VueDraggable v-model="QTYPES" tag="ul" animation="100" :group="{ name: 'group', pull: 'clone', put: false }" :clone="onClone" :sort="false">
         <li v-for="item in QTYPES" :key="item.id" @click="addItem(item)">{{ item.title }}</li>
@@ -157,7 +163,7 @@
 </router>
 
 <script setup>
-import { provide, ref, reactive, nextTick, onBeforeMount, onBeforeUnmount, defineAsyncComponent, watch, onMounted, defineComponent, computed } from 'vue'
+import { provide, ref, reactive, nextTick, onBeforeMount, onBeforeUnmount, defineComponent, watch, onMounted, computed } from 'vue'
 import XEditer from '@/components/XEditer.vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import 'simplebar'
@@ -172,6 +178,14 @@ import { debounce } from 'lodash-es'
 import { cleanupConditions } from './cleanup'
 import { message, Modal } from 'ant-design-vue'
 import dayjs from 'dayjs'
+
+// 导入问卷组件
+import MultiChoice from './components/MultiChoice.vue'
+import SingleChoice from './components/SingleChoice.vue'
+import FillBlank from './components/FillBlank.vue'
+import ImageChoice from './components/ImageChoice.vue'
+import Rate from './components/Rate.vue'
+import NPS from './components/NPS.vue'
 
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890', 12)
 
@@ -204,12 +218,12 @@ function onClone(data) {
   return d
 }
 const QtypeComponents = {
-  MultiChoice: defineAsyncComponent(() => import('./components/MultiChoice.vue')),
-  SingleChoice: defineAsyncComponent(() => import('./components/SingleChoice.vue')),
-  FillBlank: defineAsyncComponent(() => import('./components/FillBlank.vue')),
-  ImageChoice: defineAsyncComponent(() => import('./components/ImageChoice.vue')),
-  Rate: defineAsyncComponent(() => import('./components/Rate.vue')),
-  NPS: defineAsyncComponent(() => import('./components/NPS.vue'))
+  MultiChoice,
+  SingleChoice,
+  FillBlank,
+  ImageChoice,
+  Rate,
+  NPS
 }
 const Q = reactive({ data: [] })
 const seleItemIndex = ref(0)
@@ -553,6 +567,12 @@ const teamMemberColumns = [
 </script>
 
 <style scoped lang="scss">
+.loading-wrapper {
+  padding: 20px;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+}
 .header {
   display: relative;
   display: flex;

@@ -1,9 +1,9 @@
 <template>
-  {{ (item.id, answers[item.id]) }}
   <!-- 填空题 -->
   <template v-if="item.type === 'FillBlank'">
     <view v-if="!item.multiMode" class="fill-blank">
-      <up-input v-model="answers[item.id]" />
+      {{ item.options[0].fill }}
+      <up-input v-model="answers[item.id]" :placeholder="item.options[0].placeholder || '请填写'" :maxlength="item.options[0].maxLength" />
     </view>
     <view v-else class="fill-blank">
       <view v-for="opt in item.options" :key="opt.id" class="blank-item">
@@ -23,12 +23,10 @@
         <up-radio v-for="opt in item.options" :key="opt.id" :name="opt.id">
           <template #label>
             <rich-text :nodes="opt.text" style="font-size: 28rpx"></rich-text>
+            <up-input v-if="opt.fill?.show && answers[item.id] === opt.id" v-model="answers[item.id + '_fill']" :placeholder="opt.fill?.placeholder || '请填写'" :maxlength="opt.fill?.length" border="surround" />
           </template>
         </up-radio>
       </up-radio-group>
-      <view v-for="opt in item.options" :key="opt.id">
-        <uni-easyinput v-if="opt.fill?.show && answers[item.id] === opt.id" v-model="answers[item.id + '_fill']" :placeholder="opt.fill.placeholder || '请填写'" :maxlength="opt.fill.length" />
-      </view>
     </view>
   </template>
 
@@ -36,15 +34,16 @@
   <template v-if="item.type === 'MultiChoice'">
     <view class="checkbox-group">
       <up-checkbox-group v-model="answers[item.id]" placement="column">
-        <up-checkbox v-for="(item, index) in item.options" :key="index" :name="item.id">
+        <up-checkbox v-for="opt in item.options" :key="opt.id" :name="opt.id">
           <template #label>
-            <rich-text :nodes="item.text" style="font-size: 28rpx"></rich-text>
+            <rich-text :nodes="opt.text" style="font-size: 28rpx"></rich-text>
           </template>
+          <template #right>
+            <up-input v-if="opt.fill?.show && answers[item.id]?.includes(opt.id)" v-model="answers[item.id + '_' + opt.id]" :placeholder="opt.fill?.placeholder || '请填写'" :maxlength="opt.fill?.length" border="surround" />
+          </template>  
         </up-checkbox>
+        
       </up-checkbox-group>
-      <view v-for="opt in item.options" :key="opt.id">
-        <up-input v-if="opt.fill?.show && answers[item.id]?.includes(opt.id)" v-model="answers[item.id + '_' + opt.id]" :placeholder="opt.fill.placeholder || '请填写'" :maxlength="opt.fill.length" border="surround" />
-      </view>
     </view>
   </template>
 
@@ -73,12 +72,12 @@
         <up-rate v-model="answers[item.id]" :count="item.maxScore" :minCount="0" :allowHalf="item.step === 0.5" size="24" />
       </template>
       <template v-else>
-        <up-slider v-model="answers[item.id]" :min="item.minScore" :max="item.maxScore" :step="item.step" />
+        <slider @change="handleSliderChange" activeColor="#007aff" :min="item.minScore" :max="item.maxScore" :step="item.step" show-value block-size="18" />
       </template>
-      <!-- <view v-if="item.showLabels" class="rate-labels">
+      <view v-if="item.showLabels" class="rate-labels">
         <text>{{ item.minLabel }}</text>
         <text>{{ item.maxLabel }}</text>
-      </view> -->
+      </view>
     </view>
   </template>
 
@@ -98,9 +97,8 @@
   </template>
 </template>
 
-import { getNVueFlexDirection } from "@dcloudio/uni-cli-shared";
 <script setup>
-import { inject } from "vue";
+import { inject,onBeforeMount,ref } from "vue";
 defineOptions({
   styleIsolation: "shared",
 });
@@ -111,8 +109,10 @@ const props = defineProps({
   },
 });
 const answers = inject("answers");
-if (props.item.type === "Rate") {
-  answers[props.item.id] = 0;
+
+const handleSliderChange = (e) => {
+  console.log('hi',e.detail.value)
+  answers.value[props.item.id] = e.detail.value;
 }
 
 const OSS_PREFIX = "http://localhost:9000/mpadmin/";

@@ -115,7 +115,6 @@ const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVW
 const { itemIndex, itemId } = defineProps(['itemIndex', 'itemId'])
 
 const Q = inject('Q')
-const seleItemIndex = inject('seleItemIndex')
 const seleItemId = inject('seleItemId')
 const currentBlankIndex = ref(-1)
 const autoFocusIndex = ref(-1)
