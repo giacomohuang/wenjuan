@@ -11,6 +11,6 @@
     "build:uniapp": "pnpm -F @wenjuan/uniapp build"
   },
   "dependencies": {
-    "@faker-js/faker": "^9.3.0"
+    "@faker-js/faker": "^9.5.1"
   }
 }
