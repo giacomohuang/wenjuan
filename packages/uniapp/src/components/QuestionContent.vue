@@ -2,7 +2,7 @@
   <!-- 填空题 -->
   <template v-if="item.type === 'FillBlank'">
     <view v-if="!item.multiMode" class="fill-blank">
-      <mp-input v-model="answers[item.id]" :placeholder="item.options[0].placeholder || '请填写'" :maxlength="item.options[0].maxLength > 0 ? item.options[0].maxLength : undefined" />
+      <mp-input v-model="answers[item.id]" :placeholder="item.options[0].placeholder || '请填写'" :maxlength="item.options[0].maxLength" />
     </view>
     <view v-else class="fill-blank">
       <view v-for="opt in item.options" :key="opt.id" class="blank-item">
@@ -10,7 +10,7 @@
           <text class="required" v-if="opt.required">*</text>
           <rich-text :nodes="opt.text" style="font-size: 28rpx"></rich-text>
         </view>
-        <mp-input v-model="answers[item.id + '_' + opt.id]" :placeholder="opt.placeholder || '请填写'" :maxlength="opt.maxLength > 0 ? opt.maxLength : undefined" />
+        <mp-input v-model="answers[item.id + '_' + opt.id]" :placeholder="opt.placeholder || '请填写'" :maxlength="opt.maxLength" />
       </view>
     </view>
   </template>
@@ -23,7 +23,7 @@
           <mp-radio :name="opt.id">
             <rich-text :nodes="opt.text" style="font-size: 28rpx"></rich-text>
           </mp-radio>
-          <mp-input v-if="opt.fill?.show && answers[item.id] === opt.id" v-model="answers[item.id + '_fill']" :placeholder="opt.fill?.placeholder || '请填写'" :maxlength="opt.fill?.length > 0 ? opt.fill?.length : undefined" :showCharCount="true" />
+          <mp-input v-if="opt.fill?.show && answers[item.id] === opt.id" v-model="answers[item.id + '_fill']" :placeholder="opt.fill?.placeholder || '请填写'" :maxlength="opt.fill?.length" :showCharCount="true" />
         </template>
       </mp-radio-group>
     </view>
@@ -35,7 +35,7 @@
       <mp-checkbox-group v-model="answers[item.id]" placement="column">
         <template v-for="opt in item.options" :key="opt.id">
           <mp-checkbox :name="opt.id"><rich-text :nodes="opt.text" style="font-size: 28rpx"></rich-text></mp-checkbox>
-          <mp-input v-if="opt.fill?.show && answers[item.id]?.includes(opt.id)" v-model="answers[item.id + '_' + opt.id]" :placeholder="opt.fill?.placeholder || '请填写'" :maxlength="opt.fill?.length > 0 ? opt.fill?.length : undefined" :showCharCount="true" />
+          <mp-input v-if="opt.fill?.show && answers[item.id]?.includes(opt.id)" v-model="answers[item.id + '_' + opt.id]" :placeholder="opt.fill?.placeholder || '请填写'" :maxlength="opt.fill?.length" :showCharCount="true" />
         </template>
       </mp-checkbox-group>
     </view>

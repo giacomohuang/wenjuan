@@ -30,7 +30,7 @@
         </view>
       </view>
       <!-- 字符计数 -->
-      <view class="mp-input__char-count" v-if="showCharCount && maxlength !== -1"> {{ valueLength }}/{{ maxlength }} </view>
+      <view class="mp-input__char-count" v-if="showCharCount && maxlength"> {{ valueLength }}/{{ maxlength }} </view>
     </view>
     <!-- 右侧内容 -->
     <view class="mp-input__append" v-if="$slots.append">
@@ -71,7 +71,7 @@ const props = defineProps({
   // 最大长度
   maxlength: {
     type: [String, Number],
-    default: -1
+    default: null
   },
   // 是否自动聚焦
   autoFocus: {
@@ -146,7 +146,7 @@ const inputValue = ref(fixInputValue())
 
 // 如果输入值超过最大长度，则截取输入值
 function fixInputValue() {
-  if (props.maxlength !== -1 && props.modelValue.length > props.maxlength) {
+  if (props.maxlength && props.modelValue.length > props.maxlength) {
     const newValue = props.modelValue.slice(0, props.maxlength)
     emit('update:modelValue', newValue)
     return newValue
@@ -164,7 +164,7 @@ const valueLength = computed(() => {
 const onInput = (e) => {
   let value = e.detail.value
   // 修正uniapp输入框bug
-  if (props.maxlength !== -1 && value.length > props.maxlength) {
+  if (props.maxlength && value.length > props.maxlength) {
     value = value.slice(0, props.maxlength)
     setTimeout(() => {
       inputValue.value = value
