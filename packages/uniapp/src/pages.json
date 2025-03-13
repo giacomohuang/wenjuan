@@ -1,17 +1,15 @@
 {
-  "easycom": {
-    "autoscan": true,
-    "custom": {
-      "^u--(.*)": "uview-plus/components/u-$1/u-$1.vue",
-      "^up-(.*)": "uview-plus/components/u-$1/u-$1.vue",
-      "^u-([^-].*)": "uview-plus/components/u-$1/u-$1.vue"
-    }
-  },
   "pages": [
     {
       "path": "pages/index/index",
       "style": {
         "navigationBarTitleText": "uni-app"
+      }
+    },
+    {
+      "path": "pages/checkbox-demo/index",
+      "style": {
+        "navigationBarTitleText": "Checkbox 组件示例"
       }
     }
   ],
