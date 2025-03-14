@@ -132,9 +132,6 @@ const currentQuestion = computed(() => {
   return visibleQuestions.value[currentPage.value]
 })
 
-// 翻页动画控制
-const transitionName = ref('slide-left')
-
 // 是否显示上一页按钮
 const showPrevButton = computed(() => {
   return Q.value.settings?.showOnePerPage && currentPage.value > 0
@@ -222,7 +219,6 @@ const startAnswering = () => {
 // 上一题
 const prevQuestion = () => {
   if (currentPage.value > 0) {
-    transitionName.value = 'slide-right'
     currentPage.value--
   }
 }
@@ -232,11 +228,117 @@ const nextQuestion = () => {
   // 检查当前题目是否必答但未回答
   const currentQ = currentQuestion.value
   if (currentQ && currentQ.required && !isQuestionAnswered(currentQ.id)) {
+    // 构建详细的错误提示
+    let errorTitle = `此题为必答题`
+
+    // 检查是否是多项题目，需要找出具体哪个子项未填写
+    if (currentQ.type === 'FillBlank' && currentQ.multiMode) {
+      // 对于多空格填空题，找出未填写的具体子项
+      for (let i = 0; i < currentQ.options.length; i++) {
+        const opt = currentQ.options[i]
+        if (opt.required) {
+          const optValue = answers.value[currentQ.id + '_' + opt.id]
+          if (!optValue || optValue.trim() === '') {
+            // 找到第一个未填写的必填子项
+            const subItemText = opt.text?.replace(/<[^>]+>/g, '') || `第${i + 1}项`
+            errorTitle += `，请填写：${subItemText}`
+            break
+          }
+        }
+      }
+    } else if (currentQ.type === 'SingleChoice') {
+      // 如果尚未选择选项
+      if (!answers.value[currentQ.id]) {
+        errorTitle += `，请选择一个选项`
+      } else {
+        // 对于单选题，检查是否有未填写的补充内容
+        const selectedOption = currentQ.options.find((opt) => opt.id === answers.value[currentQ.id])
+        if (selectedOption?.fill?.show && selectedOption?.fill?.required) {
+          const fillValue = answers.value[currentQ.id + '_fill']
+          if (!fillValue || fillValue.trim() === '') {
+            const optText = selectedOption.text?.replace(/<[^>]+>/g, '') || '所选选项'
+            errorTitle += `，请填写"${optText}"的补充内容`
+          }
+        }
+      }
+    } else if (currentQ.type === 'MultiChoice') {
+      // 如果尚未选择任何选项
+      if (!answers.value[currentQ.id] || !Array.isArray(answers.value[currentQ.id]) || answers.value[currentQ.id].length === 0) {
+        errorTitle += `，请至少选择一个选项`
+      } else {
+        // 检查是否满足最小选择数量要求
+        const selectedCount = answers.value[currentQ.id].length
+        if (currentQ.minRange && selectedCount < currentQ.minRange) {
+          errorTitle += `，请至少选择${currentQ.minRange}项`
+        }
+        // 检查是否超出最大选择数量限制
+        else if (currentQ.maxRange && selectedCount > currentQ.maxRange) {
+          errorTitle += `，最多只能选择${currentQ.maxRange}项`
+        }
+        // 检查选中项的必填补充内容
+        else {
+          // 对于多选题，检查是否有未填写的补充内容
+          for (const optId of answers.value[currentQ.id]) {
+            const option = currentQ.options.find((opt) => opt.id === optId)
+            if (option?.fill?.show && option?.fill?.required) {
+              const fillValue = answers.value[currentQ.id + '_' + optId]
+              if (!fillValue || fillValue.trim() === '') {
+                const optText = option.text?.replace(/<[^>]+>/g, '') || '所选选项'
+                errorTitle += `，请填写"${optText}"的补充内容`
+                break
+              }
+            }
+          }
+        }
+      }
+    }
+
     uni.showToast({
-      title: '此题为必答题',
-      icon: 'none'
+      title: errorTitle,
+      icon: 'none',
+      duration: 2500
     })
     return
+  }
+
+  // 检查非必填的多选题是否符合minRange和maxRange要求（如果已选择至少一项）
+  if (currentQ && !currentQ.required && currentQ.type === 'MultiChoice') {
+    if (answers.value[currentQ.id] && Array.isArray(answers.value[currentQ.id]) && answers.value[currentQ.id].length > 0) {
+      const selectedCount = answers.value[currentQ.id].length
+      let errorMessage = null
+
+      // 检查最小选择数量
+      if (currentQ.minRange && selectedCount < currentQ.minRange) {
+        errorMessage = `您已选择${selectedCount}项，请至少选择${currentQ.minRange}项`
+      }
+      // 检查最大选择数量
+      else if (currentQ.maxRange && selectedCount > currentQ.maxRange) {
+        errorMessage = `您已选择${selectedCount}项，最多只能选择${currentQ.maxRange}项`
+      }
+      // 检查选中项的必填补充内容
+      else {
+        for (const optId of answers.value[currentQ.id]) {
+          const option = currentQ.options.find((opt) => opt.id === optId)
+          if (option?.fill?.show && option?.fill?.required) {
+            const fillValue = answers.value[currentQ.id + '_' + optId]
+            if (!fillValue || fillValue.trim() === '') {
+              const optText = option.text?.replace(/<[^>]+>/g, '') || '所选选项'
+              errorMessage = `请填写"${optText}"的补充内容`
+              break
+            }
+          }
+        }
+      }
+
+      if (errorMessage) {
+        uni.showToast({
+          title: errorMessage,
+          icon: 'none',
+          duration: 2500
+        })
+        return
+      }
+    }
   }
 
   // 处理逻辑跳转
@@ -251,7 +353,6 @@ const nextQuestion = () => {
       // 获取跳转目标题目的索引
       const targetIndex = visibleQuestions.value.findIndex((q) => q.id === jumpCondition.toLogicId)
       if (targetIndex > -1) {
-        transitionName.value = 'slide-left'
         currentPage.value = targetIndex
         return
       }
@@ -259,7 +360,6 @@ const nextQuestion = () => {
   }
 
   if (currentPage.value < visibleQuestions.value.length - 1) {
-    transitionName.value = 'slide-left'
     currentPage.value++
   }
 }
@@ -316,26 +416,72 @@ const isOptionSelected = (questionId, optionId) => {
 
 // 检查题目是否已答
 const isQuestionAnswered = (questionId) => {
-  const answer = answers.value[questionId]
-  if (!answer && answer !== 0) return false
-
   const question = Q.value.data.find((q) => q.id === questionId)
   if (!question) return false
 
   switch (question.type) {
-    case 'MultiChoice':
-      return Array.isArray(answer) && answer.length > 0
-    case 'SingleChoice':
-    case 'ImageChoice':
-      return answer !== undefined && answer !== null
     case 'FillBlank':
       if (question.multiMode) {
-        return Object.keys(answers.value).some((key) => key.startsWith(questionId + '_') && answers.value[key])
+        // 多空格模式，检查每个必填子项
+        return question.options.every((opt) => {
+          // 如果是必填项，检查是否有值
+          if (opt.required) {
+            return answers.value[question.id + '_' + opt.id] !== undefined && answers.value[question.id + '_' + opt.id] !== null && answers.value[question.id + '_' + opt.id].trim() !== ''
+          }
+          return true // 非必填项直接返回true
+        })
+      } else {
+        // 单空格模式
+        return answers.value[question.id] !== undefined && answers.value[question.id] !== null && answers.value[question.id].trim() !== ''
       }
-      return !!answer
+
+    case 'SingleChoice':
+      // 必须选择一个选项
+      if (!answers.value[question.id]) return false
+
+      // 检查所选选项是否有需要填写的内容
+      const selectedOption = question.options.find((opt) => opt.id === answers.value[question.id])
+      if (selectedOption?.fill?.show && selectedOption?.fill?.required) {
+        return answers.value[question.id + '_fill'] !== undefined && answers.value[question.id + '_fill'] !== null && answers.value[question.id + '_fill'].trim() !== ''
+      }
+      return true
+
+    case 'MultiChoice':
+      // 如果是非必填题且没有选择任何选项，直接返回true
+      if (!question.required && (!answers.value[question.id] || !Array.isArray(answers.value[question.id]) || answers.value[question.id].length === 0)) {
+        return true
+      }
+
+      // 必须至少选择一个选项（必填题）或者已选择了至少一个选项（非必填题）
+      if (!answers.value[question.id] || !Array.isArray(answers.value[question.id]) || answers.value[question.id].length === 0) {
+        return false
+      }
+
+      // 检查选择数量是否在范围内
+      const selectedCount = answers.value[question.id].length
+
+      // 检查最小选择数量
+      if (question.minRange && selectedCount < question.minRange) {
+        return false
+      }
+
+      // 检查最大选择数量
+      if (question.maxRange && selectedCount > question.maxRange) {
+        return false
+      }
+
+      // 检查所有选中的选项是否都完成了必填的填空内容
+      const selectedOptions = question.options.filter((opt) => answers.value[question.id].includes(opt.id) && opt.fill?.show && opt.fill?.required)
+
+      return selectedOptions.every((opt) => answers.value[question.id + '_' + opt.id] !== undefined && answers.value[question.id + '_' + opt.id] !== null && answers.value[question.id + '_' + opt.id].trim() !== '')
+
+    case 'ImageChoice':
+      return answers.value[question.id] !== undefined && answers.value[question.id] !== null
+
     case 'Rate':
     case 'NPS':
-      return answer !== undefined && answer !== null && answer !== ''
+      return answers.value[question.id] !== undefined && answers.value[question.id] !== null
+
     default:
       return false
   }
@@ -462,97 +608,185 @@ const calculateLogic = () => {
 
 // 提交答案
 const submit = async () => {
-  if (!isInCollectTime.value) {
-    uni.showToast({
-      title: '当前不在问卷收集时间范围内',
-      icon: 'none'
-    })
-    return
-  }
+  // 防止重复提交
+  if (submitting.value) return
 
-  // 检查提交次数限制
+  // 检查回答次数限制
   if (!checkSubmitLimit()) {
     uni.showToast({
-      title: '已超出允许的提交次数限制',
+      title: '您已超过最大提交次数限制',
       icon: 'none'
     })
     return
   }
 
-  // 验证必答题是否已答
-  const visibleRequiredQuestions = visibleQuestions.value.filter((q) => q.required && !isQuestionAnswered(q.id))
+  // 验证所有必填题
+  const unansweredQuestions = []
 
-  if (visibleRequiredQuestions.length > 0) {
-    // 找到第一个未回答的必答题索引
-    const firstUnansweredIndex = visibleQuestions.value.findIndex((q) => q.id === visibleRequiredQuestions[0].id)
+  // 按照显示顺序收集未答问题
+  Q.value.data.forEach((question) => {
+    // 跳过被隐藏的题目
+    if (isHidden(question.id)) return
 
-    if (Q.value.settings?.showOnePerPage) {
-      // 每页一题模式下，导航到第一个未回答的必答题
-      transitionName.value = currentPage.value > firstUnansweredIndex ? 'slide-right' : 'slide-left'
-      currentPage.value = firstUnansweredIndex
-
-      uni.showToast({
-        title: '请完成所有必答题',
-        icon: 'none'
-      })
-      return
-    } else {
-      // 普通模式下的提示
-      uni.showToast({
-        title: `第${getQuestionDisplayIndex(visibleRequiredQuestions[0].id)}题为必答题`,
-        icon: 'none'
-      })
-      return
+    // 如果是必填题且未回答完整
+    if (question.required && !isQuestionAnswered(question.id)) {
+      unansweredQuestions.push(question)
     }
-  }
 
-  // 多填空题模式下的验证
-  for (const item of visibleQuestions.value) {
-    if (item.type === 'FillBlank' && item.multiMode) {
-      const blankItems = item.options.filter((opt) => opt.required)
+    // 检查非必填的多选题是否符合minRange和maxRange要求（如果已选择至少一项）
+    if (!question.required && question.type === 'MultiChoice' && answers.value[question.id] && Array.isArray(answers.value[question.id]) && answers.value[question.id].length > 0) {
+      const selectedCount = answers.value[question.id].length
 
-      for (const blankItem of blankItems) {
-        if (!answers.value[`${item.id}_${blankItem.id}`]) {
-          if (Q.value.settings?.showOnePerPage) {
-            // 每页一题模式下，导航到该题
-            const itemIndex = visibleQuestions.value.findIndex((q) => q.id === item.id)
-            transitionName.value = currentPage.value > itemIndex ? 'slide-right' : 'slide-left'
-            currentPage.value = itemIndex
+      // 检查最小选择数量
+      if (question.minRange && selectedCount < question.minRange) {
+        unansweredQuestions.push({ ...question, invalidReason: 'minRange' })
+      }
+      // 检查最大选择数量
+      else if (question.maxRange && selectedCount > question.maxRange) {
+        unansweredQuestions.push({ ...question, invalidReason: 'maxRange' })
+      }
+      // 检查必填的补充内容
+      else {
+        const missingFillOption = question.options.find((opt) => answers.value[question.id].includes(opt.id) && opt.fill?.show && opt.fill?.required && (!answers.value[question.id + '_' + opt.id] || answers.value[question.id + '_' + opt.id].trim() === ''))
 
-            uni.showToast({
-              title: '此题有必填的子项未完成',
-              icon: 'none'
-            })
-            return
-          } else {
-            uni.showToast({
-              title: `第${getQuestionDisplayIndex(item.id)}题有必填的子项未完成`,
-              icon: 'none'
-            })
-            return
+        if (missingFillOption) {
+          unansweredQuestions.push({ ...question, invalidReason: 'fillRequired', missingOption: missingFillOption })
+        }
+      }
+    }
+  })
+
+  // 如果有未回答的必填题或不满足条件的题目
+  if (unansweredQuestions.length > 0) {
+    const firstQuestion = unansweredQuestions[0]
+    // 获取题目序号
+    const questionIndex = getQuestionDisplayIndex(firstQuestion.id)
+
+    // 构建错误提示
+    let errorTitle = `请完成第${questionIndex}题`
+
+    if (firstQuestion.invalidReason === 'minRange') {
+      const selectedCount = answers.value[firstQuestion.id].length
+      errorTitle = `第${questionIndex}题：您已选择${selectedCount}项，请至少选择${firstQuestion.minRange}项`
+    } else if (firstQuestion.invalidReason === 'maxRange') {
+      const selectedCount = answers.value[firstQuestion.id].length
+      errorTitle = `第${questionIndex}题：您已选择${selectedCount}项，最多只能选择${firstQuestion.maxRange}项`
+    } else if (firstQuestion.invalidReason === 'fillRequired' && firstQuestion.missingOption) {
+      const optText = firstQuestion.missingOption.text?.replace(/<[^>]+>/g, '') || '所选选项'
+      errorTitle = `第${questionIndex}题：请填写"${optText}"的补充内容`
+    }
+    // 检查是否是多项题目，需要找出具体哪个子项未填写
+    else if (firstQuestion.type === 'FillBlank' && firstQuestion.multiMode) {
+      // 对于多空格填空题，找出未填写的具体子项
+      for (let i = 0; i < firstQuestion.options.length; i++) {
+        const opt = firstQuestion.options[i]
+        if (opt.required) {
+          const optValue = answers.value[firstQuestion.id + '_' + opt.id]
+          if (!optValue || optValue.trim() === '') {
+            // 找到第一个未填写的必填子项
+            const subItemText = opt.text?.replace(/<[^>]+>/g, '') || `第${i + 1}项`
+            errorTitle += `：${subItemText}`
+            break
+          }
+        }
+      }
+    } else if (firstQuestion.type === 'SingleChoice') {
+      // 对于单选题，检查是否有未填写的补充内容
+      if (answers.value[firstQuestion.id]) {
+        const selectedOption = firstQuestion.options.find((opt) => opt.id === answers.value[firstQuestion.id])
+        if (selectedOption?.fill?.show && selectedOption?.fill?.required) {
+          const fillValue = answers.value[firstQuestion.id + '_fill']
+          if (!fillValue || fillValue.trim() === '') {
+            const optText = selectedOption.text?.replace(/<[^>]+>/g, '') || '所选选项'
+            errorTitle += `：${optText}的补充内容`
+          }
+        }
+      } else {
+        errorTitle += `：请选择一个选项`
+      }
+    } else if (firstQuestion.type === 'MultiChoice') {
+      // 对于多选题，先检查是否选择了任何选项
+      if (!answers.value[firstQuestion.id] || !Array.isArray(answers.value[firstQuestion.id]) || answers.value[firstQuestion.id].length === 0) {
+        errorTitle += `：请至少选择一个选项`
+      }
+      // 检查minRange
+      else if (firstQuestion.minRange && answers.value[firstQuestion.id].length < firstQuestion.minRange) {
+        errorTitle += `：请至少选择${firstQuestion.minRange}项`
+      }
+      // 检查maxRange
+      else if (firstQuestion.maxRange && answers.value[firstQuestion.id].length > firstQuestion.maxRange) {
+        errorTitle += `：最多只能选择${firstQuestion.maxRange}项`
+      }
+      // 检查选中选项的补充内容
+      else {
+        for (const optId of answers.value[firstQuestion.id]) {
+          const option = firstQuestion.options.find((opt) => opt.id === optId)
+          if (option?.fill?.show && option?.fill?.required) {
+            const fillValue = answers.value[firstQuestion.id + '_' + optId]
+            if (!fillValue || fillValue.trim() === '') {
+              const optText = option.text?.replace(/<[^>]+>/g, '') || '所选选项'
+              errorTitle += `：${optText}的补充内容`
+              break
+            }
           }
         }
       }
     }
+
+    // 显示错误提示
+    uni.showToast({
+      title: errorTitle,
+      icon: 'none',
+      duration: 2500
+    })
+
+    // 如果是每页一题模式，跳转到第一个未答题页面
+    if (Q.value.settings?.showOnePerPage) {
+      const index = visibleQuestions.value.findIndex((q) => q.id === firstQuestion.id)
+      if (index > -1) {
+        currentPage.value = index
+      }
+    }
+
+    return
   }
 
-  try {
-    submitting.value = true
-    // TODO: 提交答案到服务器
-    isSubmitted.value = true
+  // 开始提交
+  submitting.value = true
 
-    // 提交成功后清除计时器
+  try {
+    // 处理答案数据，剔除隐藏题和无效数据
+    const answersData = {}
+    Object.keys(answers.value).forEach((key) => {
+      // 如果是主键（不包含下划线），则检查是否是隐藏题
+      if (!key.includes('_')) {
+        const question = Q.value.data.find((q) => q.id === key)
+        // 如果题目不存在或被隐藏，跳过
+        if (!question || isHidden(question.id)) return
+      }
+
+      // 添加到要提交的数据中
+      answersData[key] = answers.value[key]
+    })
+
+    // 添加元数据
+    const submitData = {
+      wenjuanId: WENJUAN_ID,
+      answers: answersData,
+      timeSpent: Q.value.settings?.timeLimit ? Q.value.settings.timeLimit * 60 - timeLeft.value : null,
+      submitTime: new Date().toISOString()
+    }
+
+    // 调用API提交数据
+    await wenjuanApi.submit(submitData)
+
+    // 清除计时器
     clearQuestionTimer()
 
-    // 显示自定义成功消息
-    if (Q.value.settings?.submitSuccessMessage) {
-      uni.showToast({
-        title: Q.value.settings.submitSuccessMessage,
-        icon: 'success',
-        duration: 2000
-      })
-    }
+    // 显示成功提交页面
+    isSubmitted.value = true
   } catch (error) {
+    console.error('提交失败', error)
     uni.showToast({
       title: '提交失败，请重试',
       icon: 'none'
@@ -653,7 +887,7 @@ onUnmounted(() => {
 
 .main {
   flex-grow: 1;
-  height: calc(100vh - 200rpx);
+  height: calc(100vh - 250rpx);
   box-sizing: border-box;
   overflow-y: auto;
 }
@@ -689,9 +923,9 @@ onUnmounted(() => {
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 200rpx;
+  height: 250rpx;
   background: #ffffff;
-  padding: 40rpx 80rpx;
+  padding: 40rpx 80rpx 0 80rpx;
   box-shadow: 0 -4rpx 24rpx rgba(0, 0, 0, 0.06);
   box-sizing: border-box;
 }
@@ -808,7 +1042,6 @@ onUnmounted(() => {
   position: absolute;
   width: 100%;
   height: 100%;
-  transition: all 0.3s;
 }
 
 .required-tip {

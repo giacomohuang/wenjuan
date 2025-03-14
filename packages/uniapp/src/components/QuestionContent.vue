@@ -2,7 +2,7 @@
   <!-- 填空题 -->
   <template v-if="item.type === 'FillBlank'">
     <view v-if="!item.multiMode" class="fill-blank">
-      <mp-input v-model="answers[item.id]" :placeholder="item.options[0].placeholder || '请填写'" :maxlength="item.options[0].maxLength" />
+      <mp-input v-model="answers[item.id]" :placeholder="item.options[0].placeholder || '请填写'" :maxlength="item.options[0].maxLength" showCharCount />
     </view>
     <view v-else class="fill-blank">
       <view v-for="opt in item.options" :key="opt.id" class="blank-item">
@@ -10,7 +10,7 @@
           <text class="required" v-if="opt.required">*</text>
           <rich-text :nodes="opt.text" style="font-size: 28rpx"></rich-text>
         </view>
-        <mp-input v-model="answers[item.id + '_' + opt.id]" :placeholder="opt.placeholder || '请填写'" :maxlength="opt.maxLength" />
+        <mp-input v-model="answers[item.id + '_' + opt.id]" :placeholder="opt.placeholder || '请填写'" :maxlength="opt.maxLength" showCharCount />
       </view>
     </view>
   </template>
@@ -23,7 +23,10 @@
           <mp-radio :name="opt.id">
             <rich-text :nodes="opt.text" style="font-size: 28rpx"></rich-text>
           </mp-radio>
-          <mp-input v-if="opt.fill?.show && answers[item.id] === opt.id" v-model="answers[item.id + '_fill']" :placeholder="opt.fill?.placeholder || '请填写'" :maxlength="opt.fill?.length" :showCharCount="true" />
+          <view class="fill-wrap" v-if="opt.fill?.show && answers[item.id] === opt.id">
+            <text class="required" v-if="opt.fill.required">*</text>
+            <mp-input v-model="answers[item.id + '_fill']" :placeholder="opt.fill.placeholder || '请填写'" :maxlength="opt.fill.length" showCharCount />
+          </view>
         </template>
       </mp-radio-group>
     </view>
@@ -31,11 +34,17 @@
 
   <!-- 多选题 -->
   <template v-if="item.type === 'MultiChoice'">
+    <view class="range-tips" v-if="item.minRange || item.maxRange"> {{ item.minRange ? '最少选' + item.minRange + '项，' : '' }}{{ item.maxRange ? '最多选' + item.maxRange + '项' : '' }} </view>
     <view class="checkbox-group">
       <mp-checkbox-group v-model="answers[item.id]" placement="column">
         <template v-for="opt in item.options" :key="opt.id">
-          <mp-checkbox :name="opt.id"><rich-text :nodes="opt.text" style="font-size: 28rpx"></rich-text></mp-checkbox>
-          <mp-input v-if="opt.fill?.show && answers[item.id]?.includes(opt.id)" v-model="answers[item.id + '_' + opt.id]" :placeholder="opt.fill?.placeholder || '请填写'" :maxlength="opt.fill?.length" :showCharCount="true" />
+          <mp-checkbox :name="opt.id">
+            <rich-text :nodes="opt.text" style="font-size: 28rpx"></rich-text>
+          </mp-checkbox>
+          <view class="fill-wrap" v-if="opt.fill?.show && answers[item.id]?.includes(opt.id)">
+            <text class="required" v-if="opt.fill.required">*</text>
+            <mp-input v-model="answers[item.id + '_' + opt.id]" :placeholder="opt.fill.placeholder || '请填写'" :maxlength="opt.fill.length" showCharCount />
+          </view>
         </template>
       </mp-checkbox-group>
     </view>
@@ -115,11 +124,7 @@ const props = defineProps({
   }
 })
 const answers = inject('answers')
-if (props.item.type === 'FillBlank') {
-  answers.value[props.item.id] = 'asdjasdjkasd'
-  console.log('!!!!!!!', props.item.id, answers.value[props.item.id])
-  // console.log('!!!!!!gggg!!!!!', answers[props.item.id + '_' + props.item.options[0].id])
-}
+
 const handleRateChange = (score) => {
   console.log('Rate changed:', score, props.item.id)
   // v-model已经自动更新了answers[props.item.id]，这里可以做额外处理
@@ -137,16 +142,21 @@ const previewImage = (url) => {
 </script>
 
 <style lang="scss">
+.required {
+  color: red;
+  margin-right: 8rpx;
+}
+
+.range-tips {
+  color: #999;
+  font-size: 24rpx;
+  margin-bottom: 20rpx;
+}
+
 .fill-blank {
   text-wrap: wrap;
   word-break: break-all;
   padding: 0 20rpx;
-
-  .required {
-    display: flex;
-    color: red;
-    margin-right: 8rpx;
-  }
 
   .blank-item {
     margin-bottom: 32rpx;
@@ -162,6 +172,14 @@ const previewImage = (url) => {
   .blank-input {
     flex-grow: 1;
   }
+}
+
+.fill-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8rpx;
 }
 
 .radio-item,

@@ -1,7 +1,6 @@
 <template>
   <div>
-    <bubble-menu :editor="editor" :tippy-options="{ duration: 100 }" :should-show="shouldShow" v-if="editor"
-      class="toolbar">
+    <bubble-menu :editor="editor" :tippy-options="{ duration: 100 }" :should-show="shouldShow" v-if="editor" class="toolbar">
       <button @click="editor.chain().focus().toggleBold().run()" :class="{ active: editor.isActive('bold') }">
         <icon name="bold" />
       </button>
@@ -14,16 +13,13 @@
       <button @click="editor.chain().focus().toggleStrike().run()" :class="{ active: editor.isActive('strike') }">
         <icon name="strike" />
       </button>
-      <button @click="editor.chain().focus().setTextAlign('left').run()"
-        :class="{ active: editor.isActive({ textAlign: 'left' }) }">
+      <button @click="editor.chain().focus().setTextAlign('left').run()" :class="{ active: editor.isActive({ textAlign: 'left' }) }">
         <icon name="align-left" />
       </button>
-      <button @click="editor.chain().focus().setTextAlign('center').run()"
-        :class="{ active: editor.isActive({ textAlign: 'center' }) }">
+      <button @click="editor.chain().focus().setTextAlign('center').run()" :class="{ active: editor.isActive({ textAlign: 'center' }) }">
         <icon name="align-center" />
       </button>
-      <button @click="editor.chain().focus().setTextAlign('right').run()"
-        :class="{ active: editor.isActive({ textAlign: 'right' }) }">
+      <button @click="editor.chain().focus().setTextAlign('right').run()" :class="{ active: editor.isActive({ textAlign: 'right' }) }">
         <icon name="align-right" />
       </button>
       <button @click="showImageUpload = true" :class="{ active: editor.isActive('image') }">
@@ -36,10 +32,8 @@
     <editor-content :editor="editor" class="editor" />
 
     <!-- 图片上传对话框 -->
-    <a-modal :open="showImageUpload" title="上传图片" @ok="handleImageUploadOk" @cancel="handleImageUploadCancel"
-      :destroyOnClose="true">
-      <Upload :type="['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp']" :multiple="false" :max="1"
-        @uploaded="handleImageUploaded"> 点击或拖拽图片到此处上传 </Upload>
+    <a-modal :open="showImageUpload" title="上传图片" @ok="handleImageUploadOk" @cancel="handleImageUploadCancel" :destroyOnClose="true">
+      <Upload :type="['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp']" :multiple="false" :max="1" @uploaded="handleImageUploaded"> 点击或拖拽图片到此处上传 </Upload>
     </a-modal>
   </div>
 </template>
@@ -217,54 +211,55 @@ button {
 
 .ProseMirror {
   p {
-    line-height: 100%;
+    line-height: 1.2;
     word-break: break-all;
   }
 }
 
-//   > * + * {
-//     margin-top: 0.75em;
-//   }
-//   ul,
-//   ol {
-//     padding: 0 1rem;
-//   }
-//   h1,
-//   h2,
-//   h3,
-//   h4,
-//   h5,
-//   h6 {
-//     line-height: 1.1;
-//   }
-//   code {
-//     background-color: rgba(#616161, 0.1);
-//     color: #616161;
-//   }
-//   pre {
-//     background: #0d0d0d;
-//     color: #fff;
-//     font-family: 'JetBrainsMono', monospace;
-//     padding: 0.75rem 1rem;
-//     border-radius: 0.5rem;
-//     code {
-//       color: inherit;
-//       padding: 0;
-//       background: none;
-//       font-size: 0.8rem;
-//     }
-//   }
-//   img {
-//     max-width: 100%;
-//     height: auto;
-//   }
-//   blockquote {
-//     padding-left: 1rem;
-//     border-left: 2px solid rgba(#0d0d0d, 0.1);
-//   }
-//   hr {
-//     border: none;
-//     border-top: 2px solid rgba(#0d0d0d, 0.1);
-//     margin: 2rem 0;
-//   }
-// }</style>
+> * + * {
+  margin-top: 0.75em;
+}
+ul,
+ol {
+  padding: 0 1rem;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.2;
+}
+code {
+  background-color: rgba(#616161, 0.1);
+  color: #616161;
+}
+pre {
+  background: #0d0d0d;
+  color: #fff;
+  font-family: 'JetBrainsMono', monospace;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  code {
+    color: inherit;
+    padding: 0;
+    background: none;
+    font-size: 0.8rem;
+  }
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+blockquote {
+  padding-left: 1rem;
+  border-left: 2px solid rgba(#0d0d0d, 0.1);
+}
+hr {
+  border: none;
+  border-top: 2px solid rgba(#0d0d0d, 0.1);
+  margin: 2rem 0;
+}
+// }
+</style>
