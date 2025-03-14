@@ -69,11 +69,8 @@
   <!-- 评分题 -->
   <template v-if="item.type === 'Rate'">
     <view class="rate-wrap">
-      <MpRate v-if="item.maxScore <= 10" v-model="answers[item.id]" :minScore="item.minScore" :maxScore="item.maxScore" :step="item.step" size="48" gap="12" icon="heart_filled" :tips="item.tips" @change="handleRateChange" />
-      <view v-if="item.showLabels" class="rate-labels">
-        <text>{{ item.minLabel }}</text>
-        <text>{{ item.maxLabel }}</text>
-      </view>
+      <MpRate v-if="item.maxScore <= 10" v-model="answers[item.id]" :minScore="item.minScore" :maxScore="item.maxScore" :activeColor="item.iconColor" :icon="item.icon" :step="item.step" size="48" gap="12" :tips="item.tips" />
+      <view class="rate-tip">{{ item.tips.find((tip) => tip.score == Math.floor(answers[item.id]))?.text }}</view>
     </view>
     <!-- <view class="rate-wrap">
       <template v-if="item.maxScore <= 10">
@@ -124,12 +121,6 @@ const props = defineProps({
   }
 })
 const answers = inject('answers')
-
-const handleRateChange = (score) => {
-  console.log('Rate changed:', score, props.item.id)
-  // v-model已经自动更新了answers[props.item.id]，这里可以做额外处理
-  // 如果需要在answers对象中存储额外的信息，可以在这里处理
-}
 
 const OSS_PREFIX = 'http://localhost:9000/mpadmin/'
 
@@ -209,10 +200,14 @@ const previewImage = (url) => {
   }
 }
 
+.rate-tips {
+  font-size: 28rpx;
+  color: #999;
+  // justify-content: center;
+}
+
 .rate-wrap,
 .nps-wrap {
-  // padding: 20rpx 32rpx;
-
   .rate-labels,
   .nps-labels {
     display: flex;

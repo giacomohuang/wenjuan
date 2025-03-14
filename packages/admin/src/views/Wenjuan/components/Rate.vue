@@ -3,21 +3,13 @@
     <!-- 评分区域 -->
     <div class="rate-content">
       <template v-if="currentItem.maxScore <= 10">
-        <div class="rate-inner">
-          <a-rate v-model:value="currentItem.value" :count="currentItem.maxScore" :allow-half="currentItem.step === 0.5" :tooltips="currentItem.tips.map((tip) => tip.text)" v-bind="rateProps" />
-          <!-- <div v-if="currentItem.showLabels" class="rate-labels">
-            <span class="min-label">{{ currentItem.minLabel }}</span>
-            <span class="max-label">{{ currentItem.maxLabel }}</span>
-          </div> -->
+        <div class="rate-inner" :style="{ color: currentItem.iconColor }">
+          <span class="icon preview" v-for="i in currentItem.maxScore" :key="i">{{ currentItem.icon }}</span>
         </div>
       </template>
       <template v-else>
         <div class="slider-inner">
           <a-slider v-model:value="currentItem.value" :min="currentItem.minScore" :max="currentItem.maxScore" :step="currentItem.step" />
-          <!-- <div v-if="currentItem.showLabels" class="slider-labels">
-            <span class="min-label">{{ currentItem.minLabel || currentItem.minScore }}</span>
-            <span class="max-label">{{ currentItem.maxLabel || currentItem.maxScore }}</span>
-          </div> -->
         </div>
       </template>
     </div>
@@ -50,19 +42,20 @@
         <a-radio-button :value="0.5">0.5</a-radio-button>
       </a-radio-group>
     </div>
-    <div v-if="currentItem.maxScore <= 10" class="prop-item">
-      <h4>自定义图标</h4>
-      <div class="icon-preview" @click="showIconSelect = true">
-        <template v-if="currentItem.customIcon">
-          <Icon :name="currentItem.customIcon.icon" :key="currentItem.customIcon.icon" />
-          <icon name="remove" size="1.2em" class="clear-icon" @click="clearIcon" />
-        </template>
-        <template v-else>
-          <icon name="plus" />
-          <span>选择图标</span>
-        </template>
+    <template v-if="currentItem.maxScore <= 10">
+      <div class="prop-item">
+        <h4>图标</h4>
+        <a-select v-model:value="currentItem.icon" size="small" style="width: 130px">
+          <a-select-option v-for="icon in icons" :key="icon.name" :value="icon.code">
+            <span class="icon select" :style="{ color: currentItem.iconColor }">{{ icon.code }}{{ icon.code }}{{ icon.code }}{{ icon.code }}{{ icon.code }}</span>
+          </a-select-option>
+        </a-select>
       </div>
-    </div>
+      <div class="prop-item">
+        <h4>图标颜色</h4>
+        <input type="color" v-model="currentItem.iconColor" class="color-input" />
+      </div>
+    </template>
 
     <!-- <div class="prop-item">
       <h4>极值标签</h4>
@@ -94,11 +87,6 @@
         <a-button type="dashed" size="small" @click="addTip"> 添加提示 </a-button>
       </div>
     </div>
-
-    <!-- 图标选择弹窗 -->
-    <a-modal v-model:open="showIconSelect" :title="'选择图标'" :footer="null" width="800px" :destroyOnClose="true">
-      <IconSelect @iconSelect="handleIconSelect" />
-    </a-modal>
   </Teleport>
 </template>
 
@@ -109,9 +97,8 @@
 </router>
 
 <script setup>
-import { inject, computed, onBeforeMount, watch, ref, h } from 'vue'
+import { inject, computed, onBeforeMount } from 'vue'
 import { message } from 'ant-design-vue'
-import IconSelect from '@/components/IconSelect.vue'
 import Icon from '@/components/Icon.vue'
 import { cleanupScoreRanges, cleanupConditions } from '../cleanup'
 
@@ -120,48 +107,28 @@ const { itemIndex, itemId } = defineProps(['itemIndex', 'itemId'])
 const Q = inject('Q')
 // const seleItemIndex = inject('seleItemIndex')
 const seleItemId = inject('seleItemId')
-const showIconSelect = ref(false)
 
 const currentItem = computed(() => {
   return Q.data.find((item) => item.id === itemId)
 })
 
-// 添加清除图标函数
-const clearIcon = (e) => {
-  e.stopPropagation() // 阻止事件冒泡
-  currentItem.value.customIcon = null
-}
-
-// 计算rate组件的props
-const rateProps = computed(() => {
-  const item = currentItem.value
-  if (item.customIcon) {
-    return {
-      character: () =>
-        h(Icon, {
-          name: item.customIcon.icon,
-          key: item.customIcon.icon,
-          style: { fontSize: '20px' }
-        })
-    }
-  }
-  return {}
-})
+const icons = [
+  { name: 'heart', code: '\ue647' },
+  { name: 'heart_filled', code: '\ue63f' },
+  { name: 'star', code: '\ue9cf' },
+  { name: 'star_filled', code: '\ue9df' },
+  { name: 'like', code: '\ue9d0' },
+  { name: 'like_filled', code: '\ue9dc' },
+  { name: 'dislike', code: '\ue9cd' },
+  { name: 'dislike_filled', code: '\ue9d7' },
+  { name: 'flag', code: '\ue9ce' },
+  { name: 'flag_filled', code: '\ue9da' }
+  // { name: 'bookmark_filled', code: '\ue9d5' }
+]
 
 const cleanup = () => {
   cleanupScoreRanges(Q.data)
   cleanupConditions(Q.data)
-}
-
-// 处理图标选择
-function handleIconSelect({ iconType, icon }) {
-  currentItem.value.customIcon = {
-    type: iconType,
-    icon: icon
-  }
-  setTimeout(() => {
-    showIconSelect.value = false
-  }, 0)
 }
 
 function handleTipScoreChange(newScore, currentIndex) {
@@ -230,6 +197,7 @@ onBeforeMount(() => {
   // currentItem.value.showLabels ??= false
   currentItem.value.minLabel ??= ''
   currentItem.value.maxLabel ??= ''
+  currentItem.value.iconColor ??= '#ff0000'
 })
 
 // // 监听分数范围变化
@@ -275,6 +243,30 @@ function handleMaxScoreChange(value) {
 </script>
 
 <style scoped lang="scss">
+@font-face {
+  font-family: 'rate';
+  src:
+    url('@/assets/iconfont/rate.woff2') format('woff2'),
+    url('@/assets/iconfont/rate.woff') format('woff'),
+    url('@/assets/iconfont/rate.ttf') format('truetype');
+}
+
+.icon {
+  font-family: 'rate' !important;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  &.select {
+    color: red;
+    font-size: 18px;
+  }
+  &.preview {
+    font-size: 30px;
+    padding: 0 4px;
+  }
+}
+
 .rate-wrap {
   padding: 12px 0;
 }
@@ -350,44 +342,6 @@ function handleMaxScoreChange(value) {
   font-weight: 800;
 }
 
-.icon-preview {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 12px;
-  border: 1px dashed var(--border-medium);
-  border-radius: 4px;
-  cursor: pointer;
-  color: var(--text-secondary);
-  position: relative;
-
-  &:hover {
-    border-color: var(--c-brand);
-    color: var(--c-brand);
-
-    .clear-icon {
-      display: block;
-    }
-  }
-}
-
-.clear-icon {
-  display: none;
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  padding: 2px;
-  background: var(--bg-primary);
-  border-radius: 50%;
-  border: 1px solid var(--border-medium);
-  color: var(--text-secondary);
-
-  &:hover {
-    color: var(--c-red);
-    border-color: var(--c-red);
-  }
-}
-
 .rate-inner {
   position: relative;
   width: fit-content;
@@ -426,5 +380,21 @@ function handleMaxScoreChange(value) {
 .max-label {
   position: absolute;
   right: 0;
+}
+
+.color-input {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  &::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+  &::-webkit-color-swatch {
+    border: none;
+    border-radius: 2px;
+  }
 }
 </style>

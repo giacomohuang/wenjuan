@@ -354,10 +354,8 @@ onUnmounted(() => {
   grid-template-rows: 64px 1fr;
   height: 100vh;
   max-height: 100vh;
-  min-width: 100vw;
+  max-width: 100vw;
   overflow: hidden;
-
-  // max-width: 100vw;
 }
 
 .header {

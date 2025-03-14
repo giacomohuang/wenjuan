@@ -1,30 +1,15 @@
 <template>
   <view class="rate-wrap" @touchmove="touchMove" @click="touchMove">
     <view class="rate-item rate-icon" :class="{ selected: i <= currentScore }" v-for="i in maxScore" :key="i">
-      <span>{{ iconMap[props.icon] }}</span>
-      <span v-if="i === currentScore + 0.5" :class="{ halfSelected: i === currentScore + 0.5 }">{{ iconMap[props.icon] }}</span>
+      <span>{{ props.icon }}</span>
+      <span v-if="i === currentScore + 0.5" :class="{ halfSelected: i === currentScore + 0.5 }">{{ props.icon }}</span>
     </view>
   </view>
 </template>
 <script setup>
-import { getCurrentInstance, watch, onMounted } from 'vue'
-import { ref } from 'vue'
+import { getCurrentInstance, watch, onMounted, ref } from 'vue'
 
 const instance = getCurrentInstance()
-
-const iconMap = {
-  heart: '\ue647',
-  heart_filled: '\ue63f',
-  dislike: '\ue9cd',
-  dislike_filled: '\ue9d7',
-  flag: '\ue9ce',
-  star: '\ue9cf',
-  like: '\ue9d0',
-  bookmark_filled: '\ue9d5',
-  flag_filled: '\ue9da',
-  like_filled: '\ue9dc',
-  star_filled: '\ue9df'
-}
 
 const props = defineProps({
   minScore: {
@@ -49,7 +34,7 @@ const props = defineProps({
     default: '#ff4444'
   },
   inactiveColor: {
-    default: '#eeeeee'
+    default: '#cccccc'
   },
   modelValue: {
     type: [Number, null],

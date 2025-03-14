@@ -972,6 +972,7 @@ onUnmounted(() => {
     font-weight: 600;
     padding: 0 80rpx;
     box-sizing: border-box;
+    color: v-bind('Q.settings.coverTextColor');
   }
 
   .description {

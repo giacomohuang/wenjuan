@@ -809,8 +809,10 @@ const answeredProgress = computed(() => {
     font-size: 24px;
     font-weight: 600;
     padding: 0 40px;
+    color: v-bind('Q.settings.coverTextColor');
   }
   .description {
+    background: inherit;
     font-size: 14px;
     font-weight: 400;
     font-family:
