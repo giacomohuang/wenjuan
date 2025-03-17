@@ -51,6 +51,7 @@
     "@rushstack/eslint-patch": "^1.10.5",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
+    "@vue/babel-plugin-jsx": "^1.4.0",
     "@vue/cli-plugin-typescript": "^5.0.8",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/test-utils": "^2.4.6",

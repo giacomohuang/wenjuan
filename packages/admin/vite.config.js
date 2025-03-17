@@ -6,6 +6,7 @@ import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import routesGeneratorPlugin from './plugins/routes-generator'
 import svgSpritePlugin from './plugins/svg-sprite'
+import jsx from '@vitejs/plugin-vue-jsx'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -37,6 +38,7 @@ export default defineConfig({
   },
   plugins: [
     vue(),
+    jsx(),
     routesGeneratorPlugin({ layoutDir: path.resolve(process.cwd(), './src/views/Layout.vue') }),
     svgSpritePlugin(),
     Components({
