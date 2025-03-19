@@ -33,7 +33,17 @@
               <div class="add left" @click.stop="addItem('parent')"></div>
             </a-tooltip>
           </div>
-          <component style="margin: 12px" :is="Module[modelValue.exp.type]" :key="modelValue.exp.id" :modelValue="modelValue.exp" @update:modelValue="(newValue) => updateChild(index, newValue)" />
+          <div class="item__content">
+            <a-dropdown>
+              <a class="module-select-trigger" @click.prevent> * </a>
+              <template #overlay>
+                <a-menu>
+                  <a-menu-item v-for="item in moduleOptions" @click="modelValue.exp.type = item.value" :key="item.value">{{ item.label }}</a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
+            <component :is="module[modelValue.exp.type]" :key="modelValue.exp.id" :modelValue="modelValue.exp" @update:modelValue="(newValue) => updateChild(index, newValue)" />
+          </div>
         </div>
         <div class="del" @click.stop="delItem" v-if="!isRoot"></div>
       </div>
@@ -57,10 +67,15 @@ const { modelValue, isRoot = false } = defineProps({
   }
 })
 
-const Module = {
+const module = {
   MPSelect,
   MPRange
 }
+
+const moduleOptions = [
+  { label: '金额', value: 'MPSelect' },
+  { label: '日期范围', value: 'MPRange' }
+]
 
 const emit = defineEmits(['update:modelValue', 'insert-before', 'insert-after'])
 
@@ -321,15 +336,22 @@ const updateChild = (index, newValue) => {
 
     &__wrap {
       background-color: var(--bg-secondary);
-      display: flex;
-      align-items: center;
-      // gap: 10px;
       border: 1px solid var(--border-medium);
       border-radius: 4px;
-      // padding: 12px;
-      // margin-left: 20px;
       position: relative;
       z-index: 1;
+    }
+
+    &__content {
+      margin: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 10;
+    }
+    .module-select-trigger {
+      cursor: pointer;
+      font-size: 20px;
     }
 
     &:hover {
@@ -389,7 +411,12 @@ const updateChild = (index, newValue) => {
   position: absolute;
   width: 100%;
   height: 100%;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+
   .add {
+    pointer-events: auto;
     display: flex;
     align-items: center;
     justify-content: center;
