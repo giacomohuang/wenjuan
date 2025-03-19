@@ -2,25 +2,38 @@
   <div class="rule-editor">
     <Rule v-model="ruleData" is-root />
   </div>
+  <div>
+    <pre>{{ ruleData }}</pre>
+  </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import Rule from './Rule.vue'
+import { nanoid } from 'nanoid'
+// const ruleData = ref({
+//   exp: {
+//     id: nanoid(),
+//     type: 'MPSelect',
+//     field: 'aaa',
+//     operator: 'eq'
+//   }
+// })
 const ruleData = ref({
   operator: 'and',
   children: [
     {
       exp: {
-        id: 1,
-        field: 'name',
-        operator: 'eq',
-        value: '张三<br/>李四<br/>王五\nasdasd'
+        id: nanoid(),
+        type: 'MPSelect',
+        field: 'aaa',
+        operator: 'eq'
       }
     },
     {
       exp: {
-        id: 2,
+        id: nanoid(),
+        type: 'MPRange',
         field: 'age',
         operator: 'gt',
         value: 18
@@ -31,18 +44,17 @@ const ruleData = ref({
       children: [
         {
           exp: {
-            id: 3,
+            id: nanoid(),
+            type: 'MPSelect',
             field: 'name',
-            operator: 'eq',
+            operator: 'neq',
             value: '张三'
           }
         },
         {
           exp: {
-            id: 4,
-            field: 'age',
-            operator: 'gt',
-            value: 18
+            id: nanoid(),
+            type: 'MPSelect'
           }
         },
         {
@@ -50,15 +62,15 @@ const ruleData = ref({
           children: [
             {
               exp: {
-                id: 3,
-                field: 'name',
-                operator: 'eq',
-                value: '张三'
+                id: nanoid(),
+                type: 'MPSelect'
               }
             },
             {
               exp: {
-                id: 4,
+                type: 'MPRange',
+                range: 'range1',
+                id: nanoid(),
                 field: 'age',
                 operator: 'gt',
                 value: 18
@@ -66,50 +78,38 @@ const ruleData = ref({
             },
             {
               exp: {
-                id: 4,
-                field: 'age',
-                operator: 'gt',
-                value: 18
+                type: 'MPRange',
+                range: null
               }
             },
             {
               exp: {
-                id: 4,
-                field: 'age',
-                operator: 'gt',
-                value: 18
+                id: nanoid(),
+                type: 'MPSelect'
               }
             },
             {
               exp: {
-                id: 4,
-                field: 'age',
-                operator: 'gt',
-                value: 18
+                id: nanoid(),
+                type: 'MPSelect'
               }
             },
             {
               exp: {
-                id: 4,
-                field: 'age',
-                operator: 'gt',
-                value: 18
+                id: nanoid(),
+                type: 'MPSelect'
               }
             },
             {
               exp: {
-                id: 4,
-                field: 'age',
-                operator: 'gt',
-                value: ''
+                id: nanoid(),
+                type: 'MPSelect'
               }
             },
             {
               exp: {
-                id: 4,
-                field: 'age',
-                operator: '',
-                value: ''
+                id: nanoid(),
+                type: 'MPSelect'
               }
             }
           ]

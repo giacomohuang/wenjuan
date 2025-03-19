@@ -1,19 +1,41 @@
 <template>
   <div class="rule-wrap" :class="{ root: isRoot }" v-if="modelValue">
     <div class="opr" v-if="modelValue.children && modelValue.children.length">
-      <div class="btn" @click.stop="toggleOperator">{{ operator.label }}</div>
+      <div class="btn" @click.stop="toggleOperator">
+        {{ operator.label }}
+        <div class="handle">
+          <a-tooltip title="在上面添加条件" v-if="!isRoot" :mouseLeaveDelay="0" :mouseEnterDelay="0">
+            <div class="add top" @click.stop="addItem('prev')"></div>
+          </a-tooltip>
+          <a-tooltip title="在下面添加条件" v-if="!isRoot" :mouseLeaveDelay="0" :mouseEnterDelay="0">
+            <div v-if="!isRoot" class="add bottom" @click.stop="addItem('next')"></div>
+          </a-tooltip>
+          <a-tooltip title="添加条件组合" :mouseLeaveDelay="0" :mouseEnterDelay="0">
+            <div class="add left" @click.stop="addItem('parent')"></div>
+          </a-tooltip>
+        </div>
+      </div>
     </div>
     <div class="children" v-if="modelValue.children && modelValue.children.length">
-      <Rule v-for="(child, index) in modelValue.children" :key="index" :modelValue="child" @update:modelValue="(newValue) => updateChild(index, newValue)" />
+      <Rule v-for="(child, index) in modelValue.children" :key="index" :modelValue="child" @update:modelValue="(newValue) => updateChild(index, newValue)" @insert-before="(newItem) => insertBefore(index, newItem)" @insert-after="(newItem) => insertAfter(index, newItem)" />
     </div>
     <div class="exps" v-else-if="modelValue.exp">
       <div class="item">
         <div class="item__wrap">
-          <div class="field">{{ modelValue.exp.field }}</div>
-          <div class="operator">{{ modelValue.exp.operator }}</div>
-          <div class="value" v-html="modelValue.exp.value"></div>
+          <div class="handle">
+            <a-tooltip title="在上面添加条件" v-if="!isRoot" :mouseLeaveDelay="0" :mouseEnterDelay="0">
+              <div class="add top" @click.stop="addItem('prev')"></div>
+            </a-tooltip>
+            <a-tooltip title="在下面添加条件" v-if="!isRoot" :mouseLeaveDelay="0" :mouseEnterDelay="0">
+              <div v-if="!isRoot" class="add bottom" @click.stop="addItem('next')"></div>
+            </a-tooltip>
+            <a-tooltip title="添加条件组合" :mouseLeaveDelay="0" :mouseEnterDelay="0">
+              <div class="add left" @click.stop="addItem('parent')"></div>
+            </a-tooltip>
+          </div>
+          <component style="margin: 12px" :is="Module[modelValue.exp.type]" :key="modelValue.exp.id" :modelValue="modelValue.exp" @update:modelValue="(newValue) => updateChild(index, newValue)" />
         </div>
-        <div class="del" @click.stop="delItem"></div>
+        <div class="del" @click.stop="delItem" v-if="!isRoot"></div>
       </div>
     </div>
   </div>
@@ -21,6 +43,8 @@
 
 <script setup>
 import { computed } from 'vue'
+import MPSelect from './MPSelect.vue'
+import MPRange from './MPRange.vue'
 
 const { modelValue, isRoot = false } = defineProps({
   modelValue: {
@@ -33,7 +57,12 @@ const { modelValue, isRoot = false } = defineProps({
   }
 })
 
-const emit = defineEmits(['update:modelValue'])
+const Module = {
+  MPSelect,
+  MPRange
+}
+
+const emit = defineEmits(['update:modelValue', 'insert-before', 'insert-after'])
 
 const operatorOptions = [
   { label: '且', value: 'and' },
@@ -54,33 +83,94 @@ const delItem = () => {
   emit('update:modelValue', null)
 }
 
+// 新增 addItem 功能
+const addItem = (position) => {
+  // 创建一个新的基础表达式节点
+  const newExp = {
+    exp: {
+      id: Date.now(), // 使用时间戳作为唯一ID
+      type: 'MPSelect' // 默认类型
+      // 其他必要的初始属性
+    }
+  }
+
+  switch (position) {
+    case 'prev': // 在当前项之前添加
+      // 通知父组件在当前位置前添加新项
+      console.log('prev', newExp, modelValue)
+      emit('insert-before', newExp)
+      break
+
+    case 'next': // 在当前项之后添加
+      // 通知父组件在当前位置后添加新项
+      emit('insert-after', newExp)
+      break
+
+    case 'parent': // 将当前项与新项作为子项添加到一个新的父项中
+      // 当前项是一个表达式节点，需要将其与新节点合并为一个具有子项的节点
+      emit('update:modelValue', {
+        operator: 'and', // 默认操作符
+        children: [
+          // 保留当前项
+          { ...modelValue },
+          // 添加新项
+          newExp
+        ]
+      })
+      break
+  }
+}
+
+// 插入在当前位置之前
+const insertBefore = (index, newItem) => {
+  if (!modelValue.children) return
+  const updatedChildren = [...modelValue.children]
+  updatedChildren.splice(index, 0, newItem)
+  emit('update:modelValue', {
+    ...modelValue,
+    children: updatedChildren
+  })
+}
+
+// 插入在当前位置之后
+const insertAfter = (index, newItem) => {
+  if (!modelValue.children) return
+  const updatedChildren = [...modelValue.children]
+  updatedChildren.splice(index + 1, 0, newItem)
+  emit('update:modelValue', {
+    ...modelValue,
+    children: updatedChildren
+  })
+}
+
 // 更新子规则的方法
 const updateChild = (index, newValue) => {
   if (!modelValue.children) return
 
+  // 创建子规则数组的副本
+  const updatedChildren = [...modelValue.children]
+
   // 如果新值为null，表示需要删除此子项
   if (newValue === null) {
-    const updatedChildren = [...modelValue.children]
     updatedChildren.splice(index, 1)
+  } else {
+    updatedChildren[index] = newValue
+  }
 
-    const updatedValue = {
+  // 检查删除后是否只剩一个子元素
+  if (updatedChildren.length === 1) {
+    // 如果只剩一个子元素，将它的属性合并到父级
+    const lastChild = updatedChildren[0]
+    emit('update:modelValue', {
+      ...lastChild
+    })
+  } else {
+    // 否则正常更新子元素数组
+    emit('update:modelValue', {
       ...modelValue,
       children: updatedChildren
-    }
-
-    emit('update:modelValue', updatedValue)
-    return
+    })
   }
-
-  const updatedChildren = [...modelValue.children]
-  updatedChildren[index] = newValue
-
-  const updatedValue = {
-    ...modelValue,
-    children: updatedChildren
-  }
-
-  emit('update:modelValue', updatedValue)
 }
 </script>
 
@@ -89,7 +179,6 @@ const updateChild = (index, newValue) => {
   position: relative;
   display: flex;
   align-items: stretch;
-  overflow: hidden;
   // border: 1px solid red;
 
   &:not(.root) {
@@ -129,8 +218,8 @@ const updateChild = (index, newValue) => {
       border-radius: 8px 0 0 0;
       border-left: 1px solid var(--border-dark);
       border-top: 1px solid var(--border-dark);
-      // height: 50%;
-      transform: translateY(50%);
+      height: 50%;
+      transform: translateY(100%);
       // border: 1px solid green;
     }
 
@@ -140,15 +229,16 @@ const updateChild = (index, newValue) => {
       border-radius: 0 0 0 8px;
       border-left: 1px solid var(--border-dark);
       border-bottom: 1px solid var(--border-dark);
-      // height: 50%;
-      transform: translateY(-50%);
-      // border: 1px solid green;
+      height: 50%;
+      // transform: translateY(-50%);
+      // border: 1px solid blue;
     }
   }
 }
 
 .opr {
   // border: 1px solid green;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -167,6 +257,7 @@ const updateChild = (index, newValue) => {
   // margin-top: 22px; // 垂直居中对齐
 
   .btn {
+    flex-shrink: 0;
     border: 1px solid var(--border-medium);
     background-color: var(--bg-primary);
     border-radius: 4px;
@@ -184,22 +275,36 @@ const updateChild = (index, newValue) => {
       background-color: var(--bg-brand);
       border-color: var(--c-brand);
     }
+    &:hover {
+      .handle {
+        opacity: 1;
+        transition: opacity 0.15s ease-in-out;
+      }
+    }
   }
 
-  // &::after {
-  //   content: '';
-  //   position: absolute;
-  //   top: 50%;
-  //   right: 0;
-  //   width: 20px;
-  //   height: 1px;
-  //   background-color: var(--border-dark);
-  // }
+  .tools {
+    position: absolute;
+    z-index: 10;
+    // right: 0;
+    // top: 0;
+    // bottom: -20px;
+    transform: translateY(-44px);
+    opacity: 0;
+    width: 200px;
+    transition: opacity 0.15s ease-in-out;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
 }
 
 .children {
   display: flex;
   flex-direction: column;
+  // flex: 1;
   // margin-left: 20px;
 }
 
@@ -207,12 +312,11 @@ const updateChild = (index, newValue) => {
   display: flex;
   flex-direction: column;
   position: relative;
+  // flex: 1;
 
   .item {
     display: flex;
     align-items: center;
-    // flex-direction: row;
-    // position: relative;
     margin: 10px 0;
 
     &__wrap {
@@ -222,15 +326,30 @@ const updateChild = (index, newValue) => {
       // gap: 10px;
       border: 1px solid var(--border-medium);
       border-radius: 4px;
-      padding: 12px;
+      // padding: 12px;
       // margin-left: 20px;
       position: relative;
       z-index: 1;
     }
+
+    &:hover {
+      .del {
+        opacity: 1;
+        transition: opacity 0.15s ease-in-out;
+      }
+      .handle {
+        opacity: 1;
+        transition: opacity 0.15s ease-in-out;
+      }
+    }
   }
   .del {
+    flex-shrink: 0;
+    opacity: 0;
+    position: relative;
     border-radius: 100%;
-    padding: 10px;
+    height: 16px;
+    width: 16px;
     margin-left: 10px;
     display: flex;
     align-items: center;
@@ -239,11 +358,11 @@ const updateChild = (index, newValue) => {
     border: 1px solid var(--border-dark);
     background-color: var(--bg-secondary);
     &:hover {
-      background-color: var(--bg-brand);
-      border-color: var(--c-brand);
+      // background-color: var(--c-red-100);
+      border-color: var(--c-red-500);
       &::before,
       &::after {
-        border-color: var(--c-brand);
+        border-color: var(--c-red-500);
       }
     }
     &::before {
@@ -251,7 +370,7 @@ const updateChild = (index, newValue) => {
       position: absolute;
       border-left: 1px solid var(--border-dark);
       width: 1px;
-      height: 13px;
+      height: 80%;
       transform: rotate(45deg);
     }
     &::after {
@@ -259,8 +378,69 @@ const updateChild = (index, newValue) => {
       content: '';
       border-right: 1px solid var(--border-dark);
       width: 1px;
-      height: 13px;
+      height: 80%;
       transform: rotate(-45deg);
+    }
+  }
+}
+
+.handle {
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  .add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    border-radius: 100%;
+    height: 15px;
+    width: 15px;
+    border: 1px solid var(--border-dark);
+    background-color: var(--bg-secondary);
+    cursor: pointer;
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      border-color: var(--border-dark);
+      border-style: solid;
+    }
+    &:before {
+      border-left-width: 1px;
+      left: 6px;
+    }
+    &:after {
+      border-top-width: 1px;
+      top: 6px;
+    }
+
+    &:hover {
+      background-color: var(--bg-brand);
+      border-color: var(--c-brand);
+      &:before,
+      &:after {
+        border-color: var(--c-brand);
+      }
+    }
+
+    &.top {
+      top: -8px;
+      left: 20px;
+      transform: translateX(-50%);
+    }
+    &.bottom {
+      bottom: -8px;
+      left: 20px;
+      transform: translateX(-50%);
+    }
+    &.left {
+      top: 50%;
+      left: -8px;
+      transform: translateY(-50%);
     }
   }
 }
