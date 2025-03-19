@@ -340,6 +340,13 @@ const updateChild = (index, newValue) => {
       border-radius: 4px;
       position: relative;
       z-index: 1;
+      transition:
+        border 0.15s ease-in-out,
+        background-color 0.15s ease-in-out;
+      &:hover {
+        border: 1px solid var(--c-brand);
+        background-color: var(--bg-brand);
+      }
     }
 
     &__content {
