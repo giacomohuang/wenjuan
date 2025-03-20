@@ -35,7 +35,7 @@
           </div>
           <div class="item__content">
             <a-dropdown>
-              <a class="module-select-trigger" @click.prevent> * </a>
+              <icon name="logic" class="module-select-trigger"></icon>
               <template #overlay>
                 <a-menu>
                   <a-menu-item v-for="item in moduleOptions" @click="modelValue.exp.type = item.value" :key="item.value">{{ item.label }}</a-menu-item>
@@ -345,7 +345,7 @@ const updateChild = (index, newValue) => {
         background-color 0.15s ease-in-out;
       &:hover {
         border: 1px solid var(--c-brand);
-        background-color: var(--bg-brand);
+        // background-color: var(--bg-brand);
       }
     }
 
@@ -358,7 +358,9 @@ const updateChild = (index, newValue) => {
     }
     .module-select-trigger {
       cursor: pointer;
-      font-size: 20px;
+      &:hover {
+        color: var(--c-brand);
+      }
     }
 
     &:hover {
