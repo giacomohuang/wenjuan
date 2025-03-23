@@ -38,7 +38,9 @@
               <icon name="logic" class="module-select-trigger"></icon>
               <template #overlay>
                 <a-menu>
-                  <a-menu-item v-for="item in moduleOptions" @click="modelValue.exp.type = item.value" :key="item.value">{{ item.label }}</a-menu-item>
+                  <template v-for="item in moduleOptions" :key="item.value">
+                    <a-menu-item :disabled="item.value === modelValue.exp.type" @click="changeModule(item.value)">{{ item.label }}</a-menu-item>
+                  </template>
                 </a-menu>
               </template>
             </a-dropdown>
@@ -53,9 +55,9 @@
 
 <script setup>
 import { computed } from 'vue'
-import MPSelect from './MPSelect.vue'
-import MPRange from './MPRange.vue'
-
+import Consumption from './Modules/Consumption.vue'
+import Merchants from './Modules/Merchants.vue'
+import { nanoid } from 'nanoid'
 const { modelValue, isRoot = false } = defineProps({
   modelValue: {
     type: Object,
@@ -68,13 +70,13 @@ const { modelValue, isRoot = false } = defineProps({
 })
 
 const module = {
-  MPSelect,
-  MPRange
+  Consumption,
+  Merchants
 }
 
 const moduleOptions = [
-  { label: '金额', value: 'MPSelect' },
-  { label: '日期范围', value: 'MPRange' }
+  { label: '会员消费', value: 'Consumption' },
+  { label: '适用商户', value: 'Merchants' }
 ]
 
 const emit = defineEmits(['update:modelValue', 'insert-before', 'insert-after'])
@@ -98,13 +100,20 @@ const delItem = () => {
   emit('update:modelValue', null)
 }
 
+const changeModule = (type) => {
+  emit('update:modelValue', {
+    ...modelValue,
+    exp: { id: nanoid(), type }
+  })
+}
+
 // 新增 addItem 功能
 const addItem = (position) => {
   // 创建一个新的基础表达式节点
   const newExp = {
     exp: {
       id: Date.now(), // 使用时间戳作为唯一ID
-      type: 'MPSelect' // 默认类型
+      type: moduleOptions[0].value // 默认类型
       // 其他必要的初始属性
     }
   }
@@ -160,6 +169,18 @@ const insertAfter = (index, newItem) => {
 
 // 更新子规则的方法
 const updateChild = (index, newValue) => {
+  console.log('updateChild', index, newValue)
+
+  // 处理exp类型的更新
+  if (modelValue.exp) {
+    emit('update:modelValue', {
+      ...modelValue,
+      exp: newValue
+    })
+    return
+  }
+
+  // 处理children类型的更新
   if (!modelValue.children) return
 
   // 创建子规则数组的副本
@@ -245,14 +266,11 @@ const updateChild = (index, newValue) => {
       border-left: 1px solid var(--border-dark);
       border-bottom: 1px solid var(--border-dark);
       height: 50%;
-      // transform: translateY(-50%);
-      // border: 1px solid blue;
     }
   }
 }
 
 .opr {
-  // border: 1px solid green;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -262,14 +280,11 @@ const updateChild = (index, newValue) => {
     content: '';
     left: 0;
     top: 50%;
-    z-index: 2000;
     transform: translateY(-50%);
     width: 20px;
     height: 1px;
     background-color: var(--border-dark);
   }
-  // padding-right: 20px;
-  // margin-top: 22px; // 垂直居中对齐
 
   .btn {
     flex-shrink: 0;
@@ -319,15 +334,12 @@ const updateChild = (index, newValue) => {
 .children {
   display: flex;
   flex-direction: column;
-  // flex: 1;
-  // margin-left: 20px;
 }
 
 .exps {
   display: flex;
   flex-direction: column;
   position: relative;
-  // flex: 1;
 
   .item {
     display: flex;
@@ -339,7 +351,6 @@ const updateChild = (index, newValue) => {
       border: 1px solid var(--border-medium);
       border-radius: 4px;
       position: relative;
-      z-index: 1;
       transition:
         border 0.15s ease-in-out,
         background-color 0.15s ease-in-out;
@@ -355,9 +366,11 @@ const updateChild = (index, newValue) => {
       align-items: center;
       gap: 10px;
       z-index: 10;
+      flex-wrap: nowrap;
     }
     .module-select-trigger {
       cursor: pointer;
+      flex-shrink: 0;
       &:hover {
         color: var(--c-brand);
       }
