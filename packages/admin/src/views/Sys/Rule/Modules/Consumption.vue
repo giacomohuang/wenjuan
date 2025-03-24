@@ -41,11 +41,11 @@
         </a-radio-group>
         <div class="merchant-wrap" v-if="activeFilter === 'floor'">
           <div v-for="floor in floorsComputed" :key="floor.code">
-            <a-checkbox v-model:checked="selectedFloors[floor.code]">
+            <a-checkbox v-model:checked="selectedFloors[(activeProjectKey ? activeProjectKey + '_' : '') + floor.code]" @change="handleFloorChecked((activeProjectKey ? activeProjectKey + '_' : '') + floor.code)">
               <span class="floor-name">{{ floor.name }}</span>
             </a-checkbox>
             <div class="merchant-list">
-              <a-tag v-for="merchant in getMerchantsGroupByFloor(floor.code)" :key="merchant.id">{{ merchant.name }}</a-tag>
+              <a-tag v-for="merchant in getMerchantsGroupByFloor(floor.code)" :key="merchant.id" :color="selectedMerchants.includes(merchant.id) ? 'blue' : 'default'">{{ merchant.name }}</a-tag>
             </div>
           </div>
         </div>
@@ -75,6 +75,7 @@ const merchantModalOpen = ref(false)
 const activeProjectKey = ref(projects[0]?.id)
 const activeFilter = ref('floor')
 const selectedFloors = ref([])
+const selectedMerchants = ref([])
 
 const merchantsComputed = computed(() => {
   console.log(activeProjectKey.value)
@@ -91,6 +92,14 @@ const categoriesComputed = computed(() => {
 
 function getMerchantsGroupByFloor(code) {
   return merchantsComputed.value.filter((item) => item.floorCode === code)
+}
+
+function handleFloorChecked(code) {
+  const floorCode = code.split('_')[1]
+  console.log(floorCode)
+
+  selectedMerchants.value = selectedMerchants.value.filter((item) => item.floorCode === floorCode)
+  console.log(selectedMerchants.value)
 }
 
 const merchantRangeOptions = [
