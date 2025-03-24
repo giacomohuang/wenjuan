@@ -40,17 +40,18 @@
           <a-radio-button value="category">业态</a-radio-button>
         </a-radio-group>
         <div class="merchant-wrap" v-if="activeFilter === 'floor'">
-          <div v-for="floor in floorsComputed" :key="floor.code">
-            <a-checkbox v-model:checked="selectedFloors[(activeProjectKey ? activeProjectKey + '_' : '') + floor.code]" @change="handleFloorChecked((activeProjectKey ? activeProjectKey + '_' : '') + floor.code)">
+          <div v-for="floor in floorsComputed" :key="floor.id">
+            <a-checkbox @change="handleFloorChecked($event, floor.id)">
               <span class="floor-name">{{ floor.name }}</span>
             </a-checkbox>
             <div class="merchant-list">
-              <a-tag v-for="merchant in getMerchantsGroupByFloor(floor.code)" :key="merchant.id" :color="selectedMerchants.includes(merchant.id) ? 'blue' : 'default'">{{ merchant.name }}</a-tag>
+              <a-tag v-for="merchant in getMerchantsGroupByFloor(floor.id)" :key="merchant.id" :color="selectedMerchants.has(merchant.id) ? 'blue' : 'default'">{{ merchant.id }}{{ merchant.name }}</a-tag>
             </div>
           </div>
         </div>
       </div>
     </div>
+    floors:{{ selectedFloors }} merchants:{{ selectedMerchants }}
   </a-modal>
 </template>
 
@@ -74,8 +75,8 @@ modelValue.operator ??= 'gte'
 const merchantModalOpen = ref(false)
 const activeProjectKey = ref(projects[0]?.id)
 const activeFilter = ref('floor')
-const selectedFloors = ref([])
-const selectedMerchants = ref([])
+const selectedFloors = ref(new Set())
+const selectedMerchants = ref(new Set())
 
 const merchantsComputed = computed(() => {
   console.log(activeProjectKey.value)
@@ -90,16 +91,34 @@ const categoriesComputed = computed(() => {
   return categories.filter((item) => item.projectId === activeProjectKey.value)
 })
 
-function getMerchantsGroupByFloor(code) {
-  return merchantsComputed.value.filter((item) => item.floorCode === code)
+function getMerchantsGroupByFloor(id) {
+  return merchantsComputed.value.filter((item) => {
+    if (Array.isArray(item.floorId)) {
+      return item.floorId.includes(id)
+    } else {
+      return item.floorId === id
+    }
+  })
 }
 
-function handleFloorChecked(code) {
-  const floorCode = code.split('_')[1]
-  console.log(floorCode)
-
-  selectedMerchants.value = selectedMerchants.value.filter((item) => item.floorCode === floorCode)
-  console.log(selectedMerchants.value)
+function handleFloorChecked(e, floorId) {
+  // console.log(selectedFloors.value)
+  if (e.target.checked) {
+    selectedFloors.value.add(floorId)
+    const merchants = getMerchantsGroupByFloor(floorId)
+    for (const merchant of merchants) {
+      selectedMerchants.value.add(merchant.id)
+    }
+  } else {
+    selectedFloors.value.delete(floorId)
+    const merchants = getMerchantsGroupByFloor(floorId)
+    for (const merchant of merchants) {
+      selectedMerchants.value.delete(merchant.id)
+    }
+  }
+  // if (e.target.checked) {
+  //   selectedMerchants.value = selectedMerchants.value.concat(getMerchantsGroupByFloor(floorId)).map((item) => item.id)
+  // }
 }
 
 const merchantRangeOptions = [
