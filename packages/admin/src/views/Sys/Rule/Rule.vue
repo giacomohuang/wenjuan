@@ -56,7 +56,7 @@
 <script setup>
 import { computed } from 'vue'
 import Consumption from './Modules/Consumption.vue'
-import Merchants from './Modules/Merchants.vue'
+// import Merchants from './Modules/Merchants.vue'
 import { nanoid } from 'nanoid'
 const { modelValue, isRoot = false } = defineProps({
   modelValue: {
@@ -70,13 +70,13 @@ const { modelValue, isRoot = false } = defineProps({
 })
 
 const module = {
-  Consumption,
-  Merchants
+  Consumption
+  // Merchants
 }
 
 const moduleOptions = [
-  { label: '会员消费', value: 'Consumption' },
-  { label: '适用商户', value: 'Merchants' }
+  { label: '会员消费', value: 'Consumption' }
+  // { label: '适用商户', value: 'Merchants' }
 ]
 
 const emit = defineEmits(['update:modelValue', 'insert-before', 'insert-after'])

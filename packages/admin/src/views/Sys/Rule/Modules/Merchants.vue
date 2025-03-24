@@ -59,7 +59,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { category, merchants, floors } from './testdata'
+import { categories, merchants, floors } from './testdata'
 
 const { modelValue } = defineProps({
   modelValue: {
@@ -221,7 +221,7 @@ function fixSelectedMerchantKeys() {
   const selectedMerchantKeys = []
   merchants.forEach((merchant) => {
     // 如果选中的商户ID包含该商户ID，或者选中的楼层包含该商户的楼层(商户有可能属于多个楼层)，或者选中的分类包含该商户的分类，则将该商户ID加入到选中的商户ID列表中
-    if (modelValue.merchants?.includes(merchant.id) || modelValue.floors.some((f) => merchant.floor.includes(f)) || modelValue.categories?.includes(merchant.category)) {
+    if (modelValue.merchants?.includes(merchant.id) || modelValue.floors?.some((f) => merchant.floor.includes(f)) || modelValue.categories?.includes(merchant.category)) {
       selectedMerchantKeys.push(merchant.id)
     }
   })

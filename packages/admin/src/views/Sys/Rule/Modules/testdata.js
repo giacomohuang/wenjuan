@@ -1,286 +1,199 @@
-const category = [
-  { code: 'R1001', name: '零售', parent_id: 0 },
-  { code: 'R100101', name: '时尚服饰', parent_id: 'R1001' },
-  { code: 'R10010101', name: '女装', parent_id: 'R100101' },
-  { code: 'R10010102', name: '男装', parent_id: 'R100101' },
-  { code: 'R100102', name: '美妆个护', parent_id: 'R1001' },
+const projects = [
+  { id: 'P001', name: '项目1项目1项目1项目1项目1项目1项目1项目1' },
+  { id: 'P002', name: '项目2' },
+  { id: 'P003', name: '项目3' },
+  { id: 'P004', name: '项目4' },
+  { id: 'P005', name: '项目5' },
+  { id: 'P006', name: '项目6' },
+  { id: 'P007', name: '项目7' },
+  { id: 'P008', name: '项目8' },
+  { id: 'P009', name: '项目9' },
+  { id: 'P010', name: '项目10' },
+  { id: 'P011', name: '项目11' },
+  { id: 'P012', name: '项目12' },
+  { id: 'P013', name: '项目13' },
+  { id: 'P014', name: '项目14' },
+  { id: 'P015', name: '项目15' }
+]
 
-  { code: 'R10010201', name: '国际美妆', parent_id: 'R100102' },
-  { code: 'R100103', name: '运动户外', parent_id: 'R1001' },
-  { code: 'R100104', name: '电子产品', parent_id: 'R1001' },
-  { code: 'R100105', name: '内衣', parent_id: 'R1001' },
-  { code: 'R100106', name: '珠宝首饰', parent_id: 'R1001' },
-  { code: 'R100107', name: '鞋类', parent_id: 'R1001' },
-  { code: 'F2001', name: '餐饮', parent_id: 0 },
-  { code: 'F200101', name: '中式餐饮', parent_id: 'F2001' },
-  { code: 'F20010101', name: '川湘菜系', parent_id: 'F200101' },
-  { code: 'F20010102', name: '酸菜鱼', parent_id: 'F200101' },
-  { code: 'F20010103', name: '火锅', parent_id: 'F200101' },
-  { code: 'F200102', name: '西式餐饮', parent_id: 'F2001' },
-  { code: 'F20010201', name: '意式餐厅', parent_id: 'F200102' },
-  { code: 'F200103', name: '甜品饮品', parent_id: 'F2001' },
-  { code: 'F20010301', name: '咖啡茶饮', parent_id: 'F200103' },
-  { code: 'F20010302', name: '甜品饮品', parent_id: 'F200103' },
+const categories = [
+  { code: 'R1001', name: '零售', parent_id: 0, projectId: 'P001' },
+  { code: 'R100101', name: '时尚服饰', parent_id: 'R1001', projectId: 'P001' },
+  { code: 'R10010101', name: '女装', parent_id: 'R100101', projectId: 'P001' },
+  { code: 'R10010102', name: '男装', parent_id: 'R100101', projectId: 'P001' },
+  { code: 'R100102', name: '美妆个护', parent_id: 'R1001', projectId: 'P001' },
+  { code: 'R10010201', name: '国际美妆', parent_id: 'R100102', projectId: 'P001' },
+  { code: 'R100103', name: '运动户外', parent_id: 'R1001', projectId: 'P001' },
+  { code: 'R100104', name: '电子产品', parent_id: 'R1001', projectId: 'P001' },
+  { code: 'R100105', name: '内衣', parent_id: 'R1001', projectId: 'P001' },
+  { code: 'R100106', name: '珠宝首饰', parent_id: 'R1001', projectId: 'P001' },
+  { code: 'R100107', name: '鞋类', parent_id: 'R1001', projectId: 'P001' },
+  { code: 'F2001', name: '餐饮', parent_id: 0, projectId: 'P001' },
+  { code: 'F200101', name: '中式餐饮', parent_id: 'F2001', projectId: 'P001' },
+  { code: 'F20010101', name: '川湘菜系', parent_id: 'F200101', projectId: 'P001' },
+  { code: 'F20010102', name: '酸菜鱼', parent_id: 'F200101', projectId: 'P001' },
+  { code: 'F20010103', name: '火锅', parent_id: 'F200101', projectId: 'P001' },
+  { code: 'F200102', name: '西式餐饮', parent_id: 'F2001', projectId: 'P001' },
+  { code: 'F20010201', name: '意式餐厅', parent_id: 'F200102', projectId: 'P001' },
+  { code: 'F200103', name: '甜品饮品', parent_id: 'F2001', projectId: 'P001' },
+  { code: 'F20010301', name: '咖啡茶饮', parent_id: 'F200103', projectId: 'P001' },
+  { code: 'F20010302', name: '甜品饮品', parent_id: 'F200103', projectId: 'P001' },
+  { code: 'E3001', name: '休闲娱乐', parent_id: 0, projectId: 'P001' },
+  { code: 'E300101', name: '影院', parent_id: 'E3001', projectId: 'P001' },
+  { code: 'E300102', name: '健身中心', parent_id: 'E3001', projectId: 'P001' },
+  { code: 'E300103', name: '电玩城', parent_id: 'E3001', projectId: 'P001' },
+  { code: 'K4001', name: '儿童亲子', parent_id: 0, projectId: 'P001' },
+  { code: 'K400101', name: '儿童教育', parent_id: 'K4001', projectId: 'P001' },
+  { code: 'K400102', name: '儿童游乐', parent_id: 'K4001', projectId: 'P001' },
+  { code: 'S5001', name: '生活服务', parent_id: 0, projectId: 'P001' },
+  { code: 'S500101', name: '金融服务', parent_id: 'S5001', projectId: 'P001' },
+  { code: 'S500102', name: '生活服务A', parent_id: 'S5001', projectId: 'P001' },
+  { code: 'S500103', name: '生活服务B', parent_id: 'S5001', projectId: 'P001' },
+  { code: 'S500104', name: '照相馆', parent_id: 'S5001', projectId: 'P001' },
 
-  { code: 'E3001', name: '休闲娱乐', parent_id: 0 },
-  { code: 'E300101', name: '影院', parent_id: 'E3001' },
-  { code: 'E300102', name: '健身中心', parent_id: 'E3001' },
-  { code: 'E300103', name: '电玩城', parent_id: 'E3001' },
-
-  { code: 'K4001', name: '儿童亲子', parent_id: 0 },
-  { code: 'K400101', name: '儿童教育', parent_id: 'K4001' },
-  { code: 'K400102', name: '儿童游乐', parent_id: 'K4001' },
-
-  { code: 'S5001', name: '生活服务', parent_id: 0 },
-  { code: 'S500101', name: '金融服务', parent_id: 'S5001' },
-  { code: 'S500102', name: '生活服务A', parent_id: 'S5001' },
-  { code: 'S500103', name: '生活服务B', parent_id: 'S5001' },
-  { code: 'S500104', name: '照相', parent_id: 'S5001' }
+  { code: 'RA1001', name: '零售', parent_id: 0, projectId: 'P002' },
+  { code: 'RA100101', name: '时尚服饰', parent_id: 'RA1001', projectId: 'P002' },
+  { code: 'RA10010101', name: '女装', parent_id: 'RA100101', projectId: 'P002' },
+  { code: 'RA10010102', name: '男装', parent_id: 'RA100101', projectId: 'P002' },
+  { code: 'RA100102', name: '美妆个护', parent_id: 'RA1001', projectId: 'P002' },
+  { code: 'RA10010201', name: '国际美妆', parent_id: 'RA100102', projectId: 'P002' },
+  { code: 'RA100103', name: '运动户外', parent_id: 'RA1001', projectId: 'P002' },
+  { code: 'RA100104', name: '电子产品', parent_id: 'RA1001', projectId: 'P002' },
+  { code: 'RA100105', name: '内衣', parent_id: 'RA1001', projectId: 'P002' },
+  { code: 'RA100106', name: '珠宝首饰', parent_id: 'RA1001', projectId: 'P002' },
+  { code: 'RA100107', name: '鞋类', parent_id: 'RA1001', projectId: 'P002' },
+  { code: 'FA2001', name: '餐饮', parent_id: 0, projectId: 'P002' },
+  { code: 'FA200101', name: '中式餐饮', parent_id: 'FA2001', projectId: 'P002' },
+  { code: 'FA20010101', name: '川湘菜系', parent_id: 'FA200101', projectId: 'P002' },
+  { code: 'FA20010102', name: '酸菜鱼', parent_id: 'FA200101', projectId: 'P002' },
+  { code: 'FA20010103', name: '火锅', parent_id: 'FA200101', projectId: 'P002' },
+  { code: 'FA200102', name: '西式餐饮', parent_id: 'FA2001', projectId: 'P002' },
+  { code: 'FA20010201', name: '意式餐厅', parent_id: 'FA200102', projectId: 'P002' },
+  { code: 'FA200103', name: '甜品饮品', parent_id: 'FA2001', projectId: 'P002' },
+  { code: 'FA20010301', name: '咖啡茶饮', parent_id: 'FA200103', projectId: 'P002' },
+  { code: 'FA20010302', name: '甜品饮品', parent_id: 'FA200103', projectId: 'P002' },
+  { code: 'EA3001', name: '休闲娱乐', parent_id: 0, projectId: 'P002' },
+  { code: 'EA300101', name: '影院', parent_id: 'EA3001', projectId: 'P002' },
+  { code: 'EA300102', name: '健身中心', parent_id: 'EA3001', projectId: 'P002' },
+  { code: 'EA300103', name: '电玩城', parent_id: 'EA3001', projectId: 'P002' },
+  { code: 'KA4001', name: '儿童亲子', parent_id: 0, projectId: 'P002' },
+  { code: 'KA400101', name: '儿童教育', parent_id: 'KA4001', projectId: 'P002' },
+  { code: 'KA400102', name: '儿童游乐', parent_id: 'KA4001', projectId: 'P002' },
+  { code: 'SA5001', name: '生活服务', parent_id: 0, projectId: 'P002' },
+  { code: 'SA500101', name: '金融服务', parent_id: 'SA5001', projectId: 'P002' },
+  { code: 'SA500102', name: '生活服务A', parent_id: 'SA5001', projectId: 'P002' },
+  { code: 'SA500103', name: '生活服务B', parent_id: 'SA5001', projectId: 'P002' },
+  { code: 'SA500104', name: '照相馆', parent_id: 'SA5001', projectId: 'P002' }
 ]
 
 const merchants = [
-  {
-    id: 'M001',
-    name: 'ZARA女装旗舰店',
-    category: 'R10010101',
-    floor: 'L1'
-  },
-  {
-    id: 'M015',
-    name: '海底捞火锅',
-    category: 'F20010101',
-    floor: 'L5'
-  },
-  {
-    id: 'M023',
-    name: '万达影城IMAX',
-    category: 'E300101',
-    floor: ['L5', 'L6']
-  },
-  {
-    id: 'M037',
-    name: '乐高教育中心',
-    category: 'K400101',
-    floor: 'L3'
-  },
-  {
-    id: 'M044',
-    name: '星巴克臻选店',
-    category: 'F20010201',
-    floor: 'L1'
-  },
-  {
-    id: 'M062',
-    name: '迪卡侬运动超市',
-    category: 'R100103',
-    floor: 'L2'
-  },
-  {
-    id: 'M078',
-    name: '招商银行网点',
-    category: 'S500101',
-    floor: 'B1'
-  },
-  {
-    id: 'M083',
-    name: '汤姆熊电玩城',
-    category: 'E300103',
-    floor: 'L4'
-  },
-  {
-    id: 'M091',
-    name: '孩子王母婴店',
-    category: 'K400102',
-    floor: 'L3'
-  },
-  {
-    id: 'M100',
-    name: '华为智能生活馆',
-    category: 'R100103',
-    floor: 'L1'
-  },
-  {
-    id: 'M101',
-    name: '雅诗兰黛专柜',
-    category: 'R10010201',
-    floor: 'L1'
-  },
-  {
-    id: 'M102',
-    name: '优衣库旗舰店',
-    category: 'R10010102',
-    floor: 'L2'
-  },
-  {
-    id: 'M103',
-    name: '西西弗书店',
-    category: 'S500102',
-    floor: 'L3'
-  },
-  {
-    id: 'M104',
-    name: '喜茶LAB店',
-    category: 'F20010301',
-    floor: 'L5'
-  },
-  {
-    id: 'M105',
-    name: '金宝贝早教中心',
-    category: 'K400101',
-    floor: 'L3'
-  },
-  {
-    id: 'M106',
-    name: '大疆体验店',
-    category: 'R100104',
-    floor: 'L1'
-  },
-  {
-    id: 'M107',
-    name: '全棉时代',
-    category: 'R100105',
-    floor: 'B1'
-  },
-  {
-    id: 'M108',
-    name: '海底捞智慧餐厅',
-    category: 'F20010101',
-    floor: 'L6'
-  },
-  {
-    id: 'M109',
-    name: '乐刻运动24H',
-    category: 'E300102',
-    floor: 'L4'
-  },
-  {
-    id: 'M110',
-    name: '盒马鲜生',
-    category: 'S500103',
-    floor: 'B1'
-  },
-  {
-    id: 'M111',
-    name: '泡泡玛特主题店',
-    category: 'R100106',
-    floor: 'L2'
-  },
-  {
-    id: 'M112',
-    name: '太二酸菜鱼',
-    category: 'F20010102',
-    floor: 'L5'
-  },
-  {
-    id: 'M113',
-    name: '星际传奇电玩',
-    category: 'E300103',
-    floor: 'L4'
-  },
-  {
-    id: 'M114',
-    name: '周大福传承馆',
-    category: 'R100107',
-    floor: 'L1'
-  },
-  {
-    id: 'M115',
-    name: '美吉姆国际早教',
-    category: 'K400101',
-    floor: 'L3'
-  },
-  {
-    id: 'M116',
-    name: '苹果授权店',
-    category: 'R100104',
-    floor: 'L1'
-  },
-  {
-    id: 'M117',
-    name: '西西弗矢量咖啡',
-    category: 'F20010302',
-    floor: 'L3'
-  },
-  {
-    id: 'M118',
-    name: '海马体照相馆',
-    category: 'S500104',
-    floor: 'L2'
-  },
-  {
-    id: 'M119',
-    name: '超级猩猩健身',
-    category: 'E300102',
-    floor: 'L4'
-  },
-  {
-    id: 'M120',
-    name: '小米之家',
-    category: 'R100104',
-    floor: 'L2'
-  },
-  {
-    id: 'M121',
-    name: '奈雪の茶PRO',
-    category: 'F20010301',
-    floor: 'L5'
-  },
-  {
-    id: 'M122',
-    name: '孩子王儿童乐园',
-    category: 'K400102',
-    floor: 'L3'
-  },
-  {
-    id: 'M123',
-    name: '顺电脉体验店',
-    category: 'R100104',
-    floor: 'L1'
-  },
-  {
-    id: 'M124',
-    name: '钟书阁书店',
-    category: 'S500102',
-    floor: 'L3'
-  },
-  {
-    id: 'M125',
-    name: '捞王锅物料理',
-    category: 'F20010103',
-    floor: 'L5'
-  },
-  {
-    id: 'M126',
-    name: '星际传奇VR体验馆',
-    category: 'E300103',
-    floor: 'L4'
-  },
-  {
-    id: 'M127',
-    name: '完美日记体验店',
-    category: 'R10010201',
-    floor: 'L1'
-  },
-  {
-    id: 'M128',
-    name: '中信银行网点',
-    category: 'S500101',
-    floor: 'B1'
-  },
-  {
-    id: 'M129',
-    name: 'Meland儿童乐园',
-    category: 'K400102',
-    floor: 'L3'
-  },
-  {
-    id: 'M130',
-    name: '华为智能家居馆',
-    category: 'R100104',
-    floor: 'L1'
-  }
+  { id: 'M001', name: 'ZARA女装旗舰店', category: 'R10010101', floorCode: '0', projectId: 'P001' },
+  { id: 'M015', name: '海底捞火锅', category: 'F20010101', floorCode: '4', projectId: 'P001' },
+  { id: 'M023', name: '万达影城IMAX', category: 'E300101', floorCode: ['4', '5'], projectId: 'P001' },
+  { id: 'M037', name: '乐高教育中心', category: 'K400101', floorCode: '2', projectId: 'P001' },
+  { id: 'M044', name: '星巴克臻选店', category: 'F20010201', floorCode: '0', projectId: 'P001' },
+  { id: 'M062', name: '迪卡侬运动超市', category: 'R100103', floorCode: '1', projectId: 'P001' },
+  { id: 'M078', name: '招商银行网点', category: 'S500101', floorCode: '-1', projectId: 'P001' },
+  { id: 'M083', name: '汤姆熊电玩城', category: 'E300103', floorCode: '4', projectId: 'P001' },
+  { id: 'M091', name: '孩子王母婴店', category: 'K400102', floorCode: '2', projectId: 'P001' },
+  { id: 'M100', name: '华为智能生活馆', category: 'R100103', floorCode: '0', projectId: 'P001' },
+  { id: 'M101', name: '雅诗兰黛专柜', category: 'R10010201', floorCode: '0', projectId: 'P001' },
+  { id: 'M102', name: '优衣库旗舰店', category: 'R10010102', floorCode: '1', projectId: 'P001' },
+  { id: 'M103', name: '西西弗书店', category: 'S500102', floorCode: '2', projectId: 'P001' },
+  { id: 'M104', name: '喜茶LAB店', category: 'F20010301', floorCode: '4', projectId: 'P001' },
+  { id: 'M105', name: '金宝贝早教中心', category: 'K400101', floorCode: '2', projectId: 'P001' },
+  { id: 'M106', name: '大疆体验店', category: 'R100104', floorCode: '0', projectId: 'P001' },
+  { id: 'M107', name: '全棉时代', category: 'R100105', floorCode: 'B1', projectId: 'P001' },
+  { id: 'M108', name: '海底捞智慧餐厅', category: 'F20010101', floorCode: '5', projectId: 'P001' },
+  { id: 'M109', name: '乐刻运动24H', category: 'E300102', floorCode: '4', projectId: 'P001' },
+  { id: 'M110', name: '盒马鲜生', category: 'S500103', floorCode: '-1', projectId: 'P001' },
+  { id: 'M111', name: '泡泡玛特主题店', category: 'R100106', floorCode: '1', projectId: 'P001' },
+  { id: 'M112', name: '太二酸菜鱼', category: 'F20010102', floorCode: '5', projectId: 'P001' },
+  { id: 'M113', name: '星际传奇电玩', category: 'E300103', floorCode: '4', projectId: 'P001' },
+  { id: 'M114', name: '周大福传承馆', category: 'R100107', floorCode: '0', projectId: 'P001' },
+  { id: 'M115', name: '美吉姆国际早教', category: 'K400101', floorCode: '2', projectId: 'P001' },
+  { id: 'M116', name: '苹果授权店', category: 'R100104', floorCode: '0', projectId: 'P001' },
+  { id: 'M117', name: '西西弗矢量咖啡', category: 'F20010302', floorCode: '3', projectId: 'P001' },
+  { id: 'M118', name: '海马体照相馆', category: 'S500104', floorCode: '2', projectId: 'P001' },
+  { id: 'M119', name: '超级猩猩健身', category: 'E300102', floorCode: '4', projectId: 'P001' },
+  { id: 'M120', name: '小米之家', category: 'R100104', floorCode: '2', projectId: 'P001' },
+  { id: 'M121', name: '奈雪の茶PRO', category: 'F20010301', floorCode: '5', projectId: 'P001' },
+  { id: 'M122', name: '孩子王儿童乐园', category: 'K400102', floorCode: '2', projectId: 'P001' },
+  { id: 'M123', name: '顺电脉体验店', category: 'R100104', floorCode: '0', projectId: 'P001' },
+  { id: 'M124', name: '钟书阁书店', category: 'S500102', floorCode: '2', projectId: 'P001' },
+  { id: 'M125', name: '捞王锅物料理', category: 'F20010103', floorCode: '5', projectId: 'P001' },
+  { id: 'M126', name: '星际传奇VR体验馆', category: 'E300103', floorCode: '4', projectId: 'P001' },
+  { id: 'M127', name: '完美日记体验店', category: 'R10010201', floorCode: '0', projectId: 'P001' },
+  { id: 'M128', name: '中信银行网点', category: 'S500101', floorCode: '-1', projectId: 'P001' },
+  { id: 'M129', name: 'Meland儿童乐园', category: 'K400102', floorCode: '2', projectId: 'P001' },
+  { id: 'M130', name: '华为智能家居馆', category: 'R100104', floorCode: '0', projectId: 'P001' },
+  //
+  { id: 'MM001', name: 'ZARA女装旗舰店(M)', category: 'RA10010101', floorCode: '0', projectId: 'P002' },
+  { id: 'MM015', name: '海底捞火锅(M)', category: 'FA20010101', floorCode: '5', projectId: 'P002' },
+  { id: 'MM023', name: '万达影城IMAX(M)', category: 'EA300101', floorCode: ['5', '6'], projectId: 'P002' },
+  { id: 'MM037', name: '乐高教育中心(M)', category: 'KA400101', floorCode: '2', projectId: 'P002' },
+  { id: 'MM044', name: '星巴克臻选店(M)', category: 'FA20010201', floorCode: '0', projectId: 'P002' },
+  { id: 'MM062', name: '迪卡侬运动超市(M)', category: 'RA100103', floorCode: '1', projectId: 'P002' },
+  { id: 'MM078', name: '招商银行网点(M)', category: 'SA500101', floorCode: '-1', projectId: 'P002' },
+  { id: 'MM083', name: '汤姆熊电玩城(M)', category: 'EA300103', floorCode: '4', projectId: 'P002' },
+  { id: 'MM091', name: '孩子王母婴店(M)', category: 'KA400102', floorCode: '2', projectId: 'P002' },
+  { id: 'MM100', name: '华为智能生活馆(M)', category: 'RA100103', floorCode: '0', projectId: 'P002' },
+  { id: 'MM101', name: '雅诗兰黛专柜(M)', category: 'RA10010201', floorCode: '0', projectId: 'P002' },
+  { id: 'MM102', name: '优衣库旗舰店(M)', category: 'RA10010102', floorCode: '1', projectId: 'P002' },
+  { id: 'MM103', name: '西西弗书店(M)', category: 'SA500102', floorCode: '2', projectId: 'P002' },
+  { id: 'MM104', name: '喜茶LAB店(M)', category: 'FA20010301', floorCode: '5', projectId: 'P002' },
+  { id: 'MM105', name: '金宝贝早教中心(M)', category: 'KA400101', floorCode: '2', projectId: 'P002' },
+  { id: 'MM106', name: '大疆体验店(M)', category: 'RA100104', floorCode: '0', projectId: 'P002' },
+  { id: 'MM107', name: '全棉时代(M)', category: 'RA100105', floorCode: '-1', projectId: 'P002' },
+  { id: 'MM108', name: '海底捞智慧餐厅(M)', category: 'FA20010101', floorCode: '5', projectId: 'P002' },
+  { id: 'MM109', name: '乐刻运动24H(M)', category: 'EA300102', floorCode: '4', projectId: 'P002' },
+  { id: 'MM110', name: '盒马鲜生(M)', category: 'SA500103', floorCode: '-1', projectId: 'P002' },
+  { id: 'MM111', name: '泡泡玛特主题店(M)', category: 'RA100106', floorCode: '1', projectId: 'P002' },
+  { id: 'MM112', name: '太二酸菜鱼(M)', category: 'FA20010102', floorCode: '5', projectId: 'P002' },
+  { id: 'MM113', name: '星际传奇电玩(M)', category: 'EA300103', floorCode: '4', projectId: 'P002' },
+  { id: 'MM114', name: '周大福传承馆(M)', category: 'RA100107', floorCode: '0', projectId: 'P002' },
+  { id: 'MM115', name: '美吉姆国际早教(M)', category: 'KA400101', floorCode: '2', projectId: 'P002' },
+  { id: 'MM116', name: '苹果授权店(M)', category: 'RA100104', floorCode: '0', projectId: 'P002' },
+  { id: 'MM117', name: '西西弗矢量咖啡(M)', category: 'FA20010302', floorCode: '3', projectId: 'P002' },
+  { id: 'MM118', name: '海马体照相馆(M)', category: 'SA500104', floorCode: '2', projectId: 'P002' },
+  { id: 'MM119', name: '超级猩猩健身(M)', category: 'EA300102', floorCode: '4', projectId: 'P002' },
+  { id: 'MM120', name: '小米之家(M)', category: 'RA100104', floorCode: '2', projectId: 'P002' },
+  { id: 'MM121', name: '奈雪の茶PRO(M)', category: 'FA20010301', floorCode: '5', projectId: 'P002' },
+  { id: 'MM122', name: '孩子王儿童乐园(M)', category: 'KA400102', floorCode: '2', projectId: 'P002' },
+  { id: 'MM123', name: '顺电脉体验店(M)', category: 'RA100104', floorCode: '0', projectId: 'P002' },
+  { id: 'MM124', name: '钟书阁书店(M)', category: 'SA500102', floorCode: '2', projectId: 'P002' },
+  { id: 'MM125', name: '捞王锅物料理(M)', category: 'FA20010103', floorCode: '5', projectId: 'P002' },
+  { id: 'MM126', name: '星际传奇VR体验馆(M)', category: 'EA300103', floorCode: '4', projectId: 'P002' },
+  { id: 'MM127', name: '完美日记体验店(M)', category: 'RA10010201', floorCode: '0', projectId: 'P002' },
+  { id: 'MM128', name: '中信银行网点(M)', category: 'SA500101', floorCode: '-1', projectId: 'P002' },
+  { id: 'MM129', name: 'Meland儿童乐园(M)', category: 'KA400102', floorCode: '2', projectId: 'P002' },
+  { id: 'MM130', name: '华为智能家居馆(M)', category: 'RA100104', floorCode: '0', projectId: 'P002' }
 ]
 
-const floors = ['L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'B1']
+const blocks = [
+  { id: 'B001', name: '法国街' },
+  { id: 'B002', name: '意大利街' },
+  { id: 'B003', name: '德国街' }
+]
 
-export { category, merchants, floors }
+const floors = [
+  { code: '0', name: 'L1', blockId: 'B001', projectId: 'P001' },
+  { code: '1', name: 'L2', blockId: 'B001', projectId: 'P001' },
+  { code: '2', name: 'L3', blockId: 'B001', projectId: 'P001' },
+  { code: '3', name: 'L4', blockId: 'B001', projectId: 'P001' },
+  { code: '4', name: 'L5', blockId: 'B001', projectId: 'P001' },
+  { code: '5', name: 'L6', blockId: 'B001', projectId: 'P001' },
+  { code: '-1', name: 'B1', blockId: 'B001', projectId: 'P001' },
+  { code: '0', name: 'L1', blockId: 'B002', projectId: 'P002' },
+  { code: '1', name: 'L2', blockId: 'B002', projectId: 'P002' },
+  { code: '2', name: 'L3', blockId: 'B002', projectId: 'P002' },
+  { code: '3', name: 'L4', blockId: 'B002', projectId: 'P002' },
+  { code: '4', name: 'L5', blockId: 'B002', projectId: 'P002' },
+  { code: '5', name: 'L6', blockId: 'B002', projectId: 'P002' },
+  { code: '-1', name: 'B1', blockId: 'B002', projectId: 'P002' },
+  { code: '0', name: 'L1', blockId: 'B003', projectId: 'P003' },
+  { code: '1', name: 'L2', blockId: 'B003', projectId: 'P003' },
+  { code: '2', name: 'L3', blockId: 'B003', projectId: 'P003' }
+]
+
+export { projects, categories, merchants, floors, blocks }
