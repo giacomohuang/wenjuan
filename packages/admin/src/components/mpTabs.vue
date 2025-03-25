@@ -120,6 +120,7 @@ onMounted(() => {
 
   &:before,
   &:after {
+    pointer-events: none;
     opacity: 0;
     z-index: 10;
     content: '';
@@ -152,13 +153,6 @@ onMounted(() => {
 }
 
 .mp-tabs-item {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: pointer;
-  line-height: 40px;
-  padding: 0 12px;
-
   &:hover,
   &.active {
     color: var(--c-brand);

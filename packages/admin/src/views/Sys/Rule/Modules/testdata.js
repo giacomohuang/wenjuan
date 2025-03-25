@@ -82,8 +82,7 @@ const categories = [
   { id: 'SA5001', name: '生活服务', parent_id: 0, projectId: 'P002' },
   { id: 'SA500101', name: '金融服务', parent_id: 'SA5001', projectId: 'P002' },
   { id: 'SA500102', name: '生活服务A', parent_id: 'SA5001', projectId: 'P002' },
-  { id: 'SA500103', name: '生活服务B', parent_id: 'SA5001', projectId: 'P002' },
-  { id: 'SA500104', name: '照相馆', parent_id: 'SA5001', projectId: 'P002' }
+  { id: 'SA500103', name: '生活服务B', parent_id: 'SA5001', projectId: 'P002' }
 ]
 
 const merchants = [
@@ -106,7 +105,7 @@ const merchants = [
   { id: 'M107', name: '全棉时代', category: 'R100105', floorId: 'a700', projectId: 'P001' },
   { id: 'M108', name: '海底捞智慧餐厅', category: 'F20010101', floorId: 'a500', projectId: 'P001' },
   { id: 'M109', name: '乐刻运动24H', category: 'E300102', floorId: 'a400', projectId: 'P001' },
-  { id: 'M110', name: '盒马鲜生', category: 'S500103', floorId: 'a700', projectId: 'P001' },
+  { id: 'M110', name: '盒马鲜生', category: 'S500103', floorId: 'a600', projectId: 'P001' },
   { id: 'M111', name: '泡泡玛特主题店', category: 'R100106', floorId: 'a100', projectId: 'P001' },
   { id: 'M112', name: '太二酸菜鱼', category: 'F20010102', floorId: 'a500', projectId: 'P001' },
   { id: 'M113', name: '星际传奇电玩', category: 'E300103', floorId: 'a400', projectId: 'P001' },
@@ -171,9 +170,9 @@ const merchants = [
 ]
 
 const blocks = [
-  { id: 'B001', name: '法国街' },
-  { id: 'B002', name: '意大利街' },
-  { id: 'B003', name: '德国街' }
+  { id: 'B001', name: '法国街', projectId: 'P001' },
+  { id: 'B002', name: '意大利街', projectId: 'P001' },
+  { id: 'B003', name: '德国街', projectId: 'P001' }
 ]
 
 const floors = [
@@ -190,14 +189,7 @@ const floors = [
   { id: 'b400', code: '3', name: 'L4', blockId: 'B002', projectId: 'P002' },
   { id: 'b500', code: '4', name: 'L5', blockId: 'B002', projectId: 'P002' },
   { id: 'b600', code: '5', name: 'L6', blockId: 'B002', projectId: 'P002' },
-  { id: 'b700', code: '-1', name: 'B1', blockId: 'B002', projectId: 'P002' },
-  { id: 'c100', code: '0', name: 'L1', blockId: 'B003', projectId: 'P003' },
-  { id: 'c200', code: '1', name: 'L2', blockId: 'B003', projectId: 'P003' },
-  { id: 'c300', code: '2', name: 'L3', blockId: 'B003', projectId: 'P003' },
-  { id: 'c400', code: '3', name: 'L4', blockId: 'B003', projectId: 'P003' },
-  { id: 'c500', code: '4', name: 'L5', blockId: 'B003', projectId: 'P003' },
-  { id: 'c600', code: '5', name: 'L6', blockId: 'B003', projectId: 'P003' },
-  { id: 'c700', code: '-1', name: 'B1', blockId: 'B003', projectId: 'P003' }
+  { id: 'b700', code: '-1', name: 'B1', blockId: 'B002', projectId: 'P002' }
 ]
 
 export { projects, categories, merchants, floors, blocks }

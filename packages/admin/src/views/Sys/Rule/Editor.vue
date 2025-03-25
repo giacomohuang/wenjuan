@@ -12,27 +12,16 @@ import { ref } from 'vue'
 import Rule from './Rule.vue'
 import { nanoid } from 'nanoid'
 const ruleData = ref({
-  operator: 'and',
-  children: [
-    {
-      exp: {
-        id: nanoid(),
-        type: 'Consumption',
-        field: 'daily_consumption',
-        operator: 'eq',
-        value: 100
-      }
-    },
-    {
-      exp: {
-        id: nanoid(),
-        type: 'Merchants',
-        floors: ['L1', 'L2'],
-        categories: ['R100101', 'R100102'],
-        merchants: ['M100', 'M101', 'M023']
-      }
-    }
-  ]
+  exp: {
+    id: nanoid(),
+    type: 'Consumption',
+    field: 'daily_consumption',
+    operator: 'gt',
+    floors: ['a700', 'a600'],
+    categories: ['R100101', 'R100102'],
+    merchants: ['M100', 'M101', 'M023', 'M110', 'M078', 'M107', 'M118', 'M124', 'M128', 'M127', 'M044', 'M001', 'M111', 'M114'],
+    value: 100
+  }
 })
 // const ruleData = ref({
 //   operator: 'and',

@@ -28,9 +28,12 @@
   <a-modal v-model:open="merchantModalOpen" title="选择商户" @ok="handleMerchantOk" width="1000px">
     <div class="modal-wrap">
       <div class="left-wrap" v-if="projects.length > 0">
-        <mp-tabs v-model="activeProjectKey" :tabs="projects" style="width: 150px; height: 400px">
+        <mp-tabs v-model="activeProjectKey" :tabs="projects" style="width: 150px; height: 600px">
           <template #item="{ data }">
-            <span>{{ data.name }} (23)</span>
+            <div class="project-item">
+              <span class="project-name">{{ data.name }}</span>
+              <span class="project-count">({{ getSelectedMerchantsCountByProject(data.id) }})</span>
+            </div>
           </template>
         </mp-tabs>
       </div>
@@ -41,16 +44,27 @@
         </a-radio-group>
         <div class="merchant-wrap" v-if="activeFilter === 'floor'">
           <div v-for="floor in floorsComputed" :key="floor.id">
-            <a-checkbox @change="handleFloorChecked($event, floor.id)">
+            <a-checkbox v-if="getMerchantsGroupByFloor(floor.id).length > 0" @change="handleFloorChecked($event, floor.id)" :checked="isMerchantsAllChecked(floor.id)" :indeterminate="isMerchantsSomeChecked(floor.id)">
               <span class="floor-name">{{ floor.name }}</span>
             </a-checkbox>
             <div class="merchant-list">
-              <a-tag v-for="merchant in getMerchantsGroupByFloor(floor.id)" :key="merchant.id" :color="selectedMerchants.has(merchant.id) ? 'blue' : 'default'">{{ merchant.id }}{{ merchant.name }}</a-tag>
+              <mp-tag v-for="merchant in getMerchantsGroupByFloor(floor.id)" :key="merchant.id" @click.stop="handleMerchantChecked(floor.id, merchant.id)" :color="selectedMerchants.has(merchant.id) ? 'blue' : 'gray'">{{ merchant.id }}{{ merchant.name }}</mp-tag>
+            </div>
+          </div>
+        </div>
+        <div class="merchant-wrap" v-if="activeFilter === 'category'">
+          <div v-for="category in categoriesComputed" :key="category.id">
+            <a-checkbox @change="handleCategoryChecked($event, category.id)" :checked="isMerchantsAllChecked(category.id)" :indeterminate="isMerchantsSomeChecked(category.id)">
+              <span class="category-name">{{ category.name }}</span>
+            </a-checkbox>
+            <div class="merchant-list">
+              <mp-tag v-for="merchant in getMerchantsGroupByCategory(category.id)" :key="merchant.id" @click.stop="handleMerchantChecked(floor.id, merchant.id)" :color="selectedMerchants.has(merchant.id) ? 'blue' : 'gray'">{{ merchant.id }}{{ merchant.name }}</mp-tag>
             </div>
           </div>
         </div>
       </div>
     </div>
+
     floors:{{ selectedFloors }} merchants:{{ selectedMerchants }}
   </a-modal>
 </template>
@@ -75,22 +89,59 @@ modelValue.operator ??= 'gte'
 const merchantModalOpen = ref(false)
 const activeProjectKey = ref(projects[0]?.id)
 const activeFilter = ref('floor')
-const selectedFloors = ref(new Set())
-const selectedMerchants = ref(new Set())
 
+const selectedFloors = ref(new Set(modelValue.floors))
+const selectedMerchants = ref(new Set(modelValue.merchants))
+
+fixSelectedMerchants()
+fixSelectedFloors()
+function fixSelectedMerchants() {
+  for (const floorId of selectedFloors.value) {
+    // console.log('floor', floorId)
+    const m = merchants
+      .filter((item) => {
+        if (Array.isArray(item.floorId)) {
+          return item.floorId.includes(floorId)
+        } else {
+          return item.floorId == floorId
+        }
+      })
+      .map((item) => item.id)
+    selectedMerchants.value = new Set([...selectedMerchants.value, ...m])
+  }
+}
+
+function getSelectedMerchantsCountByProject(id) {
+  return merchants.filter((item) => item.projectId === id && selectedMerchants.value.has(item.id)).length
+}
+
+function fixSelectedFloors() {
+  // 根据merchants的商户数据，如果楼层所在商户全部被选中，则选中该楼层
+  // for (const floor of floorsComputed.value) {
+  //   if (getMerchantsGroupByFloor(floor.id).every((item) => selectedMerchants.value.has(item.id))) {
+  //     selectedFloors.value.add(floor.id)
+  //   } else {
+  //     selectedFloors.value.delete(floor.id)
+  //   }
+  // }
+}
+
+// 获取某个项目下的所有商户
 const merchantsComputed = computed(() => {
-  console.log(activeProjectKey.value)
   return merchants.filter((item) => item.projectId === activeProjectKey.value)
 })
 
+// 获取某个项目下的所有楼层
 const floorsComputed = computed(() => {
   return floors.filter((item) => item.projectId === activeProjectKey.value).sort((a, b) => a.code - b.code)
 })
 
+// 获取某个项目下的所有业态，需要考虑嵌套
 const categoriesComputed = computed(() => {
   return categories.filter((item) => item.projectId === activeProjectKey.value)
 })
 
+// 获取某个项目下的所有商户，根据楼层分组
 function getMerchantsGroupByFloor(id) {
   return merchantsComputed.value.filter((item) => {
     if (Array.isArray(item.floorId)) {
@@ -101,6 +152,12 @@ function getMerchantsGroupByFloor(id) {
   })
 }
 
+// 获取某个项目下的所有商户，根据业态分组
+function getMerchantsGroupByCategory(id) {
+  return merchantsComputed.value.filter((item) => item.categoryId === id)
+}
+
+// 处理楼层选中
 function handleFloorChecked(e, floorId) {
   // console.log(selectedFloors.value)
   if (e.target.checked) {
@@ -116,9 +173,33 @@ function handleFloorChecked(e, floorId) {
       selectedMerchants.value.delete(merchant.id)
     }
   }
-  // if (e.target.checked) {
-  //   selectedMerchants.value = selectedMerchants.value.concat(getMerchantsGroupByFloor(floorId)).map((item) => item.id)
-  // }
+}
+
+// 处理商户选中
+function handleMerchantChecked(floorId, merchantId) {
+  if (selectedMerchants.value.has(merchantId)) {
+    selectedMerchants.value.delete(merchantId)
+  } else {
+    selectedMerchants.value.add(merchantId)
+  }
+  // 如果该楼层的所有商户都没有被选中，则取消选中该楼层
+  if (getMerchantsGroupByFloor(floorId).every((item) => selectedMerchants.value.has(item.id))) {
+    selectedFloors.value.add(floorId)
+  } else {
+    selectedFloors.value.delete(floorId)
+  }
+}
+
+// 判断某个楼层下的商户是否部分选中
+function isMerchantsSomeChecked(floorId) {
+  const merchants = getMerchantsGroupByFloor(floorId)
+  // 如果该楼层下的商户部分选中，则返回 true
+  return merchants.some((item) => selectedMerchants.value.has(item.id)) && !merchants.every((item) => selectedMerchants.value.has(item.id))
+}
+
+// 判断某个楼层下的商户是否全部选中
+function isMerchantsAllChecked(floorId) {
+  return selectedFloors.value.has(floorId) || getMerchantsGroupByFloor(floorId).every((item) => selectedMerchants.value.has(item.id))
 }
 
 const merchantRangeOptions = [
@@ -203,15 +284,46 @@ const handleMerchantOk = () => {
   flex-direction: column;
   gap: 10px;
   flex-grow: 1;
+  // height: 300px;
 }
 .merchant-wrap {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  height: 600px;
+  overflow: auto;
+}
+.project-item {
+  display: flex;
+  align-items: center;
+  padding-right: 12px;
+}
+.project-name {
+  display: inline-block;
+  // width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.project-count {
+  padding-left: 4px;
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--text-tertiary);
 }
 .floor-name {
   font-size: 16px;
   line-height: 32px;
   // font-weight: 600;
+}
+.merchant-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  > span {
+    cursor: pointer;
+  }
 }
 </style>
