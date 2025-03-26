@@ -176,7 +176,7 @@ function getMerchantsGroupByCategory(id) {
 
 // 处理楼层选中
 function handleFloorChecked(e, floorId) {
-  console.log(e.target.checked, floorId)
+  // console.log(e.target.checked, floorId)
   const floorMerchants = getMerchantsGroupByFloor(floorId).map((item) => item.id)
   if (e.target.checked) {
     selectedMerchants.value = new Set([...selectedMerchants.value, ...floorMerchants])
@@ -199,7 +199,7 @@ function handleFloorChecked(e, floorId) {
 
 // 处理业态选中
 function handleCategoryChecked(e, categoryId) {
-  console.log(e.target.checked, categoryId)
+  // console.log(e.target.checked, categoryId)
   const categoryMerchants = getMerchantsGroupByCategory(categoryId).map((item) => item.id)
   if (e.target.checked) {
     selectedMerchants.value = new Set([...selectedMerchants.value, ...categoryMerchants])
@@ -265,7 +265,7 @@ function isMerchantsSomeChecked(type, id) {
 function isMerchantsAllChecked(type, id) {
   const merchants = type === 'floor' ? getMerchantsGroupByFloor(id) : getMerchantsGroupByCategory(id)
   const isAllChecked = merchants.length > 0 && merchants.every((item) => selectedMerchants.value.has(item.id))
-  console.log('isMerchantsAllChecked', id, isAllChecked)
+  // console.log('isMerchantsAllChecked', id, isAllChecked)
   return isAllChecked
 }
 
