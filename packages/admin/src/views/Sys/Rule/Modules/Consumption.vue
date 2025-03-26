@@ -4,7 +4,7 @@
       <a-form-item name="merchantRange">
         <a-select v-model:value="modelValue.merchantRange" :options="merchantRangeOptions" :dropdownMatchSelectWidth="false"></a-select>
       </a-form-item>
-      <a-form-item name="merchant">
+      <a-form-item name="merchant" v-if="modelValue.merchantRange !== 'All'">
         <a-button type="primary" @click="merchantModalOpen = true">选择商户</a-button>
       </a-form-item>
       <a-form-item name="timeRange">
@@ -27,8 +27,8 @@
   </div>
   <a-modal v-model:open="merchantModalOpen" title="选择商户" @ok="handleMerchantOk" width="1000px">
     <div class="modal-wrap">
-      <div class="left-wrap" v-if="projects.length > 0">
-        <mp-tabs v-model="activeProjectKey" :tabs="projects" style="width: 150px; height: 400px">
+      <div class="left-wrap" v-if="projects.length > 1">
+        <mp-tabs v-model="activeProjectKey" :tabs="projects.filter((item) => getSelectedMerchantsCountByProject(item.id) > 0)" style="width: 150px; height: 400px">
           <template #item="{ data }">
             <div class="project-item">
               <span class="project-name">{{ data.name }}</span>
@@ -38,28 +38,37 @@
         </mp-tabs>
       </div>
       <div class="right-wrap">
-        <a-radio-group v-model:value="activeFilter" style="align-self: center">
-          <a-radio-button value="floor">楼层</a-radio-button>
-          <a-radio-button value="category">业态</a-radio-button>
-        </a-radio-group>
-
-        <div class="merchant-wrap" v-if="activeFilter === 'floor'">
-          <div v-for="floor in floorsComputed" :key="floor.id">
-            <a-checkbox v-if="getMerchantsGroupByFloor(floor.id).length > 0" @change="handleFloorChecked($event, floor.id)" :checked="isMerchantsAllChecked('floor', floor.id)" :indeterminate="isMerchantsSomeChecked('floor', floor.id)">
-              <span class="floor-name">{{ floor.name }}</span>
-            </a-checkbox>
-            <div class="merchant-list">
-              <mp-tag v-for="merchant in getMerchantsGroupByFloor(floor.id)" :key="merchant.id" @click.stop="handleMerchantChecked(merchant.id)" :color="selectedMerchants.has(merchant.id) ? 'blue' : 'gray'">{{ merchant.id }}{{ merchant.name }}</mp-tag>
-            </div>
+        <div class="filter-wrap">
+          <a-radio-group v-model:value="activeFilter">
+            <a-radio-button value="floor">楼层</a-radio-button>
+            <a-radio-button value="category">业态</a-radio-button>
+          </a-radio-group>
+          <div class="search-wrap">
+            <icon name="search" class="search-icon"></icon>
+            <input class="search-input" placeholder="输入关键词搜索商户" v-model="keywords" />
+            <span class="highlight-count" v-if="highlightCount > 0 && keywords.trim()">{{ highlightCount }}个搜索结果</span>
+            <span class="highlight-count" v-if="highlightCount === 0 && keywords.trim()" @click="resetHighlight">没有搜索到</span>
           </div>
         </div>
-        <div class="merchant-wrap" v-if="activeFilter === 'category'">
-          <div v-for="category in categoriesComputed" :key="category.id">
-            <a-checkbox v-if="getMerchantsGroupByCategory(category.id).length > 0" @change="handleCategoryChecked($event, category.id)" :checked="isMerchantsAllChecked('category', category.id)" :indeterminate="isMerchantsSomeChecked('category', category.id)">
-              <span class="category-name">{{ category.name }}</span>
-            </a-checkbox>
-            <div class="merchant-list">
-              <mp-tag v-for="merchant in getMerchantsGroupByCategory(category.id)" :key="merchant.id" @click.stop="handleMerchantChecked(merchant.id)" :color="selectedMerchants.has(merchant.id) ? 'blue' : 'gray'">{{ merchant.id }}{{ merchant.name }}</mp-tag>
+        <div class="merchant-list-wrap">
+          <div class="merchant-wrap" v-if="activeFilter === 'floor'">
+            <div v-for="floor in floorsComputed" :key="floor.id">
+              <a-checkbox v-if="getMerchantsGroupByFloor(floor.id).length > 0" @change="handleFloorChecked($event, floor.id)" :checked="isMerchantsAllChecked('floor', floor.id)" :indeterminate="isMerchantsSomeChecked('floor', floor.id)">
+                <span class="floor-name">{{ floor.name }}</span>
+              </a-checkbox>
+              <div class="merchant-list">
+                <mp-tag v-for="merchant in getMerchantsGroupByFloor(floor.id)" :key="merchant.id" @click.stop="handleMerchantChecked(merchant.id)" :color="selectedMerchants.has(merchant.id) ? 'blue' : 'gray'">{{ merchant.id }}{{ merchant.name }}</mp-tag>
+              </div>
+            </div>
+          </div>
+          <div class="merchant-wrap" v-if="activeFilter === 'category'">
+            <div v-for="category in categoriesComputed" :key="category.id">
+              <a-checkbox v-if="getMerchantsGroupByCategory(category.id).length > 0" @change="handleCategoryChecked($event, category.id)" :checked="isMerchantsAllChecked('category', category.id)" :indeterminate="isMerchantsSomeChecked('category', category.id)">
+                <span class="category-name">{{ category.name }}</span>
+              </a-checkbox>
+              <div class="merchant-list">
+                <mp-tag v-for="merchant in getMerchantsGroupByCategory(category.id)" :key="merchant.id" @click.stop="handleMerchantChecked(merchant.id)" :color="selectedMerchants.has(merchant.id) ? 'blue' : 'gray'">{{ merchant.id }}{{ merchant.name }}</mp-tag>
+              </div>
             </div>
           </div>
         </div>
@@ -70,8 +79,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { projects, categories, merchants, floors, blocks } from './testdata'
+import { ref, computed, watch } from 'vue'
+import { projects, categories, merchants, floors } from './testdata'
 import mpTabs from '@/components/mpTabs.vue'
 import 'simplebar'
 import 'simplebar/dist/simplebar.min.css'
@@ -96,7 +105,14 @@ const selectedFloors = ref(new Set(modelValue.floors))
 const selectedMerchants = ref(new Set(modelValue.merchants))
 const selectedCategories = ref(new Set(modelValue.categories))
 
+const keywords = ref('')
+const highlightCount = ref(0)
+
 fixSelectedMerchants()
+
+watch(keywords, (newVal) => {
+  highlight()
+})
 
 // 根据选中的楼层，从商户基本表中表中获取当前最新的商户数据，解决规则表中的商户数据可能滞后的问题
 function fixSelectedMerchants() {
@@ -161,34 +177,49 @@ function getMerchantsGroupByCategory(id) {
 // 处理楼层选中
 function handleFloorChecked(e, floorId) {
   console.log(e.target.checked, floorId)
-  const merchants = getMerchantsGroupByFloor(floorId)
+  const floorMerchants = getMerchantsGroupByFloor(floorId).map((item) => item.id)
   if (e.target.checked) {
-    for (const merchant of merchants) {
-      selectedMerchants.value.add(merchant.id)
-    }
+    selectedMerchants.value = new Set([...selectedMerchants.value, ...floorMerchants])
     selectedFloors.value.add(floorId)
   } else {
-    for (const merchant of merchants) {
-      selectedMerchants.value.delete(merchant.id)
-    }
+    selectedMerchants.value = new Set([...selectedMerchants.value].filter((item) => !floorMerchants.includes(item)))
     selectedFloors.value.delete(floorId)
+    selectedCategories.value.delete(floorMerchants.map((item) => item.categoryId))
+  }
+  // 处理业态选中
+  for (const m of floorMerchants) {
+    const category = merchants.find((item) => item.id === m)?.categoryId
+    if (getMerchantsGroupByCategory(category).every((item) => selectedMerchants.value.has(item.id))) {
+      selectedCategories.value.add(category)
+    } else {
+      selectedCategories.value.delete(category)
+    }
   }
 }
 
 // 处理业态选中
 function handleCategoryChecked(e, categoryId) {
   console.log(e.target.checked, categoryId)
-  const merchants = getMerchantsGroupByCategory(categoryId)
+  const categoryMerchants = getMerchantsGroupByCategory(categoryId).map((item) => item.id)
   if (e.target.checked) {
-    for (const merchant of merchants) {
-      selectedMerchants.value.add(merchant.id)
-    }
+    selectedMerchants.value = new Set([...selectedMerchants.value, ...categoryMerchants])
     selectedCategories.value.add(categoryId)
   } else {
-    for (const merchant of merchants) {
-      selectedMerchants.value.delete(merchant.id)
-    }
+    selectedMerchants.value = new Set([...selectedMerchants.value].filter((item) => !categoryMerchants.includes(item)))
     selectedCategories.value.delete(categoryId)
+  }
+  // 处理楼层选中
+  for (const m of categoryMerchants) {
+    const floors = merchants.find((item) => item.id === m)?.floorId
+    // floorId 可能是一个数组
+    const floorIds = Array.isArray(floors) ? floors : [floors]
+    for (const floorId of floorIds) {
+      if (getMerchantsGroupByFloor(floorId).every((item) => selectedMerchants.value.has(item.id))) {
+        selectedFloors.value.add(floorId)
+      } else {
+        selectedFloors.value.delete(floorId)
+      }
+    }
   }
 }
 
@@ -201,10 +232,10 @@ function handleMerchantChecked(merchantId) {
     selectedMerchants.value.add(merchantId)
   }
 
-  // 考虑一个商户可能属于多个楼层
   const floors = merchants.find((item) => item.id === merchantId)?.floorId
+  // 考虑一个商户可能属于多个楼层
   const floorIds = Array.isArray(floors) ? floors : [floors]
-  for (let floorId of floorIds) {
+  for (const floorId of floorIds) {
     // 如果该楼层的所有商户都没有被选中，则取消选中该楼层
     if (getMerchantsGroupByFloor(floorId).every((item) => selectedMerchants.value.has(item.id))) {
       selectedFloors.value.add(floorId)
@@ -212,7 +243,7 @@ function handleMerchantChecked(merchantId) {
       selectedFloors.value.delete(floorId)
     }
   }
-  // 考虑一个商户只属于一个业态
+  // 一个商户只属于一个业态
   const category = merchants.find((item) => item.id === merchantId)?.categoryId
   if (getMerchantsGroupByCategory(category).every((item) => selectedMerchants.value.has(item.id))) {
     selectedCategories.value.add(category)
@@ -306,6 +337,50 @@ const validateRules = ref({
 const handleMerchantOk = () => {
   merchantModalOpen.value = false
 }
+
+const highlight = () => {
+  // 清理所有高亮
+  const contents = document.querySelectorAll('.merchant-list-wrap .tag')
+  for (const content of contents) {
+    content.innerHTML = content.textContent
+    content.classList.remove('search-highlight')
+  }
+  const keyword = keywords.value.trim().toLowerCase()
+  let posFlag = true
+  highlightCount.value = 0
+
+  for (const content of contents) {
+    const text = content.textContent
+    if (!keyword) {
+      content.innerHTML = text
+      continue
+    }
+    // 使用正则表达式匹配关键词，并只高亮第一次匹配的部分
+    const regex = new RegExp(`(${keyword})`, 'gi')
+    const match = text.match(regex)
+    if (match) {
+      content.innerHTML = text.replace(regex, (_, p1, offset) => {
+        // 只高亮第一次匹配
+        if (offset === text.toLowerCase().indexOf(keyword)) {
+          highlightCount.value++
+          return `<span class="search-highlight">${p1}</span>`
+        }
+        return p1
+      })
+
+      if (posFlag) {
+        content.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        posFlag = false
+      }
+    }
+  }
+  if (highlightCount.value === 0) {
+    const merchantListWrap = document.querySelector('.merchant-wrap')
+    if (merchantListWrap) {
+      merchantListWrap.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -369,6 +444,73 @@ const handleMerchantOk = () => {
   gap: 10px;
   > span {
     cursor: pointer;
+  }
+}
+
+.filter-wrap {
+  // flex-grow: 0.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+}
+
+.search-wrap {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 400px;
+  .search-icon {
+    position: absolute;
+    margin: 8px;
+    font-size: 12px;
+    color: var(--c-gray-300);
+  }
+
+  .search-input {
+    height: 32px;
+    width: 224px;
+    border-radius: 6px;
+    border: 1px solid var(--border-medium);
+    background-color: var(--bg-primary);
+    padding-left: 32px;
+    padding-right: 32px;
+    outline: none;
+    transition: border-color 0.3s;
+
+    &:focus {
+      border-color: var(--c-brand-500);
+    }
+  }
+  .highlight-count {
+    // position: absolute;
+    // right: 0px; // border: 1px solid red;
+    padding-left: 12px;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    cursor: pointer;
+  }
+}
+
+:deep(.search-highlight) {
+  // background-color: #4e9a06;
+  // border: 2px dashed #4e9a06;
+  color: red;
+  // font-weight: 600;
+}
+
+:deep(.search-highlight) {
+  border: 2px dashed #4e9a06;
+  animation: blink 0.15s 6;
+  @keyframes blink {
+    0%,
+    80%,
+    100% {
+      opacity: 1;
+    }
+    40% {
+      opacity: 0;
+    }
   }
 }
 </style>
