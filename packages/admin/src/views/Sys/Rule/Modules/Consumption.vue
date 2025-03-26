@@ -47,7 +47,7 @@
             <icon name="search" class="search-icon"></icon>
             <input class="search-input" placeholder="输入关键词搜索商户" v-model="keywords" />
             <span class="highlight-count" v-if="highlightCount > 0 && keywords.trim()">{{ highlightCount }}个搜索结果</span>
-            <span class="highlight-count" v-else-if="highlightCount === 0 && keywords.trim()" @click="resetHighlight">没有搜索结果</span>
+            <span class="highlight-count" v-if="highlightCount === 0 && keywords.trim()" @click="resetHighlight">没有搜索到结果</span>
           </div>
         </div>
         <div class="merchant-list-wrap">
@@ -81,7 +81,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { projects, categories, merchants, floors } from './testdata'
-import debounceRef from '@/js/debounceRef'
 import mpTabs from '@/components/mpTabs.vue'
 import 'simplebar'
 import 'simplebar/dist/simplebar.min.css'
@@ -107,12 +106,11 @@ const selectedMerchants = ref(new Set(modelValue.merchants))
 const selectedCategories = ref(new Set(modelValue.categories))
 
 const keywords = ref('')
-const highlightCount = debounceRef(0, 500)
+const highlightCount = ref(0)
 
 fixSelectedMerchants()
 
 watch(keywords, (newVal) => {
-  highlightCount.value = -1
   highlight()
 })
 
@@ -137,12 +135,10 @@ function fixSelectedMerchants() {
   }
 }
 
-// 获取某个项目下选中的商户数量
 function getSelectedMerchantsCountByProject(id) {
   return merchants.filter((item) => item.projectId === id && selectedMerchants.value.has(item.id)).length
 }
 
-// 获取某个项目下的所有商户数量
 function getMerchantsCountByProject(id) {
   return merchants.filter((item) => item.projectId === id).length
 }
@@ -180,7 +176,7 @@ function getMerchantsGroupByCategory(id) {
 
 // 处理楼层选中
 function handleFloorChecked(e, floorId) {
-  // console.log(e.target.checked, floorId)
+  console.log(e.target.checked, floorId)
   const floorMerchants = getMerchantsGroupByFloor(floorId).map((item) => item.id)
   if (e.target.checked) {
     selectedMerchants.value = new Set([...selectedMerchants.value, ...floorMerchants])
@@ -203,7 +199,7 @@ function handleFloorChecked(e, floorId) {
 
 // 处理业态选中
 function handleCategoryChecked(e, categoryId) {
-  // console.log(e.target.checked, categoryId)
+  console.log(e.target.checked, categoryId)
   const categoryMerchants = getMerchantsGroupByCategory(categoryId).map((item) => item.id)
   if (e.target.checked) {
     selectedMerchants.value = new Set([...selectedMerchants.value, ...categoryMerchants])
@@ -269,7 +265,7 @@ function isMerchantsSomeChecked(type, id) {
 function isMerchantsAllChecked(type, id) {
   const merchants = type === 'floor' ? getMerchantsGroupByFloor(id) : getMerchantsGroupByCategory(id)
   const isAllChecked = merchants.length > 0 && merchants.every((item) => selectedMerchants.value.has(item.id))
-  // console.log('isMerchantsAllChecked', id, isAllChecked)
+  console.log('isMerchantsAllChecked', id, isAllChecked)
   return isAllChecked
 }
 
@@ -351,9 +347,8 @@ const highlight = () => {
   }
   const keyword = keywords.value.trim().toLowerCase()
   let posFlag = true
-  // highlightCount.value = -1
+  highlightCount.value = 0
 
-  let count = 0
   for (const content of contents) {
     const text = content.textContent
     if (!keyword) {
@@ -367,7 +362,7 @@ const highlight = () => {
       content.innerHTML = text.replace(regex, (_, p1, offset) => {
         // 只高亮第一次匹配
         if (offset === text.toLowerCase().indexOf(keyword)) {
-          count++
+          highlightCount.value++
           return `<span class="search-highlight">${p1}</span>`
         }
         return p1
@@ -385,7 +380,6 @@ const highlight = () => {
       merchantListWrap.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
-  highlightCount.value = count
 }
 </script>
 
