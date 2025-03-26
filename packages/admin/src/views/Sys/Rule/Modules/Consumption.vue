@@ -81,6 +81,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { projects, categories, merchants, floors } from './testdata'
+import debounceRef from '@/js/debounceRef'
 import mpTabs from '@/components/mpTabs.vue'
 import 'simplebar'
 import 'simplebar/dist/simplebar.min.css'
@@ -106,7 +107,7 @@ const selectedMerchants = ref(new Set(modelValue.merchants))
 const selectedCategories = ref(new Set(modelValue.categories))
 
 const keywords = ref('')
-const highlightCount = ref(0)
+const highlightCount = debounceRef(0, 500)
 
 fixSelectedMerchants()
 
