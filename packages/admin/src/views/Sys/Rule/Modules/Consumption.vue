@@ -47,6 +47,7 @@
             <icon name="search" class="search-icon"></icon>
             <input class="search-input" placeholder="输入关键词搜索商户" v-model="keywords" />
             <span class="highlight-count" v-if="highlightCount > 0 && keywords.trim()">{{ highlightCount }}个搜索结果</span>
+            <span class="highlight-count" v-else-if="highlightCount === 0 && keywords.trim()" @click="resetHighlight">没有搜索结果</span>
           </div>
         </div>
         <div class="merchant-list-wrap">
@@ -111,6 +112,7 @@ const highlightCount = debounceRef(0, 500)
 fixSelectedMerchants()
 
 watch(keywords, (newVal) => {
+  highlightCount.value = -1
   highlight()
 })
 
