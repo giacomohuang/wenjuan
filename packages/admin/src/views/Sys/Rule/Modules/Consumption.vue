@@ -50,28 +50,31 @@
             <span class="highlight-count" v-if="highlightCount === 0 && keywords.trim()" @click="resetHighlight">没有搜索到结果</span>
           </div>
         </div>
-        <div class="merchant-list-wrap">
-          <div class="merchant-wrap" v-if="activeFilter === 'floor'">
-            <div v-for="floor in floorsComputed" :key="floor.id">
-              <a-checkbox v-if="getMerchantsGroupByFloor(floor.id).length > 0" @change="handleFloorChecked($event, floor.id)" :checked="isMerchantsAllChecked('floor', floor.id)" :indeterminate="isMerchantsSomeChecked('floor', floor.id)">
-                <span class="floor-name">{{ floor.name }}</span>
-              </a-checkbox>
-              <div class="merchant-list">
-                <mp-tag v-for="merchant in getMerchantsGroupByFloor(floor.id)" :key="merchant.id" @click.stop="handleMerchantChecked(merchant.id)" :color="selectedMerchants.has(merchant.id) ? 'blue' : 'gray'">{{ merchant.id }}{{ merchant.name }}</mp-tag>
+        <simplebar style="height: 500px">
+          <div class="merchant-list-wrap">
+            <div class="merchant-wrap" v-if="activeFilter === 'floor'">
+              <div v-for="floor in floorsComputed" :key="floor.id">
+                <a-checkbox v-if="getMerchantsGroupByFloor(floor.id).length > 0" @change="handleFloorChecked($event, floor.id)" :checked="isMerchantsAllChecked('floor', floor.id)" :indeterminate="isMerchantsSomeChecked('floor', floor.id)">
+                  <span class="floor-name">{{ floor.name }}</span>
+                </a-checkbox>
+                <div class="merchant-list">
+                  <mp-tag v-for="merchant in getMerchantsGroupByFloor(floor.id)" :key="merchant.id" @click.stop="handleMerchantChecked(merchant.id)" :color="selectedMerchants.has(merchant.id) ? 'blue' : 'gray'">{{ merchant.name }}</mp-tag>
+                </div>
+              </div>
+            </div>
+
+            <div class="merchant-wrap" v-else>
+              <div v-for="category in categoriesComputed" :key="category.id">
+                <a-checkbox v-if="getMerchantsGroupByCategory(category.id).length > 0" @change="handleCategoryChecked($event, category.id)" :checked="isMerchantsAllChecked('category', category.id)" :indeterminate="isMerchantsSomeChecked('category', category.id)">
+                  <span class="category-name">{{ category.name }}</span>
+                </a-checkbox>
+                <div class="merchant-list">
+                  <mp-tag v-for="merchant in getMerchantsGroupByCategory(category.id)" :key="merchant.id" @click.stop="handleMerchantChecked(merchant.id)" :color="selectedMerchants.has(merchant.id) ? 'blue' : 'gray'">{{ merchant.name }}</mp-tag>
+                </div>
               </div>
             </div>
           </div>
-          <div class="merchant-wrap" v-if="activeFilter === 'category'">
-            <div v-for="category in categoriesComputed" :key="category.id">
-              <a-checkbox v-if="getMerchantsGroupByCategory(category.id).length > 0" @change="handleCategoryChecked($event, category.id)" :checked="isMerchantsAllChecked('category', category.id)" :indeterminate="isMerchantsSomeChecked('category', category.id)">
-                <span class="category-name">{{ category.name }}</span>
-              </a-checkbox>
-              <div class="merchant-list">
-                <mp-tag v-for="merchant in getMerchantsGroupByCategory(category.id)" :key="merchant.id" @click.stop="handleMerchantChecked(merchant.id)" :color="selectedMerchants.has(merchant.id) ? 'blue' : 'gray'">{{ merchant.id }}{{ merchant.name }}</mp-tag>
-              </div>
-            </div>
-          </div>
-        </div>
+        </simplebar>
       </div>
     </div>
     floors:{{ selectedFloors }} category:{{ selectedCategories }} merchants:{{ selectedMerchants }}
@@ -82,8 +85,8 @@
 import { ref, computed, watch } from 'vue'
 import { projects, categories, merchants, floors } from './testdata'
 import mpTabs from '@/components/mpTabs.vue'
-import 'simplebar'
-import 'simplebar/dist/simplebar.min.css'
+import simplebar from 'simplebar-vue'
+import 'simplebar-vue/dist/simplebar.min.css'
 
 const emit = defineEmits(['update:modelValue'])
 const { modelValue } = defineProps({
@@ -375,9 +378,9 @@ const highlight = () => {
     }
   }
   if (highlightCount.value === 0) {
-    const merchantListWrap = document.querySelector('.merchant-wrap')
+    const merchantListWrap = document.querySelector('.merchant-list-wrap')
     if (merchantListWrap) {
-      merchantListWrap.scrollTo({ top: 0, behavior: 'smooth' })
+      merchantListWrap.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }
 }
@@ -400,14 +403,13 @@ const highlight = () => {
   flex-grow: 1;
   // height: 300px;
 }
+
 .merchant-wrap {
   display: flex;
   flex-direction: column;
   gap: 20px;
   user-select: none;
-
-  height: 400px;
-  overflow: auto;
+  // height: 400px;
   margin-bottom: 20px;
   margin-bottom: 20px;
 }
