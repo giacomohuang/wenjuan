@@ -59,11 +59,15 @@ router.beforeEach(async (to, from, next) => {
       // 验证通过，放行
       next()
     } catch (e) {
-      // console.log('验证失败', e)
+      console.log('验证失败', e)
       // 验证不通过，跳登录页
       if (e.status && e.status === 401) {
-        next({ path: '/signin' })
-        // console.log('e', e)
+        // 如果已经在登录页面，则不需要重定向
+        if (to.path === '/signin') {
+          next()
+        } else {
+          next({ path: '/signin' })
+        }
       } else if (e.status && e.status === 409) {
         const { newAccessToken, newRefreshToken } = await API.account.refreshToken(localStorage.getItem('refreshToken'))
         helper.setToken({ accessToken: newAccessToken, refreshToken: newRefreshToken })

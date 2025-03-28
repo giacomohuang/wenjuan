@@ -28,7 +28,7 @@
   <a-modal v-model:open="merchantModalOpen" title="选择商户" @ok="handleMerchantOk" width="1000px">
     <div class="modal-wrap">
       <div class="left-wrap" v-if="projects.length > 1">
-        <mp-tabs v-model="activeProjectKey" :tabs="projects.filter((item) => getSelectedMerchantsCountByProject(item.id) > 0)" style="width: 150px; height: 400px">
+        <mp-tabs v-model="activeProjectKey" :tabs="projects.filter((item) => getMerchantsCountByProject(item.id) > 0)" style="width: 150px; height: 400px">
           <template #item="{ data }">
             <div class="project-item">
               <span class="project-name">{{ data.name }}</span>
@@ -44,10 +44,13 @@
             <a-radio-button value="category">业态</a-radio-button>
           </a-radio-group>
           <div class="search-wrap">
-            <icon name="search" class="search-icon"></icon>
-            <input class="search-input" placeholder="输入关键词搜索商户" v-model="keywords" />
-            <span class="highlight-count" v-if="highlightCount > 0 && keywords.trim()">{{ highlightCount }}个搜索结果</span>
-            <span class="highlight-count" v-if="highlightCount === 0 && keywords.trim()" @click="resetHighlight">没有搜索到结果</span>
+            <a-input class="search-input" style="width: 224px" placeholder="输入关键词搜索商户" v-model:value="keywords" @focus="handleKeywordsFocus" allowClear />
+            <ul class="quick-select" ref="quickSelectRef">
+              <li v-for="item in quickSelectItems" :key="item.id">
+                <a-checkbox :checked="selectedMerchants.has(item.id)" @change="handleMerchantChecked(item.id)">{{ item.name }}</a-checkbox>
+              </li>
+              <li v-if="quickSelectItems.length === 0">没有搜索到结果</li>
+            </ul>
           </div>
         </div>
         <simplebar style="height: 500px">
@@ -82,7 +85,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { projects, categories, merchants, floors } from './testdata'
 import mpTabs from '@/components/mpTabs.vue'
 import simplebar from 'simplebar-vue'
@@ -94,6 +97,8 @@ const { modelValue } = defineProps({
     type: Object
   }
 })
+
+console.log('projects', projects)
 
 modelValue.merchantRange ??= 'All'
 modelValue.timeRange ??= 'NoLimit'
@@ -110,6 +115,7 @@ const selectedCategories = ref(new Set(modelValue.categories))
 
 const keywords = ref('')
 const highlightCount = ref(0)
+const quickSelectRef = ref(null)
 
 fixSelectedMerchants()
 
@@ -148,6 +154,7 @@ function getMerchantsCountByProject(id) {
 
 // 获取某个项目下的所有商户
 const merchantsComputed = computed(() => {
+  keywords.value = ''
   return merchants.filter((item) => item.projectId === activeProjectKey.value)
 })
 
@@ -339,6 +346,38 @@ const validateRules = ref({
 
 const handleMerchantOk = () => {
   merchantModalOpen.value = false
+  modelValue.merchants = [...selectedMerchants.value]
+  modelValue.floors = [...selectedFloors.value]
+  modelValue.categories = [...selectedCategories.value]
+}
+
+const quickSelectItems = computed(() => {
+  if (!keywords.value.trim()) {
+    quickSelectRef.value?.classList?.remove('show')
+    return []
+  }
+  const k = keywords.value.trim().toLowerCase()
+  const items = merchantsComputed.value.filter((item) => item.name.toLowerCase().includes(k))
+
+  quickSelectRef.value.classList.add('show')
+  window.addEventListener('click', quickSelectListener)
+  return items
+})
+
+function handleKeywordsFocus() {
+  if (keywords.value.trim()) {
+    quickSelectRef.value.classList.add('show')
+    window.addEventListener('click', quickSelectListener)
+  }
+}
+
+function quickSelectListener(e) {
+  // console.log('quickSelectListener', e.target)
+  if (e.target.closest('.quick-select') || e.target.closest('.search-input')) {
+    return
+  }
+  quickSelectRef.value?.classList?.remove('show')
+  window.removeEventListener('click', quickSelectListener)
 }
 
 const highlight = () => {
@@ -350,7 +389,7 @@ const highlight = () => {
   }
   const keyword = keywords.value.trim().toLowerCase()
   let posFlag = true
-  highlightCount.value = 0
+  let count = 0
 
   for (const content of contents) {
     const text = content.textContent
@@ -365,7 +404,7 @@ const highlight = () => {
       content.innerHTML = text.replace(regex, (_, p1, offset) => {
         // 只高亮第一次匹配
         if (offset === text.toLowerCase().indexOf(keyword)) {
-          highlightCount.value++
+          count++
           return `<span class="search-highlight">${p1}</span>`
         }
         return p1
@@ -377,13 +416,15 @@ const highlight = () => {
       }
     }
   }
-  if (highlightCount.value === 0) {
+  if (count === 0) {
     const merchantListWrap = document.querySelector('.merchant-list-wrap')
     if (merchantListWrap) {
       merchantListWrap.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }
 }
+
+onMounted(() => {})
 </script>
 
 <style scoped lang="scss">
@@ -453,15 +494,18 @@ const highlight = () => {
   // flex-grow: 0.5;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 50px;
+  justify-content: space-between;
+  // gap: 50px;
+  &:before {
+    content: '';
+    display: block;
+  }
 }
 
 .search-wrap {
   display: flex;
-  align-items: center;
   position: relative;
-  width: 400px;
+  margin-right: 30px;
   .search-icon {
     position: absolute;
     margin: 8px;
@@ -469,21 +513,6 @@ const highlight = () => {
     color: var(--c-gray-300);
   }
 
-  .search-input {
-    height: 32px;
-    width: 224px;
-    border-radius: 6px;
-    border: 1px solid var(--border-medium);
-    background-color: var(--bg-primary);
-    padding-left: 32px;
-    padding-right: 32px;
-    outline: none;
-    transition: border-color 0.3s;
-
-    &:focus {
-      border-color: var(--c-brand-500);
-    }
-  }
   .highlight-count {
     // position: absolute;
     // right: 0px; // border: 1px solid red;
@@ -513,6 +542,27 @@ const highlight = () => {
     40% {
       opacity: 0;
     }
+  }
+}
+
+.quick-select {
+  opacity: 0;
+  position: absolute;
+  top: 38px;
+  width: 224px;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-medium);
+  border-radius: 6px;
+  padding: 6px;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.3s ease;
+  user-select: none;
+  line-height: 28px;
+  &.show {
+    opacity: 1;
   }
 }
 </style>

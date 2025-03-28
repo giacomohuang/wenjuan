@@ -354,10 +354,10 @@ const updateChild = (index, newValue) => {
       transition:
         border 0.15s ease-in-out,
         background-color 0.15s ease-in-out;
-      &:hover {
-        border: 1px solid var(--c-brand);
-        // background-color: var(--bg-brand);
-      }
+      // &:hover {
+      //   border: 1px solid var(--c-brand);
+      //   // background-color: var(--bg-brand);
+      // }
     }
 
     &__content {

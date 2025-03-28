@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
+    "@highlightjs/vue-plugin": "^2.1.0",
     "@mcistudio/vue-colorpicker": "^2.3.2",
     "@tiptap/extension-bubble-menu": "^2.11.5",
     "@tiptap/extension-dropcursor": "^2.11.5",

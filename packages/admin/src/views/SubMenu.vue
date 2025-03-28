@@ -16,7 +16,7 @@
 import { onMounted, inject } from 'vue'
 const { data, isFloat } = defineProps(['data', 'isFloat'])
 const isHideSubmenu = inject('isHideSubmenu')
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 const router = useRouter()
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
