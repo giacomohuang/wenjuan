@@ -9,7 +9,7 @@
         <Rule :model-value="rule.rules" @update:model-value="updateRule(index, $event)" is-root />
         <icon name="add" class="ico-add-prev" @click="addRule(index, 'prev')"></icon>
         <icon name="add" class="ico-add-next" @click="addRule(index, 'next')"></icon>
-        <icon name="remove" class="ico-remove" @click="deleteRule(index)"></icon>
+        <icon name="del" class="ico-remove" @click="deleteRule(index)"></icon>
       </div>
     </div>
     <div class="data-preview">
@@ -155,7 +155,7 @@ const updateRule = (index, newValue) => {
   position: absolute;
   height: 25px;
   width: 25px;
-  padding: 2px;
+  padding: 0px;
   background: var(--bg-primary);
   border: 1px solid var(--c-brand);
   border-radius: 50%;
@@ -166,7 +166,7 @@ const updateRule = (index, newValue) => {
   &:hover {
     border-color: var(--c-red);
     color: var(--c-red);
-    transform: scale(1.1) !important;
+    transform: scale(1) !important;
   }
 }
 

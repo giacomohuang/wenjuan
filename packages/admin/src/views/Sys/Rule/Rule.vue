@@ -5,13 +5,13 @@
         {{ operator.label }}
         <div class="handle">
           <a-tooltip title="在上面添加条件" v-if="!isRoot" :mouseLeaveDelay="0" :mouseEnterDelay="0">
-            <div class="add top" @click.stop="addItem('prev')"></div>
+            <icon name="add" class="add top" @click.stop="addItem('prev')"></icon>
           </a-tooltip>
           <a-tooltip title="在下面添加条件" v-if="!isRoot" :mouseLeaveDelay="0" :mouseEnterDelay="0">
-            <div v-if="!isRoot" class="add bottom" @click.stop="addItem('next')"></div>
+            <icon name="add" class="add bottom" @click.stop="addItem('next')"></icon>
           </a-tooltip>
           <a-tooltip title="添加条件组合" :mouseLeaveDelay="0" :mouseEnterDelay="0">
-            <div class="add left" @click.stop="addItem('parent')"></div>
+            <icon name="add" class="add left" @click.stop="addItem('parent')"></icon>
           </a-tooltip>
         </div>
       </div>
@@ -24,13 +24,13 @@
         <div class="item__wrap">
           <div class="handle">
             <a-tooltip title="在上面添加条件" v-if="!isRoot" :mouseLeaveDelay="0" :mouseEnterDelay="0">
-              <div class="add top" @click.stop="addItem('prev')"></div>
+              <icon name="add" class="add top" @click.stop="addItem('prev')"></icon>
             </a-tooltip>
             <a-tooltip title="在下面添加条件" v-if="!isRoot" :mouseLeaveDelay="0" :mouseEnterDelay="0">
-              <div v-if="!isRoot" class="add bottom" @click.stop="addItem('next')"></div>
+              <icon name="add" class="add bottom" @click.stop="addItem('next')"></icon>
             </a-tooltip>
             <a-tooltip title="添加条件组合" :mouseLeaveDelay="0" :mouseEnterDelay="0">
-              <div class="add left" @click.stop="addItem('parent')"></div>
+              <icon name="add" class="add left" @click.stop="addItem('parent')"></icon>
             </a-tooltip>
           </div>
           <div class="item__content">
@@ -47,7 +47,7 @@
             <component :is="module[modelValue.exp.type]" :key="modelValue.exp.id" :modelValue="modelValue.exp" @update:modelValue="(newValue) => updateChild(index, newValue)" />
           </div>
         </div>
-        <div class="del" @click.stop="delItem" v-if="!isRoot"></div>
+        <icon name="del" class="del" @click.stop="delItem" v-if="!isRoot"></icon>
       </div>
     </div>
   </div>
@@ -379,11 +379,9 @@ const updateChild = (index, newValue) => {
     &:hover {
       .del {
         opacity: 1;
-        transition: opacity 0.15s ease-in-out;
       }
       .handle {
         opacity: 1;
-        transition: opacity 0.15s ease-in-out;
       }
     }
   }
@@ -392,38 +390,21 @@ const updateChild = (index, newValue) => {
     opacity: 0;
     position: relative;
     border-radius: 100%;
-    height: 16px;
-    width: 16px;
     margin-left: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border: 1px solid var(--border-dark);
-    background-color: var(--bg-secondary);
+    border: 1px solid var(--c-brand);
+    color: var(--c-brand);
+    //
+    // background-color: var(--bg-secondary);
+    transform: scale(0.8);
+    transition: all 0.15s ease;
     &:hover {
-      // background-color: var(--c-red-100);
-      border-color: var(--c-red-500);
-      &::before,
-      &::after {
-        border-color: var(--c-red-500);
-      }
-    }
-    &::before {
-      content: '';
-      position: absolute;
-      border-left: 1px solid var(--border-dark);
-      width: 1px;
-      height: 80%;
-      transform: rotate(45deg);
-    }
-    &::after {
-      position: absolute;
-      content: '';
-      border-right: 1px solid var(--border-dark);
-      width: 1px;
-      height: 80%;
-      transform: rotate(-45deg);
+      border-color: var(--c-red);
+      color: var(--c-red);
+      transform: scale(1);
     }
   }
 }
@@ -436,60 +417,36 @@ const updateChild = (index, newValue) => {
   left: 0;
   top: 0;
   pointer-events: none;
-
+  transition: all 0.15s ease;
   .add {
     pointer-events: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     position: absolute;
     border-radius: 100%;
-    height: 15px;
-    width: 15px;
-    border: 1px solid var(--border-dark);
-    background-color: var(--bg-secondary);
+    transform: scale(0.8);
+    color: var(--c-brand);
+    border: 1px solid var(--c-brand);
+    background-color: var(--bg-primary);
     cursor: pointer;
-    &:before,
-    &:after {
-      content: '';
-      position: absolute;
-      width: 9px;
-      height: 9px;
-      border-color: var(--border-dark);
-      border-style: solid;
-    }
-    &:before {
-      border-left-width: 1px;
-      left: 6px;
-    }
-    &:after {
-      border-top-width: 1px;
-      top: 6px;
-    }
+    transition: all 0.15s ease;
 
     &:hover {
-      background-color: var(--bg-brand);
-      border-color: var(--c-brand);
-      &:before,
-      &:after {
-        border-color: var(--c-brand);
-      }
+      // background-color: var(--bg-brand);
+      transform: scale(1);
+      color: var(--c-red);
+      border-color: var(--c-red);
     }
 
     &.top {
-      top: -8px;
+      top: -10px;
       left: 20px;
-      transform: translateX(-50%);
     }
     &.bottom {
-      bottom: -8px;
+      bottom: -10px;
       left: 20px;
-      transform: translateX(-50%);
     }
     &.left {
-      top: 50%;
-      left: -8px;
-      transform: translateY(-50%);
+      top: calc(50% - 10px);
+      left: -10px;
     }
   }
 }

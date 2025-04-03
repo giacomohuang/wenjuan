@@ -17,7 +17,7 @@
         <a-select v-model:value="modelValue.operator" :showArrow="false" :options="operatorOptions" :dropdownMatchSelectWidth="false"></a-select>
       </a-form-item>
       <a-form-item name="amount">
-        <a-input v-model:value="modelValue.amount" :placeholder="amountPlaceholder">
+        <a-input v-model:value="modelValue.amount" :placeholder="amountPlaceholder" style="width: 130px">
           <template #suffix>
             {{ unit }}
           </template>
@@ -286,9 +286,9 @@ const merchantRangeOptions = [
 ]
 
 const consumptionTypeOptions = [
-  { label: '消费金额', value: 'ConsumptionAmount', placeholder: '请输入消费金额', unit: '元' },
-  { label: '消费积分', value: 'ConsumptionPoint', placeholder: '请输入消费积分', unit: '分' },
-  { label: '消费积分+其他积分', value: 'AllPoint', placeholder: '请输入积分', unit: '分' }
+  { label: '消费金额', value: 'ConsumptionAmount', placeholder: '消费金额', unit: '元' },
+  { label: '消费积分', value: 'ConsumptionPoint', placeholder: '消费积分', unit: '分' },
+  { label: '消费积分+其他积分', value: 'AllPoint', placeholder: '积分', unit: '分' }
 ]
 
 const operatorOptions = [
@@ -328,7 +328,6 @@ const validateRules = ref({
     { required: true, message: '请输入消费金额', trigger: 'blur' },
     { type: 'number', transform: (value) => Number(value), message: '请输入数字', trigger: 'blur' },
     {
-      type: 'number',
       asyncValidator: (_, value) => {
         return new Promise((resolve, reject) => {
           if (value <= 0) {
