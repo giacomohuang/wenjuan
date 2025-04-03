@@ -5,7 +5,7 @@
       <div v-for="(rule, index) in ruleData" :key="rule.id" class="rule-item">
         <a-select class="card-select" v-model:value="rule.cardFrom" :options="cardOptions" :dropdownMatchSelectWidth="false" />
         <span> - </span>
-        <a-select class="card-select" v-model:value="rule.cardTo" :options="cardOptions.filter((item) => item.value !== rule.cardFrom)" :dropdownMatchSelectWidth="false" />
+        <a-select class="card-select" v-model:value="rule.cardTo" :options="cardOptions" :dropdownMatchSelectWidth="false" />
         <Rule :model-value="rule.rules" @update:model-value="updateRule(index, $event)" is-root />
         <icon name="add" class="ico-add-prev" @click="addRule(index, 'prev')"></icon>
         <icon name="add" class="ico-add-next" @click="addRule(index, 'next')"></icon>
